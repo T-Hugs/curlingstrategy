@@ -1692,7 +1692,7 @@
                     renderBroomLine();
                 }
                 
-                // Restore line visibility
+                // Restore line visibility (from URL state, then save to localStorage)
                 if (state.lineVisibility) {
                     toggleCentreLine.checked = state.lineVisibility.centreLine !== false;
                     centreLine.style.display = toggleCentreLine.checked ? 'block' : 'none';
@@ -1705,6 +1705,9 @@
                     
                     toggleFourFootLines.checked = state.lineVisibility.fourFootLines === true;
                     fourFootLines.style.display = toggleFourFootLines.checked ? 'block' : 'none';
+                    
+                    // Save restored visibility to localStorage (so it persists)
+                    saveLineVisibilityToLocalStorage();
                 }
                 
                 // Restore target hack
@@ -1813,9 +1816,10 @@
             }
         }
 
-        // Load colors from localStorage on page load (before URL state restoration)
-        // This ensures localStorage colors are available, but URL state can override them
+        // Load colors and line visibility from localStorage on page load (before URL state restoration)
+        // This ensures localStorage settings are available, but URL state can override them
         loadColorsFromLocalStorage();
+        loadLineVisibilityFromLocalStorage();
 
         // Restore state when page loads (after DOM is ready)
         if (document.readyState === 'loading') {
