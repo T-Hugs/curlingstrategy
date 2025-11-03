@@ -13,17 +13,6 @@ jobs:
             - name: Checkout repository
               uses: actions/checkout@v4
 
-            - name: Setup Node.js
-              uses: actions/setup-node@v4
-              with:
-                  node-version: "22"
-
-            - name: Install dependencies
-              run: npm ci
-
-            - name: Build TypeScript
-              run: npm run build
-
             - name: Setup SSH
               uses: webfactory/ssh-agent@v0.9.0
               with:
@@ -42,26 +31,4 @@ jobs:
 
             - name: Copy index.html to server
               run: scp ./index.html tcc@tccnc.club:/srv/curlingstrategy/dist/
-
-            - name: Copy built server files
-              run: |
-                  if [ -d "./dist" ] && [ "$(ls -A ./dist)" ]; then
-                    scp -r ./dist/* tcc@tccnc.club:/srv/curlingstrategy/dist/
-                  fi
-
-            - name: Copy package.json
-              run: scp ./package.json tcc@tccnc.club:/srv/curlingstrategy/
-
-            - name: Install production dependencies
-              run: |
-                  ssh tcc@tccnc.club << EOF
-                    cd /srv/curlingstrategy
-                    npm install --production
-                  EOF
-
-            - name: Restart curlingstrategy service
-              run: |
-                  ssh tcc@tccnc.club << EOF
-                    sudo systemctl restart curlingstrategy.service || true
-                  EOF
 
