@@ -25,6 +25,7 @@
             position: fixed;
             top: 20px;
             right: 20px;
+            width: 280px;
             background: rgba(255, 255, 255, 0.95);
             padding: 15px;
             border-radius: 8px;
@@ -54,6 +55,29 @@
         .control-item label {
             cursor: pointer;
             user-select: none;
+        }
+
+        .color-picker-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .color-picker-wrapper label {
+            flex: 1;
+            font-size: 12px;
+            margin: 0;
+        }
+
+        .color-picker-input {
+            flex: 1;
+            height: 32px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+            min-width: 60px;
+            box-sizing: border-box;
         }
 
         .stone-templates {
@@ -129,27 +153,28 @@
             <rect x="-2.375" y="10.872" width="4.75" height="0.102"
                   fill="#ffcc00" stroke="#cc9900" stroke-width="0.005"/>
 
-            <!-- Wheelchair lines (thin wool lines) - 457mm (0.457m) from centre line -->
-            <!-- Extend from hog line to outermost edge of 12-foot circle -->
-            <!-- Bottom end: from y=-10.974 (hog line) to y=-19.204 (outermost edge of circle) -->
-            <!-- Top end: from y=10.974 (hog line) to y=19.204 (outermost edge of circle) -->
+            <!-- Wheelchair lines (thin wool lines) - 457mm (0.457m) from center line -->
+            <!-- Extend from hog line all the way to the tee line (y = ±17.375) -->
+            <!-- The house circles will cover the portion that extends into the house -->
+            <!-- Bottom end: from y=-10.974 (hog line) to y=-17.375 (tee line) -->
+            <!-- Top end: from y=10.974 (hog line) to y=17.375 (tee line) -->
             <!-- Left side: outside edge at x=-0.457m -->
             <g id="wheelchair-lines">
-                <line x1="-0.457" y1="-10.974" x2="-0.457" y2="-19.204"
+                <line x1="-0.457" y1="-10.974" x2="-0.457" y2="-17.375"
                       stroke="#666" stroke-width="0.003" stroke-linecap="square"/>
                 <!-- Right side: outside edge at x=0.457m -->
-                <line x1="0.457" y1="-10.974" x2="0.457" y2="-19.204"
+                <line x1="0.457" y1="-10.974" x2="0.457" y2="-17.375"
                       stroke="#666" stroke-width="0.003" stroke-linecap="square"/>
                 <!-- Top end - left side -->
-                <line x1="-0.457" y1="10.974" x2="-0.457" y2="19.204"
+                <line x1="-0.457" y1="10.974" x2="-0.457" y2="17.375"
                       stroke="#666" stroke-width="0.003" stroke-linecap="square"/>
                 <!-- Top end - right side -->
-                <line x1="0.457" y1="10.974" x2="0.457" y2="19.204"
+                <line x1="0.457" y1="10.974" x2="0.457" y2="17.375"
                       stroke="#666" stroke-width="0.003" stroke-linecap="square"/>
             </g>
 
             <!-- Hack lines (green) - 457mm (0.457m) length, 13mm max width -->
-            <!-- Parallel to tee line, at each end of centre line (at ±21.033m) -->
+            <!-- Parallel to tee line, at each end of center line (at ±21.033m) -->
             <line x1="-0.2285" y1="-21.033" x2="0.2285" y2="-21.033"
                   stroke="#009900" stroke-width="0.013" stroke-linecap="square"/>
             <line x1="-0.2285" y1="21.033" x2="0.2285" y2="21.033"
@@ -170,14 +195,13 @@
                       stroke="#990099" stroke-width="0.013" stroke-linecap="square"/>
             </g>
 
-            <!-- 4-foot lines - 2 feet (0.610m) from centre line, parallel to centre line -->
-            <!-- Do not extend into houses (houses: bottom y=-19.204 to -15.546, top y=15.546 to 19.204) -->
+            <!-- 4-foot lines - 2 feet (0.610m) from center line, parallel to center line -->
+            <!-- Extend all the way to the house (to the tee line center at y=±17.375) -->
             <!-- Left line at x=-0.610m, Right line at x=0.610m -->
-            <!-- Middle segment only: between houses (from front of bottom house to front of top house) -->
             <g id="four-foot-lines" style="display: none;">
-                <line x1="-0.610" y1="-15.546" x2="-0.610" y2="15.546"
+                <line x1="-0.610" y1="-17.375" x2="-0.610" y2="17.375"
                       stroke="#888" stroke-width="0.01" stroke-linecap="square"/>
-                <line x1="0.610" y1="-15.546" x2="0.610" y2="15.546"
+                <line x1="0.610" y1="-17.375" x2="0.610" y2="17.375"
                       stroke="#888" stroke-width="0.01" stroke-linecap="square"/>
             </g>
 
@@ -214,14 +238,14 @@
             <circle cx="0" cy="17.375" r="0.610" fill="none" stroke="#333" stroke-width="0.013"/>
             <circle cx="0" cy="17.375" r="0.152" fill="none" stroke="#333" stroke-width="0.013"/>
 
-            <!-- Centre holes (tees) - at intersection of tee line and centre line -->
+            <!-- Center holes (tees) - at intersection of tee line and center line -->
             <circle cx="0" cy="-17.375" r="0.02" fill="#333"/>
             <circle cx="0" cy="17.375" r="0.02" fill="#333"/>
 
-            <!-- Centre line (black) - 13mm max width -->
+            <!-- Center line (black) - 13mm max width -->
             <!-- Extends from -21.033m to +21.033m (3.658m beyond each tee line) -->
             <!-- Drawn on top of house -->
-            <g id="centre-line">
+            <g id="center-line">
                 <line x1="0" y1="-21.033" x2="0" y2="21.033"
                       stroke="#000000" stroke-width="0.013" stroke-linecap="square"/>
             </g>
@@ -235,7 +259,7 @@
                   stroke="#000000" stroke-width="0.013" stroke-linecap="square"/>
 
             <!-- Hacks (brown rectangles) -->
-            <!-- Inside edge of each hack is 76mm (0.076m) from midpoint of centre line -->
+            <!-- Inside edge of each hack is 76mm (0.076m) from midpoint of center line -->
             <!-- Width of each hack max 152mm (0.152m) -->
             <!-- Material inside edge is on hack line, hack extends max 203mm (0.203m) in front -->
             <!-- Hack line is at y = ±21.033m -->
@@ -260,8 +284,8 @@
     <div class="controls">
         <h3>Line Visibility</h3>
         <div class="control-item">
-            <input type="checkbox" id="toggle-centre-line" checked>
-            <label for="toggle-centre-line">Centre Line</label>
+            <input type="checkbox" id="toggle-center-line" checked>
+            <label for="toggle-center-line">Center Line</label>
         </div>
         <div class="control-item">
             <input type="checkbox" id="toggle-courtesy-lines" checked>
@@ -284,24 +308,28 @@
                     <option value="left">Lefty</option>
                 </select>
             </div>
+            <div id="broom-line-instruction" style="font-size: 11px; color: #666; margin-top: 8px; font-style: italic;"></div>
         </div>
         <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #ddd;">
-            <h3 style="margin: 0 0 10px 0; font-size: 14px; color: #333;">Colors & Settings</h3>
-            <div class="control-item" style="margin-bottom: 10px;">
-                <label for="blue-ring-color" style="display: block; margin-bottom: 4px; font-size: 12px;">12-Foot Ring:</label>
-                <input type="color" id="blue-ring-color" value="#80b3ff" style="width: 100%; height: 32px; border: 1px solid #ddd; border-radius: 4px; cursor: pointer;">
+            <h3 style="margin: 0 0 10px 0; font-size: 14px; color: #333; cursor: pointer; user-select: none;" onclick="toggleColorsSettings()">
+                Colors & Settings <span id="colors-settings-arrow" style="font-size: 12px;">▶</span>
+            </h3>
+            <div id="colors-settings-content" style="display: none;">
+            <div class="color-picker-wrapper">
+                <label for="blue-ring-color">12-Foot Ring:</label>
+                <input type="color" id="blue-ring-color" value="#80b3ff" class="color-picker-input">
             </div>
-            <div class="control-item" style="margin-bottom: 10px;">
-                <label for="red-ring-color" style="display: block; margin-bottom: 4px; font-size: 12px;">4-Foot Ring:</label>
-                <input type="color" id="red-ring-color" value="#ff8080" style="width: 100%; height: 32px; border: 1px solid #ddd; border-radius: 4px; cursor: pointer;">
+            <div class="color-picker-wrapper">
+                <label for="red-ring-color">4-Foot Ring:</label>
+                <input type="color" id="red-ring-color" value="#ff8080" class="color-picker-input">
             </div>
-            <div class="control-item" style="margin-bottom: 10px;">
-                <label for="yellow-stone-color" style="display: block; margin-bottom: 4px; font-size: 12px;">Yellow Stone:</label>
-                <input type="color" id="yellow-stone-color" value="#ffd700" style="width: 100%; height: 32px; border: 1px solid #ddd; border-radius: 4px; cursor: pointer;">
+            <div class="color-picker-wrapper">
+                <label for="light-stone-color">Light Stone:</label>
+                <input type="color" id="light-stone-color" value="#ffd700" class="color-picker-input">
             </div>
-            <div class="control-item" style="margin-bottom: 10px;">
-                <label for="red-stone-color" style="display: block; margin-bottom: 4px; font-size: 12px;">Red Stone:</label>
-                <input type="color" id="red-stone-color" value="#cc0000" style="width: 100%; height: 32px; border: 1px solid #ddd; border-radius: 4px; cursor: pointer;">
+            <div class="color-picker-wrapper">
+                <label for="dark-stone-color">Dark Stone:</label>
+                <input type="color" id="dark-stone-color" value="#cc0000" class="color-picker-input">
             </div>
             <div class="control-item" style="margin-bottom: 10px;">
                 <label for="stone-circumference" style="display: block; margin-bottom: 4px; font-size: 12px;">Stone Circumference (inches):</label>
@@ -310,20 +338,23 @@
             <button id="reset-colors-button" style="width: 100%; padding: 6px; background: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; margin-top: 8px;" title="Reset colors and stone settings to defaults">
                 ↺ Reset Colors & Stone Settings
             </button>
+            </div>
         </div>
         <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #ddd;">
             <h3 style="margin: 0 0 10px 0; font-size: 14px; color: #333;">Reset</h3>
-            <button id="reset-viewport-button" style="width: 100%; padding: 8px; background: #ffc107; color: #333; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; margin-bottom: 8px;" title="Reset viewport (pan, zoom, rotation)">
-                ↺ Reset Viewport
-            </button>
-            <button id="reset-sheet-button" style="width: 100%; padding: 8px; background: #dc3545; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; margin-bottom: 8px;" title="Remove all stones and broom line">
-                ↻ Reset Sheet
-            </button>
+            <div style="display: flex; gap: 8px;">
+                <button id="reset-viewport-button" style="flex: 1; padding: 8px; background: #ffc107; color: #333; border: none; border-radius: 4px; cursor: pointer; font-size: 14px;" title="Reset viewport (pan, zoom, rotation)">
+                    ↺ Viewport
+                </button>
+                <button id="reset-sheet-button" style="flex: 1; padding: 8px; background: #dc3545; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px;" title="Remove all stones and broom line">
+                    ↻ Sheet
+                </button>
+            </div>
         </div>
         <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #ddd;">
             <h3 style="margin: 0 0 10px 0; font-size: 14px; color: #333;">Share</h3>
             <button id="share-button" style="width: 100%; padding: 8px; background: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; margin-bottom: 8px;" title="Copy shareable link">
-                📋 Copy Share Link
+                📄 Copy Link
             </button>
             <div id="share-feedback" style="font-size: 12px; color: #28a745; text-align: center; min-height: 16px;"></div>
         </div>
@@ -336,27 +367,50 @@
                     ↺
                 </button>
             </div>
+            <div style="font-size: 11px; color: #666; margin-bottom: 8px;">Drag stones onto the sheet.</div>
             <div class="stone-templates">
                 <div>
-                    <div class="stone-template yellow" id="yellow-stone-template" data-color="yellow"></div>
-                    <div class="stone-template-label">Yellow</div>
+                    <div class="stone-template yellow" id="light-stone-template" data-color="yellow"></div>
+                    <div class="stone-template-label">Light</div>
                 </div>
                 <div>
-                    <div class="stone-template red" id="red-stone-template" data-color="red"></div>
-                    <div class="stone-template-label">Red</div>
+                    <div class="stone-template red" id="dark-stone-template" data-color="red"></div>
+                    <div class="stone-template-label">Dark</div>
                 </div>
             </div>
         </div>
     </div>
 
     <script type="module">
+        // Toggle Colors & Settings section
+        window.toggleColorsSettings = function() {
+            const content = document.getElementById('colors-settings-content');
+            const arrow = document.getElementById('colors-settings-arrow');
+            if (content.style.display === 'none') {
+                content.style.display = 'block';
+                arrow.textContent = '▼';
+            } else {
+                content.style.display = 'none';
+                arrow.textContent = '▶';
+            }
+        };
+
+        // Detect touch device and set broom line instruction
+        const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+        const broomInstruction = document.getElementById('broom-line-instruction');
+        if (broomInstruction) {
+            broomInstruction.textContent = isTouchDevice 
+                ? 'Long-press to place broom' 
+                : 'Right-click to place broom';
+        }
+
         // Line visibility toggles
-        const centreLine = document.getElementById('centre-line');
+        const centerLine = document.getElementById('center-line');
         const courtesyLines = document.getElementById('courtesy-lines');
         const wheelchairLines = document.getElementById('wheelchair-lines');
         const fourFootLines = document.getElementById('four-foot-lines');
 
-        const toggleCentreLine = document.getElementById('toggle-centre-line');
+        const toggleCenterLine = document.getElementById('toggle-center-line');
         const toggleCourtesyLines = document.getElementById('toggle-courtesy-lines');
         const toggleWheelchairLines = document.getElementById('toggle-wheelchair-lines');
         const toggleFourFootLines = document.getElementById('toggle-four-foot-lines');
@@ -364,7 +418,7 @@
         // Function to save line visibility to localStorage
         function saveLineVisibilityToLocalStorage() {
             const visibility = {
-                centreLine: toggleCentreLine.checked,
+                centerLine: toggleCenterLine.checked,
                 courtesyLines: toggleCourtesyLines.checked,
                 wheelchairLines: toggleWheelchairLines.checked,
                 fourFootLines: toggleFourFootLines.checked
@@ -378,8 +432,8 @@
                 const stored = localStorage.getItem('curlstrat_lineVisibility');
                 if (stored) {
                     const visibility = JSON.parse(stored);
-                    toggleCentreLine.checked = visibility.centreLine !== false;
-                    centreLine.style.display = toggleCentreLine.checked ? 'block' : 'none';
+                    toggleCenterLine.checked = visibility.centerLine !== false;
+                    centerLine.style.display = toggleCenterLine.checked ? 'block' : 'none';
                     
                     toggleCourtesyLines.checked = visibility.courtesyLines !== false;
                     courtesyLines.style.display = toggleCourtesyLines.checked ? 'block' : 'none';
@@ -391,12 +445,11 @@
                     fourFootLines.style.display = toggleFourFootLines.checked ? 'block' : 'none';
                 }
             } catch (e) {
-                console.error('Failed to load line visibility from localStorage:', e);
             }
         }
 
-        toggleCentreLine.addEventListener('change', (e) => {
-            centreLine.style.display = e.target.checked ? 'block' : 'none';
+        toggleCenterLine.addEventListener('change', (e) => {
+            centerLine.style.display = e.target.checked ? 'block' : 'none';
             saveLineVisibilityToLocalStorage();
         });
 
@@ -425,8 +478,8 @@
         // Color and circumference settings
         const blueRingColorInput = document.getElementById('blue-ring-color');
         const redRingColorInput = document.getElementById('red-ring-color');
-        const yellowStoneColorInput = document.getElementById('yellow-stone-color');
-        const redStoneColorInput = document.getElementById('red-stone-color');
+        const lightStoneColorInput = document.getElementById('light-stone-color');
+        const darkStoneColorInput = document.getElementById('dark-stone-color');
         const stoneCircumferenceInput = document.getElementById('stone-circumference');
 
         // Function to save colors and circumference to localStorage
@@ -434,8 +487,8 @@
             const colorSettings = {
                 blueRing: blueRingColor,
                 redRing: redRingColor,
-                yellowStone: yellowStoneColor,
-                redStone: redStoneColor,
+                lightStone: lightStoneColor,
+                darkStone: darkStoneColor,
                 circumference: stoneCircumferenceInches
             };
             localStorage.setItem('curlstrat_colors', JSON.stringify(colorSettings));
@@ -449,25 +502,24 @@
                     const colorSettings = JSON.parse(stored);
                     if (colorSettings.blueRing) blueRingColor = colorSettings.blueRing;
                     if (colorSettings.redRing) redRingColor = colorSettings.redRing;
-                    if (colorSettings.yellowStone) yellowStoneColor = colorSettings.yellowStone;
-                    if (colorSettings.redStone) redStoneColor = colorSettings.redStone;
+                    if (colorSettings.lightStone) lightStoneColor = colorSettings.lightStone;
+                    if (colorSettings.darkStone) darkStoneColor = colorSettings.darkStone;
                     if (colorSettings.circumference) stoneCircumferenceInches = colorSettings.circumference;
                     
                     // Update UI elements
                     blueRingColorInput.value = blueRingColor;
                     redRingColorInput.value = redRingColor;
-                    yellowStoneColorInput.value = yellowStoneColor;
-                    redStoneColorInput.value = redStoneColor;
+                    lightStoneColorInput.value = lightStoneColor;
+                    darkStoneColorInput.value = darkStoneColor;
                     stoneCircumferenceInput.value = stoneCircumferenceInches;
                     
                     // Apply the colors
                     updateHouseRingColors();
-                    if (yellowTemplate) yellowTemplate.style.background = yellowStoneColor;
-                    if (redTemplate) redTemplate.style.background = redStoneColor;
+                    if (yellowTemplate) yellowTemplate.style.background = lightStoneColor;
+                    if (redTemplate) redTemplate.style.background = darkStoneColor;
                     renderStones();
                 }
             } catch (e) {
-                console.error('Failed to load colors from localStorage:', e);
             }
         }
 
@@ -483,18 +535,18 @@
             saveColorsToLocalStorage();
         });
 
-        yellowStoneColorInput.addEventListener('change', (e) => {
-            yellowStoneColor = e.target.value;
+        lightStoneColorInput.addEventListener('change', (e) => {
+            lightStoneColor = e.target.value;
             // Update template color
-            yellowTemplate.style.background = yellowStoneColor;
+            yellowTemplate.style.background = lightStoneColor;
             renderStones(); // Re-render all stones with new color
             saveColorsToLocalStorage();
         });
 
-        redStoneColorInput.addEventListener('change', (e) => {
-            redStoneColor = e.target.value;
+        darkStoneColorInput.addEventListener('change', (e) => {
+            darkStoneColor = e.target.value;
             // Update template color
-            redTemplate.style.background = redStoneColor;
+            redTemplate.style.background = darkStoneColor;
             renderStones(); // Re-render all stones with new color
             saveColorsToLocalStorage();
         });
@@ -565,11 +617,100 @@
             return circumferenceMeters / (2 * Math.PI);
         }
 
+        // Calculate distance between two points
+        function distance(x1, y1, x2, y2) {
+            return Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
+        }
+
+        // Resolve collisions - move stone to nearest valid position (touching but not overlapping)
+        function resolveCollisions(stone, excludeId = null) {
+            const radius = getStoneRadius();
+            const minDistance = radius * 2; // Two stones touch when centers are 2*radius apart
+            const maxIterations = 50; // Prevent infinite loops
+            let iterations = 0;
+            
+            // Iteratively resolve collisions until none remain or max iterations reached
+            while (iterations < maxIterations) {
+                const overlappingStones = [];
+                
+                // Find all overlapping stones
+                for (const otherStone of stones) {
+                    if (otherStone.id === stone.id || (excludeId !== null && otherStone.id === excludeId)) {
+                        continue; // Skip self
+                    }
+                    
+                    const dist = distance(stone.x, stone.y, otherStone.x, otherStone.y);
+                    
+                    if (dist < minDistance && dist > 0.001) { // Use small epsilon to avoid floating point issues
+                        overlappingStones.push({ stone: otherStone, distance: dist });
+                    }
+                }
+                
+                // If no collisions, we're done
+                if (overlappingStones.length === 0) {
+                    break;
+                }
+                
+                // If only one collision, move directly away from it
+                if (overlappingStones.length === 1) {
+                    const otherStone = overlappingStones[0].stone;
+                    const angle = Math.atan2(stone.y - otherStone.y, stone.x - otherStone.x);
+                    stone.x = otherStone.x + Math.cos(angle) * minDistance;
+                    stone.y = otherStone.y + Math.sin(angle) * minDistance;
+                } else {
+                    // Multiple collisions - calculate combined displacement vector
+                    // Move stone away from all overlapping stones simultaneously
+                    let sumDx = 0;
+                    let sumDy = 0;
+                    let totalWeight = 0;
+                    
+                    for (const overlap of overlappingStones) {
+                        const otherStone = overlap.stone;
+                        const dist = overlap.distance;
+                        const overlapAmount = minDistance - dist; // How much overlap
+                        const weight = overlapAmount; // Weight by overlap amount
+                        
+                        // Direction vector away from the other stone
+                        const dx = stone.x - otherStone.x;
+                        const dy = stone.y - otherStone.y;
+                        const magnitude = Math.sqrt(dx * dx + dy * dy);
+                        
+                        if (magnitude > 0.001) {
+                            // Normalize and scale by weight
+                            const normalizedDx = dx / magnitude;
+                            const normalizedDy = dy / magnitude;
+                            sumDx += normalizedDx * weight;
+                            sumDy += normalizedDy * weight;
+                            totalWeight += weight;
+                        }
+                    }
+                    
+                    if (totalWeight > 0) {
+                        // Normalize the combined vector
+                        const combinedMagnitude = Math.sqrt(sumDx * sumDx + sumDy * sumDy);
+                        if (combinedMagnitude > 0.001) {
+                            const normalizedDx = sumDx / combinedMagnitude;
+                            const normalizedDy = sumDy / combinedMagnitude;
+                            
+                            // Move stone away by at least the minimum distance from the closest overlapping stone
+                            const maxOverlap = Math.max(...overlappingStones.map(o => minDistance - o.distance));
+                            const moveDistance = maxOverlap + 0.01; // Small buffer
+                            
+                            stone.x += normalizedDx * moveDistance;
+                            stone.y += normalizedDy * moveDistance;
+                        }
+                    }
+                }
+                
+                iterations++;
+            }
+        }
+
         // Color settings - user-configurable
         let blueRingColor = '#80b3ff';
         let redRingColor = '#ff8080';
-        let yellowStoneColor = '#ffd700';
-        let redStoneColor = '#cc0000';
+        let lightStoneColor = '#ffd700';
+        let darkStoneColor = '#cc0000';
         let stones = []; // Array to store all stones: { id, x, y, color }
         let nextStoneId = 0;
         let isDraggingStone = false;
@@ -1036,12 +1177,12 @@
             return layer;
         }
         
-        const yellowTemplate = document.getElementById('yellow-stone-template');
-        const redTemplate = document.getElementById('red-stone-template');
+        const yellowTemplate = document.getElementById('light-stone-template');
+        const redTemplate = document.getElementById('dark-stone-template');
         
         // Initialize template colors
-        if (yellowTemplate) yellowTemplate.style.background = yellowStoneColor;
-        if (redTemplate) redTemplate.style.background = redStoneColor;
+        if (yellowTemplate) yellowTemplate.style.background = lightStoneColor;
+        if (redTemplate) redTemplate.style.background = darkStoneColor;
         
         // Initial render of any existing stones (should be empty on first load)
         renderStones();
@@ -1053,8 +1194,8 @@
             circle.setAttribute('cy', String(stone.y));
             const radius = getStoneRadius();
             circle.setAttribute('r', String(radius));
-            const stoneColor = stone.color === 'yellow' ? yellowStoneColor : redStoneColor;
-            const stoneStroke = stone.color === 'yellow' ? darkenColor(yellowStoneColor, 0.7) : darkenColor(redStoneColor, 0.7);
+            const stoneColor = stone.color === 'yellow' ? lightStoneColor : darkStoneColor;
+            const stoneStroke = stone.color === 'yellow' ? darkenColor(lightStoneColor, 0.7) : darkenColor(darkStoneColor, 0.7);
             circle.setAttribute('fill', stoneColor);
             circle.setAttribute('stroke', stoneStroke);
             circle.setAttribute('stroke-width', '0.01');
@@ -1071,7 +1212,6 @@
         function renderStones() {
             const layer = getStonesLayer();
             if (!layer) {
-                console.error('Stones layer not found');
                 return;
             }
             
@@ -1082,9 +1222,6 @@
             layer.style.display = '';
             layer.style.visibility = 'visible';
             
-            console.log('Rendering stones:', stones.length, 'stones');
-            console.log('Layer parent:', layer.parentElement?.id);
-            
             // Clear existing stones
             while (layer.firstChild) {
                 layer.removeChild(layer.firstChild);
@@ -1094,21 +1231,7 @@
             stones.forEach(stone => {
                 const element = createStoneElement(stone);
                 layer.appendChild(element);
-                console.log('Added stone:', stone.id, 'at', stone.x, stone.y, 'color:', stone.color);
-                console.log('  Element in DOM:', element.isConnected);
-                console.log('  Element parent:', element.parentElement?.id);
-                console.log('  Element cx:', element.getAttribute('cx'), 'cy:', element.getAttribute('cy'));
             });
-            
-            console.log('Stones layer children:', layer.children.length);
-            console.log('Layer in DOM:', layer.isConnected);
-            console.log('Layer transform:', layer.getAttribute('transform'));
-            
-            // Verify each stone is actually in the layer
-            for (let i = 0; i < layer.children.length; i++) {
-                const child = layer.children[i];
-                console.log(`  Child ${i}: tag=${child.tagName}, cx=${child.getAttribute('cx')}, cy=${child.getAttribute('cy')}, inDOM=${child.isConnected}`);
-            }
         }
 
         // Template mousedown - start dragging from template
@@ -1234,6 +1357,10 @@
                         stones.splice(stoneIndex, 1);
                         renderStones();
                     }
+                } else {
+                    // Resolve collisions after moving stone
+                    resolveCollisions(draggedStone);
+                    renderStones();
                 }
                 
                 isDraggingStone = false;
@@ -1262,6 +1389,10 @@
                     y: point.y,
                     color: draggedStoneTemplate
                 };
+                
+                // Resolve collisions before adding to array
+                resolveCollisions(newStone);
+                
                 stones.push(newStone);
                 
                 // Render the new stone
@@ -1393,8 +1524,6 @@
             // But user reports it's going to left hack when set to 'right', so mapping is inverted
             const hackX = broomHack === 'right' ? -0.152 : 0.152;
             
-            console.log('Broom line target: hack =', broomHack, ', coordinates = (', hackX.toFixed(3), hackY.toFixed(3), ')');
-            console.log('FIXED: Using y=21.033 to visually go to delivery area (opposite end)');
             
             return { x: hackX, y: hackY };
         }
@@ -1645,7 +1774,7 @@
                     y: broomLinePosition.y
                 } : null,
                 lineVisibility: {
-                    centreLine: toggleCentreLine.checked,
+                    centerLine: toggleCenterLine.checked,
                     courtesyLines: toggleCourtesyLines.checked,
                     wheelchairLines: toggleWheelchairLines.checked,
                     fourFootLines: toggleFourFootLines.checked
@@ -1654,8 +1783,8 @@
                 colors: {
                     blueRing: blueRingColor,
                     redRing: redRingColor,
-                    yellowStone: yellowStoneColor,
-                    redStone: redStoneColor
+                    lightStone: lightStoneColor,
+                    darkStone: darkStoneColor
                 },
                 stoneCircumference: stoneCircumferenceInches
             };
@@ -1694,8 +1823,8 @@
                 
                 // Restore line visibility (from URL state, then save to localStorage)
                 if (state.lineVisibility) {
-                    toggleCentreLine.checked = state.lineVisibility.centreLine !== false;
-                    centreLine.style.display = toggleCentreLine.checked ? 'block' : 'none';
+                    toggleCenterLine.checked = state.lineVisibility.centerLine !== false;
+                    centerLine.style.display = toggleCenterLine.checked ? 'block' : 'none';
                     
                     toggleCourtesyLines.checked = state.lineVisibility.courtesyLines !== false;
                     courtesyLines.style.display = toggleCourtesyLines.checked ? 'block' : 'none';
@@ -1721,17 +1850,17 @@
                 if (state.colors) {
                     blueRingColor = state.colors.blueRing || blueRingColor;
                     redRingColor = state.colors.redRing || redRingColor;
-                    yellowStoneColor = state.colors.yellowStone || yellowStoneColor;
-                    redStoneColor = state.colors.redStone || redStoneColor;
+                    lightStoneColor = state.colors.lightStone || lightStoneColor;
+                    darkStoneColor = state.colors.darkStone || darkStoneColor;
                     
                     blueRingColorInput.value = blueRingColor;
                     redRingColorInput.value = redRingColor;
-                    yellowStoneColorInput.value = yellowStoneColor;
-                    redStoneColorInput.value = redStoneColor;
+                    lightStoneColorInput.value = lightStoneColor;
+                    darkStoneColorInput.value = darkStoneColor;
                     
                     updateHouseRingColors();
-                    if (yellowTemplate) yellowTemplate.style.background = yellowStoneColor;
-                    if (redTemplate) redTemplate.style.background = redStoneColor;
+                    if (yellowTemplate) yellowTemplate.style.background = lightStoneColor;
+                    if (redTemplate) redTemplate.style.background = darkStoneColor;
                 }
                 
                 if (state.stoneCircumference !== undefined) {
@@ -1747,7 +1876,6 @@
                 
                 return true;
             } catch (e) {
-                console.error('Failed to deserialize board state:', e);
                 return false;
             }
         }
@@ -1767,7 +1895,6 @@
                 navigator.clipboard.writeText(link).then(() => {
                     showShareFeedback('✓ Link copied!');
                 }).catch(err => {
-                    console.error('Failed to copy:', err);
                     fallbackCopyToClipboard(link);
                 });
             } else {
@@ -1786,7 +1913,6 @@
                 document.execCommand('copy');
                 showShareFeedback('✓ Link copied!');
             } catch (err) {
-                console.error('Fallback copy failed:', err);
                 showShareFeedback('✗ Copy failed - link: ' + text.substring(0, 50) + '...');
             }
             document.body.removeChild(textArea);
@@ -1871,21 +1997,21 @@
                 // Reset to defaults
                 blueRingColor = '#80b3ff';
                 redRingColor = '#ff8080';
-                yellowStoneColor = '#ffd700';
-                redStoneColor = '#cc0000';
+                lightStoneColor = '#ffd700';
+                darkStoneColor = '#cc0000';
                 stoneCircumferenceInches = 36;
                 
                 // Update UI
                 blueRingColorInput.value = blueRingColor;
                 redRingColorInput.value = redRingColor;
-                yellowStoneColorInput.value = yellowStoneColor;
-                redStoneColorInput.value = redStoneColor;
+                lightStoneColorInput.value = lightStoneColor;
+                darkStoneColorInput.value = darkStoneColor;
                 stoneCircumferenceInput.value = stoneCircumferenceInches;
                 
                 // Apply changes
                 updateHouseRingColors();
-                if (yellowTemplate) yellowTemplate.style.background = yellowStoneColor;
-                if (redTemplate) redTemplate.style.background = redStoneColor;
+                if (yellowTemplate) yellowTemplate.style.background = lightStoneColor;
+                if (redTemplate) redTemplate.style.background = darkStoneColor;
                 renderStones();
                 
                 // Save to localStorage
