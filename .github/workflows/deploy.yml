@@ -23,12 +23,15 @@ jobs:
                   mkdir -p ~/.ssh
                   echo "tccnc.club ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDPLNy5N2dVPYcUe3LK4FnEaFtuREsVl9Ocssozo9VhGMUtEMhVISMBNlmJC+jOx1535WPScmSz28otT0MDkSyYwjJIETGXqHTgm/eN9maZF5C21FUVLUP8Q5FKfogso2KELHnoslJtNJHDVIT+NT8jdIVa+HFsPuRYHg+2toN1g5V7mhFV/AXqbYH/oeYxY/GQdxBp7042Mfi7Sh07RMclGNOCYvEaN6eDF7U/kfSMdYu5Mfygpax9CmPwHBAP39ffY+hhIjgU7NBqYniViKX7cv4gRjxzecM0HZ9bkncZD9LHLigwFqyn1n6O+fDx5DM+hbwyqlwd7pW3Fd9kNR1vgJsCCd6DS51+VsF1injEMU3/zfH2XACn7R+XPa01y90oNZgBuDJvL8eYTEvooZXowpLrTQAL69bT7JN0E9UQ5S5ZLL/Z0obhoA/19rJusW7b5CSkmDggBdjlPOaLSCLOswO9EbAVUdL2INg2f1xyhXyuET4JcGBBy0A0OwsdqLs=" >> ~/.ssh/known_hosts
 
-            - name: Create deployment directory
+            - name: Create deployment directory (if needed)
               run: |
                   ssh tcc@tccnc.club << EOF
-                    mkdir -p /srv/curlingstrategy/dist
+                    sudo mkdir -p /srv/curlingstrategy/dist
+                    sudo chown -R tcc:tcc /srv/curlingstrategy/dist || true
                   EOF
 
             - name: Copy index.html to server
-              run: scp ./index.html tcc@tccnc.club:/srv/curlingstrategy/dist/
+              run: |
+                  scp ./index.html tcc@tccnc.club:/tmp/index.html
+                  ssh tcc@tccnc.club "sudo mv /tmp/index.html /srv/curlingstrategy/dist/index.html && sudo chown www-data:www-data /srv/curlingstrategy/dist/index.html"
 
