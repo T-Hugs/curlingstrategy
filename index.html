@@ -1,0 +1,1897 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Curling Strategy Board</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .curling-sheet {
+            display: block;
+            width: 100vw;
+            height: 100vh;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+
+        .controls {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+        }
+
+        .controls h3 {
+            margin: 0 0 10px 0;
+            font-size: 16px;
+            color: #333;
+        }
+
+        .control-item {
+            display: flex;
+            align-items: center;
+            margin: 8px 0;
+        }
+
+        .control-item input[type="checkbox"] {
+            margin-right: 8px;
+            cursor: pointer;
+        }
+
+        .control-item label {
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .stone-templates {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #ddd;
+            justify-content: space-around;
+        }
+
+        .stone-template {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: grab;
+            border: 2px solid #333;
+            transition: transform 0.1s;
+        }
+
+        .stone-template:active {
+            cursor: grabbing;
+            transform: scale(0.95);
+        }
+
+        .stone-template.yellow {
+            background: #ffd700;
+            border-color: #cc9900;
+        }
+
+        .stone-template.red {
+            background: #cc0000;
+            border-color: #990000;
+        }
+
+        .stone-template-label {
+            text-align: center;
+            font-size: 11px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+    </style>
+</head>
+<body>
+    <svg class="curling-sheet" id="curling-sheet-svg" width="100%" height="100%" viewBox="-3.0 10.4 6.0 9.3" preserveAspectRatio="xMidYMid meet">
+            <!-- Definitions for reusable elements -->
+            <defs>
+                <pattern id="iceTexture" patternUnits="userSpaceOnUse" width="0.5" height="0.5">
+                    <circle cx="0.25" cy="0.25" r="0.05" fill="#d0e8ff" opacity="0.3"/>
+                </pattern>
+            </defs>
+
+            <!-- Sheet boundary (light blue ice) -->
+            <!-- Length: 45.72m (from -22.86 to +22.86), Width: 4.75m (from -2.375 to +2.375) -->
+            <rect x="-2.375" y="-22.86" width="4.75" height="45.72"
+                  fill="#f0f8ff" stroke="#333" stroke-width="0.02"/>
+
+            <!-- Back lines (black) - 13mm max width -->
+            <!-- Outside edge is 1.829m from center of tee line -->
+            <!-- Bottom: -17.375 - 1.829 = -19.204m, Top: 17.375 + 1.829 = 19.204m -->
+            <line x1="-2.375" y1="-19.204" x2="2.375" y2="-19.204"
+                  stroke="#000000" stroke-width="0.013" stroke-linecap="square"/>
+            <line x1="-2.375" y1="19.204" x2="2.375" y2="19.204"
+                  stroke="#000000" stroke-width="0.013" stroke-linecap="square"/>
+
+            <!-- Hog lines (yellow) - 102mm (0.102m) width -->
+            <!-- Inside edge is 6.401m from center of tee line -->
+            <!-- Bottom: -17.375 + 6.401 = -10.974m, Top: 17.375 - 6.401 = 10.974m -->
+            <!-- Represented as a filled rectangle to show proper width -->
+            <rect x="-2.375" y="-10.974" width="4.75" height="0.102"
+                  fill="#ffcc00" stroke="#cc9900" stroke-width="0.005"/>
+            <rect x="-2.375" y="10.872" width="4.75" height="0.102"
+                  fill="#ffcc00" stroke="#cc9900" stroke-width="0.005"/>
+
+            <!-- Wheelchair lines (thin wool lines) - 457mm (0.457m) from centre line -->
+            <!-- Extend from hog line to outermost edge of 12-foot circle -->
+            <!-- Bottom end: from y=-10.974 (hog line) to y=-19.204 (outermost edge of circle) -->
+            <!-- Top end: from y=10.974 (hog line) to y=19.204 (outermost edge of circle) -->
+            <!-- Left side: outside edge at x=-0.457m -->
+            <g id="wheelchair-lines">
+                <line x1="-0.457" y1="-10.974" x2="-0.457" y2="-19.204"
+                      stroke="#666" stroke-width="0.003" stroke-linecap="square"/>
+                <!-- Right side: outside edge at x=0.457m -->
+                <line x1="0.457" y1="-10.974" x2="0.457" y2="-19.204"
+                      stroke="#666" stroke-width="0.003" stroke-linecap="square"/>
+                <!-- Top end - left side -->
+                <line x1="-0.457" y1="10.974" x2="-0.457" y2="19.204"
+                      stroke="#666" stroke-width="0.003" stroke-linecap="square"/>
+                <!-- Top end - right side -->
+                <line x1="0.457" y1="10.974" x2="0.457" y2="19.204"
+                      stroke="#666" stroke-width="0.003" stroke-linecap="square"/>
+            </g>
+
+            <!-- Hack lines (green) - 457mm (0.457m) length, 13mm max width -->
+            <!-- Parallel to tee line, at each end of centre line (at ±21.033m) -->
+            <line x1="-0.2285" y1="-21.033" x2="0.2285" y2="-21.033"
+                  stroke="#009900" stroke-width="0.013" stroke-linecap="square"/>
+            <line x1="-0.2285" y1="21.033" x2="0.2285" y2="21.033"
+                  stroke="#009900" stroke-width="0.013" stroke-linecap="square"/>
+
+            <!-- Courtesy lines (purple) - 152mm (0.152m) length, 13mm max width -->
+            <!-- 1.219m outside and parallel to hog lines, on each side (closer to center) -->
+            <!-- Bottom: -10.974 + 1.219 = -9.755m, Top: 10.974 - 1.219 = 9.755m -->
+            <!-- Left side: from x=-2.375 to x=-2.223, Right side: from x=2.223 to x=2.375 -->
+            <g id="courtesy-lines">
+                <line x1="-2.375" y1="-9.755" x2="-2.223" y2="-9.755"
+                      stroke="#990099" stroke-width="0.013" stroke-linecap="square"/>
+                <line x1="2.223" y1="-9.755" x2="2.375" y2="-9.755"
+                      stroke="#990099" stroke-width="0.013" stroke-linecap="square"/>
+                <line x1="-2.375" y1="9.755" x2="-2.223" y2="9.755"
+                      stroke="#990099" stroke-width="0.013" stroke-linecap="square"/>
+                <line x1="2.223" y1="9.755" x2="2.375" y2="9.755"
+                      stroke="#990099" stroke-width="0.013" stroke-linecap="square"/>
+            </g>
+
+            <!-- 4-foot lines - 2 feet (0.610m) from centre line, parallel to centre line -->
+            <!-- Do not extend into houses (houses: bottom y=-19.204 to -15.546, top y=15.546 to 19.204) -->
+            <!-- Left line at x=-0.610m, Right line at x=0.610m -->
+            <!-- Middle segment only: between houses (from front of bottom house to front of top house) -->
+            <g id="four-foot-lines" style="display: none;">
+                <line x1="-0.610" y1="-15.546" x2="-0.610" y2="15.546"
+                      stroke="#888" stroke-width="0.01" stroke-linecap="square"/>
+                <line x1="0.610" y1="-15.546" x2="0.610" y2="15.546"
+                      stroke="#888" stroke-width="0.01" stroke-linecap="square"/>
+            </g>
+
+            <!-- Concentric circles at each end (House) -->
+            <!-- House at bottom end (y = -17.375m) -->
+            <!-- Fill rings from outer to inner -->
+            <!-- 12-foot ring: area between 12ft circle and 8ft circle - blue -->
+            <circle cx="0" cy="-17.375" r="1.829" fill="#80b3ff"/>
+            <!-- 8-foot ring: area between 8ft circle and 4ft circle - white -->
+            <circle cx="0" cy="-17.375" r="1.219" fill="#ffffff"/>
+            <!-- 4-foot ring: area between 4ft circle and button - red -->
+            <circle cx="0" cy="-17.375" r="0.610" fill="#ff8080"/>
+            <!-- Button area: background color -->
+            <circle cx="0" cy="-17.375" r="0.152" fill="#f0f8ff"/>
+            <!-- Circle outlines -->
+            <circle cx="0" cy="-17.375" r="1.829" fill="none" stroke="#333" stroke-width="0.013"/>
+            <circle cx="0" cy="-17.375" r="1.219" fill="none" stroke="#333" stroke-width="0.013"/>
+            <circle cx="0" cy="-17.375" r="0.610" fill="none" stroke="#333" stroke-width="0.013"/>
+            <circle cx="0" cy="-17.375" r="0.152" fill="none" stroke="#333" stroke-width="0.013"/>
+
+            <!-- House at top end (y = 17.375m) -->
+            <!-- Fill rings from outer to inner -->
+            <!-- 12-foot ring: area between 12ft circle and 8ft circle - blue -->
+            <circle cx="0" cy="17.375" r="1.829" fill="#80b3ff"/>
+            <!-- 8-foot ring: area between 8ft circle and 4ft circle - white -->
+            <circle cx="0" cy="17.375" r="1.219" fill="#ffffff"/>
+            <!-- 4-foot ring: area between 4ft circle and button - red -->
+            <circle cx="0" cy="17.375" r="0.610" fill="#ff8080"/>
+            <!-- Button area: background color -->
+            <circle cx="0" cy="17.375" r="0.152" fill="#f0f8ff"/>
+            <!-- Circle outlines -->
+            <circle cx="0" cy="17.375" r="1.829" fill="none" stroke="#333" stroke-width="0.013"/>
+            <circle cx="0" cy="17.375" r="1.219" fill="none" stroke="#333" stroke-width="0.013"/>
+            <circle cx="0" cy="17.375" r="0.610" fill="none" stroke="#333" stroke-width="0.013"/>
+            <circle cx="0" cy="17.375" r="0.152" fill="none" stroke="#333" stroke-width="0.013"/>
+
+            <!-- Centre holes (tees) - at intersection of tee line and centre line -->
+            <circle cx="0" cy="-17.375" r="0.02" fill="#333"/>
+            <circle cx="0" cy="17.375" r="0.02" fill="#333"/>
+
+            <!-- Centre line (black) - 13mm max width -->
+            <!-- Extends from -21.033m to +21.033m (3.658m beyond each tee line) -->
+            <!-- Drawn on top of house -->
+            <g id="centre-line">
+                <line x1="0" y1="-21.033" x2="0" y2="21.033"
+                      stroke="#000000" stroke-width="0.013" stroke-linecap="square"/>
+            </g>
+
+            <!-- Tee lines (black) - 13mm max width -->
+            <!-- Center is 17.375m from middle of sheet (at ±17.375m) -->
+            <!-- Drawn on top of house -->
+            <line x1="-2.375" y1="-17.375" x2="2.375" y2="-17.375"
+                  stroke="#000000" stroke-width="0.013" stroke-linecap="square"/>
+            <line x1="-2.375" y1="17.375" x2="2.375" y2="17.375"
+                  stroke="#000000" stroke-width="0.013" stroke-linecap="square"/>
+
+            <!-- Hacks (brown rectangles) -->
+            <!-- Inside edge of each hack is 76mm (0.076m) from midpoint of centre line -->
+            <!-- Width of each hack max 152mm (0.152m) -->
+            <!-- Material inside edge is on hack line, hack extends max 203mm (0.203m) in front -->
+            <!-- Hack line is at y = ±21.033m -->
+            <!-- Bottom hacks: hack line at y=-21.033, extends toward more negative y (in front) -->
+            <rect x="-0.228" y="-21.236" width="0.152" height="0.203"
+                  fill="#8B4513" stroke="#654321" stroke-width="0.005"/>
+            <rect x="0.076" y="-21.236" width="0.152" height="0.203"
+                  fill="#8B4513" stroke="#654321" stroke-width="0.005"/>
+            
+            <!-- Top hacks: hack line at y=21.033, extends toward more positive y (in front) -->
+            <rect x="-0.228" y="21.033" width="0.152" height="0.203"
+                  fill="#8B4513" stroke="#654321" stroke-width="0.005"/>
+            <rect x="0.076" y="21.033" width="0.152" height="0.203"
+                  fill="#8B4513" stroke="#654321" stroke-width="0.005"/>
+            
+            <!-- Layer for stones (on top of everything) -->
+            <g id="stones-layer"></g>
+            <!-- Layer for broom line (on top of stones) -->
+            <g id="broom-line-layer"></g>
+        </svg>
+
+    <div class="controls">
+        <h3>Line Visibility</h3>
+        <div class="control-item">
+            <input type="checkbox" id="toggle-centre-line" checked>
+            <label for="toggle-centre-line">Centre Line</label>
+        </div>
+        <div class="control-item">
+            <input type="checkbox" id="toggle-courtesy-lines" checked>
+            <label for="toggle-courtesy-lines">Courtesy Lines</label>
+        </div>
+        <div class="control-item">
+            <input type="checkbox" id="toggle-wheelchair-lines" checked>
+            <label for="toggle-wheelchair-lines">Wheelchair Lines</label>
+        </div>
+        <div class="control-item">
+            <input type="checkbox" id="toggle-four-foot-lines">
+            <label for="toggle-four-foot-lines">4-Foot Lines</label>
+        </div>
+        <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #ddd;">
+            <h3 style="margin: 0 0 10px 0; font-size: 14px; color: #333;">Broom Line</h3>
+            <div class="control-item">
+                <label for="broom-hack-select" style="margin-right: 8px;">Target Hack:</label>
+                <select id="broom-hack-select" style="padding: 4px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px;">
+                    <option value="right">Righty</option>
+                    <option value="left">Lefty</option>
+                </select>
+            </div>
+        </div>
+        <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #ddd;">
+            <h3 style="margin: 0 0 10px 0; font-size: 14px; color: #333;">Colors & Settings</h3>
+            <div class="control-item" style="margin-bottom: 10px;">
+                <label for="blue-ring-color" style="display: block; margin-bottom: 4px; font-size: 12px;">12-Foot Ring:</label>
+                <input type="color" id="blue-ring-color" value="#80b3ff" style="width: 100%; height: 32px; border: 1px solid #ddd; border-radius: 4px; cursor: pointer;">
+            </div>
+            <div class="control-item" style="margin-bottom: 10px;">
+                <label for="red-ring-color" style="display: block; margin-bottom: 4px; font-size: 12px;">4-Foot Ring:</label>
+                <input type="color" id="red-ring-color" value="#ff8080" style="width: 100%; height: 32px; border: 1px solid #ddd; border-radius: 4px; cursor: pointer;">
+            </div>
+            <div class="control-item" style="margin-bottom: 10px;">
+                <label for="yellow-stone-color" style="display: block; margin-bottom: 4px; font-size: 12px;">Yellow Stone:</label>
+                <input type="color" id="yellow-stone-color" value="#ffd700" style="width: 100%; height: 32px; border: 1px solid #ddd; border-radius: 4px; cursor: pointer;">
+            </div>
+            <div class="control-item" style="margin-bottom: 10px;">
+                <label for="red-stone-color" style="display: block; margin-bottom: 4px; font-size: 12px;">Red Stone:</label>
+                <input type="color" id="red-stone-color" value="#cc0000" style="width: 100%; height: 32px; border: 1px solid #ddd; border-radius: 4px; cursor: pointer;">
+            </div>
+            <div class="control-item" style="margin-bottom: 10px;">
+                <label for="stone-circumference" style="display: block; margin-bottom: 4px; font-size: 12px;">Stone Circumference (inches):</label>
+                <input type="number" id="stone-circumference" value="36" min="1" max="100" step="0.1" style="width: 100%; padding: 4px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px;">
+            </div>
+            <button id="reset-colors-button" style="width: 100%; padding: 6px; background: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; margin-top: 8px;" title="Reset colors and stone settings to defaults">
+                ↺ Reset Colors & Stone Settings
+            </button>
+        </div>
+        <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #ddd;">
+            <h3 style="margin: 0 0 10px 0; font-size: 14px; color: #333;">Reset</h3>
+            <button id="reset-viewport-button" style="width: 100%; padding: 8px; background: #ffc107; color: #333; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; margin-bottom: 8px;" title="Reset viewport (pan, zoom, rotation)">
+                ↺ Reset Viewport
+            </button>
+            <button id="reset-sheet-button" style="width: 100%; padding: 8px; background: #dc3545; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; margin-bottom: 8px;" title="Remove all stones and broom line">
+                ↻ Reset Sheet
+            </button>
+        </div>
+        <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #ddd;">
+            <h3 style="margin: 0 0 10px 0; font-size: 14px; color: #333;">Share</h3>
+            <button id="share-button" style="width: 100%; padding: 8px; background: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; margin-bottom: 8px;" title="Copy shareable link">
+                📋 Copy Share Link
+            </button>
+            <div id="share-feedback" style="font-size: 12px; color: #28a745; text-align: center; min-height: 16px;"></div>
+        </div>
+        <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #ddd;">
+            <div style="display: flex; gap: 8px; margin-bottom: 15px;">
+                <button id="rotate-cw-button" style="flex: 1; padding: 8px; background: #0066cc; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 18px; line-height: 1;" title="Rotate clockwise">
+                    ↻
+                </button>
+                <button id="rotate-ccw-button" style="flex: 1; padding: 8px; background: #0066cc; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 18px; line-height: 1;" title="Rotate counterclockwise">
+                    ↺
+                </button>
+            </div>
+            <div class="stone-templates">
+                <div>
+                    <div class="stone-template yellow" id="yellow-stone-template" data-color="yellow"></div>
+                    <div class="stone-template-label">Yellow</div>
+                </div>
+                <div>
+                    <div class="stone-template red" id="red-stone-template" data-color="red"></div>
+                    <div class="stone-template-label">Red</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        // Line visibility toggles
+        const centreLine = document.getElementById('centre-line');
+        const courtesyLines = document.getElementById('courtesy-lines');
+        const wheelchairLines = document.getElementById('wheelchair-lines');
+        const fourFootLines = document.getElementById('four-foot-lines');
+
+        const toggleCentreLine = document.getElementById('toggle-centre-line');
+        const toggleCourtesyLines = document.getElementById('toggle-courtesy-lines');
+        const toggleWheelchairLines = document.getElementById('toggle-wheelchair-lines');
+        const toggleFourFootLines = document.getElementById('toggle-four-foot-lines');
+
+        // Function to save line visibility to localStorage
+        function saveLineVisibilityToLocalStorage() {
+            const visibility = {
+                centreLine: toggleCentreLine.checked,
+                courtesyLines: toggleCourtesyLines.checked,
+                wheelchairLines: toggleWheelchairLines.checked,
+                fourFootLines: toggleFourFootLines.checked
+            };
+            localStorage.setItem('curlstrat_lineVisibility', JSON.stringify(visibility));
+        }
+
+        // Function to load line visibility from localStorage
+        function loadLineVisibilityFromLocalStorage() {
+            try {
+                const stored = localStorage.getItem('curlstrat_lineVisibility');
+                if (stored) {
+                    const visibility = JSON.parse(stored);
+                    toggleCentreLine.checked = visibility.centreLine !== false;
+                    centreLine.style.display = toggleCentreLine.checked ? 'block' : 'none';
+                    
+                    toggleCourtesyLines.checked = visibility.courtesyLines !== false;
+                    courtesyLines.style.display = toggleCourtesyLines.checked ? 'block' : 'none';
+                    
+                    toggleWheelchairLines.checked = visibility.wheelchairLines !== false;
+                    wheelchairLines.style.display = toggleWheelchairLines.checked ? 'block' : 'none';
+                    
+                    toggleFourFootLines.checked = visibility.fourFootLines === true;
+                    fourFootLines.style.display = toggleFourFootLines.checked ? 'block' : 'none';
+                }
+            } catch (e) {
+                console.error('Failed to load line visibility from localStorage:', e);
+            }
+        }
+
+        toggleCentreLine.addEventListener('change', (e) => {
+            centreLine.style.display = e.target.checked ? 'block' : 'none';
+            saveLineVisibilityToLocalStorage();
+        });
+
+        toggleCourtesyLines.addEventListener('change', (e) => {
+            courtesyLines.style.display = e.target.checked ? 'block' : 'none';
+            saveLineVisibilityToLocalStorage();
+        });
+
+        toggleWheelchairLines.addEventListener('change', (e) => {
+            wheelchairLines.style.display = e.target.checked ? 'block' : 'none';
+            saveLineVisibilityToLocalStorage();
+        });
+
+        toggleFourFootLines.addEventListener('change', (e) => {
+            fourFootLines.style.display = e.target.checked ? 'block' : 'none';
+            saveLineVisibilityToLocalStorage();
+        });
+
+        // Broom line hack selection
+        const broomHackSelect = document.getElementById('broom-hack-select');
+        broomHackSelect.addEventListener('change', (e) => {
+            broomHack = e.target.value;
+            renderBroomLine();
+        });
+
+        // Color and circumference settings
+        const blueRingColorInput = document.getElementById('blue-ring-color');
+        const redRingColorInput = document.getElementById('red-ring-color');
+        const yellowStoneColorInput = document.getElementById('yellow-stone-color');
+        const redStoneColorInput = document.getElementById('red-stone-color');
+        const stoneCircumferenceInput = document.getElementById('stone-circumference');
+
+        // Function to save colors and circumference to localStorage
+        function saveColorsToLocalStorage() {
+            const colorSettings = {
+                blueRing: blueRingColor,
+                redRing: redRingColor,
+                yellowStone: yellowStoneColor,
+                redStone: redStoneColor,
+                circumference: stoneCircumferenceInches
+            };
+            localStorage.setItem('curlstrat_colors', JSON.stringify(colorSettings));
+        }
+
+        // Function to load colors and circumference from localStorage
+        function loadColorsFromLocalStorage() {
+            try {
+                const stored = localStorage.getItem('curlstrat_colors');
+                if (stored) {
+                    const colorSettings = JSON.parse(stored);
+                    if (colorSettings.blueRing) blueRingColor = colorSettings.blueRing;
+                    if (colorSettings.redRing) redRingColor = colorSettings.redRing;
+                    if (colorSettings.yellowStone) yellowStoneColor = colorSettings.yellowStone;
+                    if (colorSettings.redStone) redStoneColor = colorSettings.redStone;
+                    if (colorSettings.circumference) stoneCircumferenceInches = colorSettings.circumference;
+                    
+                    // Update UI elements
+                    blueRingColorInput.value = blueRingColor;
+                    redRingColorInput.value = redRingColor;
+                    yellowStoneColorInput.value = yellowStoneColor;
+                    redStoneColorInput.value = redStoneColor;
+                    stoneCircumferenceInput.value = stoneCircumferenceInches;
+                    
+                    // Apply the colors
+                    updateHouseRingColors();
+                    if (yellowTemplate) yellowTemplate.style.background = yellowStoneColor;
+                    if (redTemplate) redTemplate.style.background = redStoneColor;
+                    renderStones();
+                }
+            } catch (e) {
+                console.error('Failed to load colors from localStorage:', e);
+            }
+        }
+
+        blueRingColorInput.addEventListener('change', (e) => {
+            blueRingColor = e.target.value;
+            updateHouseRingColors();
+            saveColorsToLocalStorage();
+        });
+
+        redRingColorInput.addEventListener('change', (e) => {
+            redRingColor = e.target.value;
+            updateHouseRingColors();
+            saveColorsToLocalStorage();
+        });
+
+        yellowStoneColorInput.addEventListener('change', (e) => {
+            yellowStoneColor = e.target.value;
+            // Update template color
+            yellowTemplate.style.background = yellowStoneColor;
+            renderStones(); // Re-render all stones with new color
+            saveColorsToLocalStorage();
+        });
+
+        redStoneColorInput.addEventListener('change', (e) => {
+            redStoneColor = e.target.value;
+            // Update template color
+            redTemplate.style.background = redStoneColor;
+            renderStones(); // Re-render all stones with new color
+            saveColorsToLocalStorage();
+        });
+
+        stoneCircumferenceInput.addEventListener('change', (e) => {
+            stoneCircumferenceInches = parseFloat(e.target.value) || 36;
+            renderStones(); // Re-render all stones with new size
+            saveColorsToLocalStorage();
+        });
+
+        // Function to update house ring colors
+        function updateHouseRingColors() {
+            // Update bottom house (y = -17.375)
+            const bottomBlueRing = svg.querySelector('circle[cy="-17.375"][r="1.829"]');
+            const bottomRedRing = svg.querySelector('circle[cy="-17.375"][r="0.610"]');
+            if (bottomBlueRing) bottomBlueRing.setAttribute('fill', blueRingColor);
+            if (bottomRedRing) bottomRedRing.setAttribute('fill', redRingColor);
+            
+            // Update top house (y = 17.375)
+            const topBlueRing = svg.querySelector('circle[cy="17.375"][r="1.829"]');
+            const topRedRing = svg.querySelector('circle[cy="17.375"][r="0.610"]');
+            if (topBlueRing) topBlueRing.setAttribute('fill', blueRingColor);
+            if (topRedRing) topRedRing.setAttribute('fill', redRingColor);
+        }
+
+        // Function to darken a color (for stroke)
+        function darkenColor(color, factor) {
+            // Remove # if present
+            color = color.replace('#', '');
+            const r = parseInt(color.substring(0, 2), 16);
+            const g = parseInt(color.substring(2, 4), 16);
+            const b = parseInt(color.substring(4, 6), 16);
+            const newR = Math.floor(r * factor);
+            const newG = Math.floor(g * factor);
+            const newB = Math.floor(b * factor);
+            return `#${newR.toString(16).padStart(2, '0')}${newG.toString(16).padStart(2, '0')}${newB.toString(16).padStart(2, '0')}`;
+        }
+
+        // Zoom and Pan functionality
+        const svg = document.getElementById('curling-sheet-svg');
+        const svgContent = svg.querySelector('defs').nextElementSibling?.parentElement || svg;
+
+        // View state - Default view: from back line to hog line (top end, will be rotated 180°)
+        // Back line: y = 19.204m, Hog line inside edge: y = 10.974m (top end)
+        // Adding padding for better view
+        // Showing top end so after 180° rotation, house appears at bottom
+        let viewBox = {
+            x: -3.0,        // Left edge with padding
+            y: 10.4,        // Top (hog line area with padding - note: positive y for top end)
+            width: 6.0,     // Width showing full sheet width with padding
+            height: 9.3     // Height from hog line to back line with padding
+        };
+
+        let isPanning = false;
+        let panStart = { x: 0, y: 0 }; // Screen coordinates
+        let panStartViewBox = { x: 0, y: 0 };
+        let currentRotation = 180; // Default: rotated 180° so house is at bottom
+        const minZoom = 0.05; // Allow zooming out to see entire sheet (45.72m length, 4.75m width)
+        const maxZoom = 20;
+        let currentZoom = 1;
+
+        // Stone drag and drop functionality - declare early so ALL handlers can access
+        // Curling stone: default circumference 36 inches = 0.9144 meters
+        // Radius = circumference / (2 * π)
+        let stoneCircumferenceInches = 36; // User-configurable
+        function getStoneRadius() {
+            const circumferenceMeters = (stoneCircumferenceInches * 2.54) / 100; // Convert inches to meters
+            return circumferenceMeters / (2 * Math.PI);
+        }
+
+        // Color settings - user-configurable
+        let blueRingColor = '#80b3ff';
+        let redRingColor = '#ff8080';
+        let yellowStoneColor = '#ffd700';
+        let redStoneColor = '#cc0000';
+        let stones = []; // Array to store all stones: { id, x, y, color }
+        let nextStoneId = 0;
+        let isDraggingStone = false;
+        let draggedStoneTemplate = null;
+        let draggedStone = null;
+        let dragStartPoint = null;
+        let isDraggingFromTemplate = false; // Track if dragging from template (not existing stone)
+        let previewStone = null; // Preview stone element during drag
+
+        // Broom line functionality
+        let broomLinePosition = null; // { x, y } in SVG coordinates (rotate-group space), or null if no broom line
+        let isDraggingBroomLine = false;
+        let broomHack = 'right'; // 'left' or 'right' from playing area perspective
+        let longPressTimer = null; // Timer for long press detection
+        let longPressStartPoint = null; // Starting point for long press
+        const LONG_PRESS_DURATION = 500; // Milliseconds to wait for long press
+        const LONG_PRESS_MOVE_THRESHOLD = 10; // Pixels - if moved more than this, cancel long press
+
+        // Update viewBox
+        function updateViewBox() {
+            svg.setAttribute('viewBox', `${viewBox.x} ${viewBox.y} ${viewBox.width} ${viewBox.height}`);
+        }
+
+        // Get point in SVG coordinates from screen coordinates
+        // Accounts for rotation transform on rotate-group
+        function screenToSVG(screenX, screenY) {
+            const rect = svg.getBoundingClientRect();
+            const point = svg.createSVGPoint();
+            point.x = screenX - rect.left;
+            point.y = screenY - rect.top;
+            
+            // Convert to SVG root coordinates first
+            const svgPoint = point.matrixTransform(svg.getScreenCTM().inverse());
+            
+            // Now we need to convert from SVG root coordinates to rotate-group coordinates
+            // The rotate-group has a rotation transform, so we need to apply the inverse rotation
+            // around the origin (0, 0)
+            const rotateGroup = document.getElementById('rotate-group');
+            if (rotateGroup) {
+                // Get the current rotation angle (in degrees)
+                const transform = rotateGroup.getAttribute('transform');
+                if (transform && transform.includes('rotate')) {
+                    // Extract rotation angle: "rotate(180 0 0)" -> 180
+                    const match = transform.match(/rotate\(([^)]+)\)/);
+                    if (match) {
+                        const parts = match[1].split(/\s+/);
+                        const angle = parseFloat(parts[0]);
+                        if (!isNaN(angle)) {
+                            // Apply inverse rotation (rotate back)
+                            const rad = -angle * Math.PI / 180;
+                            const cos = Math.cos(rad);
+                            const sin = Math.sin(rad);
+                            // Rotate point around origin (0, 0)
+                            const rotatedX = svgPoint.x * cos - svgPoint.y * sin;
+                            const rotatedY = svgPoint.x * sin + svgPoint.y * cos;
+                            return { x: rotatedX, y: rotatedY };
+                        }
+                    }
+                }
+            }
+            
+            // Fallback: return coordinates in SVG root space
+            return { x: svgPoint.x, y: svgPoint.y };
+        }
+
+        // Zoom at a specific point
+        function zoomAtPoint(zoomFactor, centerX, centerY) {
+            const newZoom = Math.max(minZoom, Math.min(maxZoom, currentZoom * zoomFactor));
+            const zoomChange = newZoom / currentZoom;
+            currentZoom = newZoom;
+
+            const viewBoxWidth = viewBox.width / zoomChange;
+            const viewBoxHeight = viewBox.height / zoomChange;
+            
+            viewBox.x = centerX - (centerX - viewBox.x) / zoomChange;
+            viewBox.y = centerY - (centerY - viewBox.y) / zoomChange;
+            viewBox.width = viewBoxWidth;
+            viewBox.height = viewBoxHeight;
+
+            updateViewBox();
+        }
+
+        // Mouse wheel zoom - zoom at mouse cursor position
+        svg.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            
+            // Convert screen coordinates to SVG root coordinates (for viewBox manipulation)
+            const rect = svg.getBoundingClientRect();
+            const point = svg.createSVGPoint();
+            point.x = e.clientX - rect.left;
+            point.y = e.clientY - rect.top;
+            const svgPoint = point.matrixTransform(svg.getScreenCTM().inverse());
+            
+            // Flipped: scroll down (positive deltaY) zooms out, scroll up (negative deltaY) zooms in
+            const zoomFactor = e.deltaY > 0 ? 0.9 : 1.1;
+            zoomAtPoint(zoomFactor, svgPoint.x, svgPoint.y);
+        });
+
+        // Touch pinch zoom
+        let lastTouchDistance = 0;
+        let pinchCenter = null;
+
+        svg.addEventListener('touchstart', (e) => {
+            if (e.touches.length === 2) {
+                e.preventDefault();
+                const touch1 = e.touches[0];
+                const touch2 = e.touches[1];
+                lastTouchDistance = Math.hypot(
+                    touch2.clientX - touch1.clientX,
+                    touch2.clientY - touch1.clientY
+                );
+                pinchCenter = screenToSVG(
+                    (touch1.clientX + touch2.clientX) / 2,
+                    (touch1.clientY + touch2.clientY) / 2
+                );
+            } else if (e.touches.length === 1) {
+                const touch = e.touches[0];
+                isPanning = true;
+                panStart = { x: touch.clientX, y: touch.clientY };
+                panStartViewBox = { x: viewBox.x, y: viewBox.y };
+            }
+        });
+
+        svg.addEventListener('touchmove', (e) => {
+            if (e.touches.length === 2) {
+                e.preventDefault();
+                const touch1 = e.touches[0];
+                const touch2 = e.touches[1];
+                const currentDistance = Math.hypot(
+                    touch2.clientX - touch1.clientX,
+                    touch2.clientY - touch1.clientY
+                );
+
+                if (lastTouchDistance > 0 && pinchCenter) {
+                    const zoomFactor = currentDistance / lastTouchDistance;
+                    zoomAtPoint(zoomFactor, pinchCenter.x, pinchCenter.y);
+                    lastTouchDistance = currentDistance;
+                }
+            } else if (e.touches.length === 1 && isPanning) {
+                e.preventDefault();
+                const touch = e.touches[0];
+                const deltaX = touch.clientX - panStart.x;
+                const deltaY = touch.clientY - panStart.y;
+                
+                // Convert screen pixel deltas directly using the inverse transform
+                const ctm = svg.getScreenCTM();
+                const invCTM = ctm ? ctm.inverse() : null;
+                
+                if (invCTM) {
+                    // Convert screen pixel delta to SVG coordinate delta
+                    const startPoint = svg.createSVGPoint();
+                    startPoint.x = 0;
+                    startPoint.y = 0;
+                    
+                    const endPoint = svg.createSVGPoint();
+                    endPoint.x = deltaX;
+                    endPoint.y = deltaY;
+                    
+                    // Transform both points
+                    const startTransformed = startPoint.matrixTransform(invCTM);
+                    const endTransformed = endPoint.matrixTransform(invCTM);
+                    
+                    // Calculate the delta in SVG space
+                    const svgDeltaX = endTransformed.x - startTransformed.x;
+                    const svgDeltaY = endTransformed.y - startTransformed.y;
+                    
+                    // Move viewBox opposite to drag direction for natural panning
+                    viewBox.x = panStartViewBox.x - svgDeltaX;
+                    viewBox.y = panStartViewBox.y - svgDeltaY;
+                    
+                    updateViewBox();
+                }
+            }
+        });
+
+        svg.addEventListener('touchend', (e) => {
+            if (e.touches.length < 2) {
+                lastTouchDistance = 0;
+                pinchCenter = null;
+            }
+            if (e.touches.length === 0) {
+                isPanning = false;
+            }
+        });
+
+        // Mouse pan (click and drag) - only if not dragging a stone
+        svg.addEventListener('mousedown', (e) => {
+            // Check if clicking on a stone - if so, let stone dragging handle it
+            const stoneElement = e.target.closest('[data-stone-id]');
+            if (stoneElement) {
+                return; // Stone dragging will handle this
+            }
+            
+            if (e.button === 0) { // Left mouse button
+                isPanning = true;
+                panStart = { x: e.clientX, y: e.clientY };
+                panStartViewBox = { x: viewBox.x, y: viewBox.y };
+                svg.style.cursor = 'grabbing';
+            }
+        });
+
+        svg.addEventListener('mousemove', (e) => {
+            // Don't pan if we're dragging a stone
+            if (isDraggingStone) {
+                return;
+            }
+            
+            if (isPanning) {
+                const deltaX = e.clientX - panStart.x;
+                const deltaY = e.clientY - panStart.y;
+                
+                // Convert screen pixel deltas directly using the inverse transform
+                // getScreenCTM() gives transform FROM SVG TO screen
+                // So we need the inverse to go FROM screen TO SVG
+                const ctm = svg.getScreenCTM();
+                const invCTM = ctm ? ctm.inverse() : null;
+                
+                if (invCTM) {
+                    // Convert screen pixel delta to SVG coordinate delta
+                    // Create SVG point objects for the transformation
+                    const startPoint = svg.createSVGPoint();
+                    startPoint.x = 0;
+                    startPoint.y = 0;
+                    
+                    const endPoint = svg.createSVGPoint();
+                    endPoint.x = deltaX;
+                    endPoint.y = deltaY;
+                    
+                    // Transform both points
+                    const startTransformed = startPoint.matrixTransform(invCTM);
+                    const endTransformed = endPoint.matrixTransform(invCTM);
+                    
+                    // Calculate the delta in SVG space
+                    const svgDeltaX = endTransformed.x - startTransformed.x;
+                    const svgDeltaY = endTransformed.y - startTransformed.y;
+                    
+                    // Move viewBox opposite to drag direction for natural panning
+                    viewBox.x = panStartViewBox.x - svgDeltaX;
+                    viewBox.y = panStartViewBox.y - svgDeltaY;
+                    
+                    updateViewBox();
+                }
+            }
+        });
+
+        svg.addEventListener('mouseup', () => {
+            isPanning = false;
+            svg.style.cursor = 'grab';
+        });
+
+        svg.addEventListener('mouseleave', (e) => {
+            // Only cancel panning if we're not dragging from template
+            if (!isDraggingFromTemplate) {
+                isPanning = false;
+                svg.style.cursor = 'default';
+            }
+            // Template drag cancellation is handled in the dedicated handler below
+        });
+
+        svg.style.cursor = 'grab';
+
+        // Rotation control
+        const rotateCwButton = document.getElementById('rotate-cw-button');
+        const rotateCcwButton = document.getElementById('rotate-ccw-button');
+        
+        // Initialize rotation group on page load
+        let rotateGroup = document.getElementById('rotate-group');
+        if (!rotateGroup) {
+            rotateGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+            rotateGroup.id = 'rotate-group';
+            
+            // Move all content except defs into the group
+            const defs = svg.querySelector('defs');
+            const childrenToMove = Array.from(svg.children);
+            childrenToMove.forEach(child => {
+                if (child !== defs && child !== rotateGroup && 
+                    child.tagName !== 'defs' && child.id !== 'rotate-group') {
+                    rotateGroup.appendChild(child);
+                }
+            });
+            svg.insertBefore(rotateGroup, defs.nextSibling);
+            
+            // Ensure stones layer is accessible (it should be inside rotate group now)
+            // Re-fetch it in case it was moved
+            let stonesLayerInGroup = document.getElementById('stones-layer');
+            if (!stonesLayerInGroup) {
+                stonesLayerInGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+                stonesLayerInGroup.id = 'stones-layer';
+                rotateGroup.appendChild(stonesLayerInGroup);
+            }
+            // Ensure stones layer is at the end (on top) of the rotate group
+            rotateGroup.appendChild(stonesLayerInGroup);
+        }
+        
+        // Function to reset view to playing area (back line to hog line)
+        // The playing area is always at the top end: y = 10.4 to 19.7, x = -3.0 to 3.0
+        // After rotation, we adjust viewBox to center on the same physical area
+        function resetToDefaultView() {
+            // Default playing area coordinates (top end: back line to hog line)
+            // This is the area we want to show at the default 180° rotation
+            const defaultX = -3.0;
+            const defaultY = 10.4;
+            const defaultWidth = 6.0;
+            const defaultHeight = 9.3;
+            
+            // Calculate the center of the playing area in SVG coordinates
+            const centerX = defaultX + defaultWidth / 2;  // 0
+            const centerY = defaultY + defaultHeight / 2; // ~15.05
+            
+            // We always want to show the same playing area (top end: back line to hog line)
+            // But the viewBox coordinates change based on rotation
+            // At 180°: we show top end (y=10.4 to 19.7) - house appears at bottom
+            // At 0°: we need to show bottom end (y=-19.7 to -10.4) so house appears at bottom after 0° rotation
+            // At 90°: we show left side
+            // At 270°: we show right side
+            
+            // Set viewBox to center on the rotated position
+            // For 90° and 270°, swap width/height since we're viewing sideways
+            // But keep the same vertical extent as the default view (showing playing area)
+            if (currentRotation === 90 || currentRotation === 270) {
+                viewBox.width = defaultHeight;  // 9.3 - vertical extent of playing area
+                viewBox.height = defaultWidth;   // 6.0 - width of sheet with padding
+            } else {
+                viewBox.width = defaultWidth;    // 6.0 - width of sheet with padding
+                viewBox.height = defaultHeight;  // 9.3 - vertical extent of playing area
+            }
+            
+            // Calculate viewBox position based on rotation
+            if (currentRotation === 0) {
+                // At 0°, show bottom end so house appears at bottom (mirror of 180°)
+                // Bottom end: back line at y=-19.204, hog line at y=-10.974
+                // We want the same view as 180°, so show from back line to hog line of bottom end
+                // Adding padding: back line -19.204, hog line -10.974, so center is ~-15.089
+                // We want height 9.3, so y should be -15.089 - 9.3/2 = -19.739, but we want to match the padding
+                // Top end: y=10.4 to 19.7 (height 9.3)
+                // Bottom end: y=-19.7 to -10.4 (height 9.3, mirrored)
+                viewBox.x = -defaultWidth / 2; // Center x
+                viewBox.y = -defaultY - defaultHeight; // Mirror of top end: -10.4 - 9.3 = -19.7
+            } else if (currentRotation === 180) {
+                // At 180°, show top end (default)
+                viewBox.x = defaultX;
+                viewBox.y = defaultY;
+            } else if (currentRotation === 90) {
+                // At 90°, the top end (positive y in original) appears on the right side (positive x)
+                // The playing area center (0, 15.05) rotates to (-15.05, 0) in SVG rotation math
+                // But SVG rotation is counter-clockwise, so at 90° the top end appears on the RIGHT
+                // Actually, let me reconsider: rotating content 90° CCW makes top end appear on LEFT
+                // So we want to center on the delivery area position to show the playing area?
+                // No wait - the delivery area center (0, -15.05) rotates to (15.05, 0)
+                // We want the PLAYING area, which centers at (-15.05, 0)
+                const angleRad = (currentRotation * Math.PI) / 180;
+                // Playing area center rotates to (-15.05, 0) - but this shows delivery area after rotation
+                // Delivery area center (0, -15.05) rotates to (15.05, 0) - this shows playing area after rotation
+                // So we need to use the INVERSE: show delivery area coordinates to see playing area
+                const deliveryCenterY = -centerY; // -15.05 (delivery area center)
+                const rotatedCenterX = centerX * Math.cos(angleRad) - deliveryCenterY * Math.sin(angleRad);
+                const rotatedCenterY = centerX * Math.sin(angleRad) + deliveryCenterY * Math.cos(angleRad);
+                
+                // At 90°, we're viewing sideways, so width/height are swapped
+                // Center on (15.05, 0) to show the playing area (which appears on the right after rotation)
+                viewBox.x = rotatedCenterX - viewBox.width / 2;
+                viewBox.y = rotatedCenterY - viewBox.height / 2;
+            } else if (currentRotation === 270) {
+                // At 270°, similar logic - use delivery area center to show playing area
+                const angleRad = (currentRotation * Math.PI) / 180;
+                const deliveryCenterY = -centerY; // -15.05 (delivery area center)
+                const rotatedCenterX = centerX * Math.cos(angleRad) - deliveryCenterY * Math.sin(angleRad);
+                const rotatedCenterY = centerX * Math.sin(angleRad) + deliveryCenterY * Math.cos(angleRad);
+                
+                // At 270°, center on (-15.05, 0) to show the playing area (which appears on the left after rotation)
+                viewBox.x = rotatedCenterX - viewBox.width / 2;
+                viewBox.y = rotatedCenterY - viewBox.height / 2;
+            }
+            
+            currentZoom = 1;
+            updateViewBox();
+        }
+        
+        // Apply initial rotation
+        rotateGroup.setAttribute('transform', 
+            `rotate(${currentRotation} 0 0)`
+        );
+        
+        // Clockwise rotation (rotate content clockwise in SVG space)
+        rotateCwButton.addEventListener('click', () => {
+            // Rotate 90 degrees clockwise from user's perspective
+            // Since SVG rotation is counter-clockwise, rotating content clockwise
+            // makes the view appear to rotate clockwise
+            // Subtract 90 degrees from the content rotation
+            currentRotation = (currentRotation - 90) % 360;
+            // Ensure positive rotation value
+            if (currentRotation < 0) {
+                currentRotation += 360;
+            }
+            
+            // Rotate around the center of the sheet (0, 0 in SVG coordinates)
+            rotateGroup.setAttribute('transform', 
+                `rotate(${currentRotation} 0 0)`
+            );
+            
+            // Reset zoom and pan to default view
+            resetToDefaultView();
+            
+            // Re-render stones after rotation to ensure they're visible
+            renderStones();
+            
+            // Re-render broom line after rotation
+            renderBroomLine();
+        });
+        
+        // Counterclockwise rotation (rotate content counter-clockwise in SVG space)
+        rotateCcwButton.addEventListener('click', () => {
+            // Rotate 90 degrees counter-clockwise from user's perspective
+            // Since SVG rotation is counter-clockwise, rotating content counter-clockwise
+            // makes the view appear to rotate counter-clockwise
+            // Add 90 degrees to the content rotation
+            currentRotation = (currentRotation + 90) % 360;
+            
+            // Rotate around the center of the sheet (0, 0 in SVG coordinates)
+            rotateGroup.setAttribute('transform', 
+                `rotate(${currentRotation} 0 0)`
+            );
+            
+            // Reset zoom and pan to default view
+            resetToDefaultView();
+            
+            // Re-render stones after rotation to ensure they're visible
+            renderStones();
+            
+            // Re-render broom line after rotation
+            renderBroomLine();
+        });
+
+        // Get stones layer - ensure it's inside rotate group
+        let stonesLayer = document.getElementById('stones-layer');
+        if (stonesLayer && stonesLayer.parentElement !== rotateGroup) {
+            // Move it into rotate group if it's not already there
+            rotateGroup.appendChild(stonesLayer);
+        } else if (!stonesLayer) {
+            // Create it if it doesn't exist
+            stonesLayer = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+            stonesLayer.id = 'stones-layer';
+            rotateGroup.appendChild(stonesLayer);
+        }
+        
+        // Get broom line layer - ensure it's inside rotate group (after stones layer)
+        const broomLineLayerForRotate = document.getElementById('broom-line-layer');
+        if (broomLineLayerForRotate && broomLineLayerForRotate.parentElement !== rotateGroup) {
+            rotateGroup.appendChild(broomLineLayerForRotate);
+        } else if (!broomLineLayerForRotate) {
+            // Create it if it doesn't exist
+            const newBroomLayer = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+            newBroomLayer.id = 'broom-line-layer';
+            rotateGroup.appendChild(newBroomLayer);
+        }
+        
+        // Helper to get fresh reference to stones layer
+        function getStonesLayer() {
+            const layer = document.getElementById('stones-layer');
+            // Ensure it's in the rotate group
+            if (layer && layer.parentElement !== rotateGroup) {
+                rotateGroup.appendChild(layer);
+            }
+            return layer;
+        }
+        
+        const yellowTemplate = document.getElementById('yellow-stone-template');
+        const redTemplate = document.getElementById('red-stone-template');
+        
+        // Initialize template colors
+        if (yellowTemplate) yellowTemplate.style.background = yellowStoneColor;
+        if (redTemplate) redTemplate.style.background = redStoneColor;
+        
+        // Initial render of any existing stones (should be empty on first load)
+        renderStones();
+
+        // Create a stone element
+        function createStoneElement(stone) {
+            const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            circle.setAttribute('cx', String(stone.x));
+            circle.setAttribute('cy', String(stone.y));
+            const radius = getStoneRadius();
+            circle.setAttribute('r', String(radius));
+            const stoneColor = stone.color === 'yellow' ? yellowStoneColor : redStoneColor;
+            const stoneStroke = stone.color === 'yellow' ? darkenColor(yellowStoneColor, 0.7) : darkenColor(redStoneColor, 0.7);
+            circle.setAttribute('fill', stoneColor);
+            circle.setAttribute('stroke', stoneStroke);
+            circle.setAttribute('stroke-width', '0.01');
+            circle.setAttribute('data-stone-id', String(stone.id));
+            circle.style.cursor = 'grab';
+            circle.style.pointerEvents = 'all';
+            circle.style.opacity = '1';
+            circle.style.visibility = 'visible';
+            circle.style.display = 'block';
+            return circle;
+        }
+
+        // Render all stones
+        function renderStones() {
+            const layer = getStonesLayer();
+            if (!layer) {
+                console.error('Stones layer not found');
+                return;
+            }
+            
+            // Ensure layer is visible and has proper parent
+            if (layer.parentElement !== rotateGroup) {
+                rotateGroup.appendChild(layer);
+            }
+            layer.style.display = '';
+            layer.style.visibility = 'visible';
+            
+            console.log('Rendering stones:', stones.length, 'stones');
+            console.log('Layer parent:', layer.parentElement?.id);
+            
+            // Clear existing stones
+            while (layer.firstChild) {
+                layer.removeChild(layer.firstChild);
+            }
+            
+            // Add all stones
+            stones.forEach(stone => {
+                const element = createStoneElement(stone);
+                layer.appendChild(element);
+                console.log('Added stone:', stone.id, 'at', stone.x, stone.y, 'color:', stone.color);
+                console.log('  Element in DOM:', element.isConnected);
+                console.log('  Element parent:', element.parentElement?.id);
+                console.log('  Element cx:', element.getAttribute('cx'), 'cy:', element.getAttribute('cy'));
+            });
+            
+            console.log('Stones layer children:', layer.children.length);
+            console.log('Layer in DOM:', layer.isConnected);
+            console.log('Layer transform:', layer.getAttribute('transform'));
+            
+            // Verify each stone is actually in the layer
+            for (let i = 0; i < layer.children.length; i++) {
+                const child = layer.children[i];
+                console.log(`  Child ${i}: tag=${child.tagName}, cx=${child.getAttribute('cx')}, cy=${child.getAttribute('cy')}, inDOM=${child.isConnected}`);
+            }
+        }
+
+        // Template mousedown - start dragging from template
+        yellowTemplate.addEventListener('mousedown', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            isDraggingFromTemplate = true;
+            draggedStoneTemplate = 'yellow';
+            svg.style.cursor = 'crosshair';
+        });
+
+        redTemplate.addEventListener('mousedown', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            isDraggingFromTemplate = true;
+            draggedStoneTemplate = 'red';
+            svg.style.cursor = 'crosshair';
+        });
+
+        // Stone dragging on the sheet
+        // Use event delegation on the SVG since stones layer might be inside rotate group
+        svg.addEventListener('mousedown', (e) => {
+            // Check if clicking on a stone
+            const stoneElement = e.target.closest('[data-stone-id]');
+            if (stoneElement) {
+                e.preventDefault();
+                e.stopPropagation(); // Prevent panning when dragging stone
+                cancelLongPress(); // Cancel any pending long press
+                isDraggingStone = true;
+                const stoneId = parseInt(stoneElement.getAttribute('data-stone-id'));
+                draggedStone = stones.find(s => s.id === stoneId);
+                
+                if (!draggedStone) {
+                    isDraggingStone = false;
+                    return;
+                }
+                
+                const point = screenToSVG(e.clientX, e.clientY);
+                dragStartPoint = { x: point.x - draggedStone.x, y: point.y - draggedStone.y };
+                
+                svg.style.cursor = 'grabbing';
+                return; // Don't process further - stone dragging takes priority
+            }
+        });
+
+        // Handle stone dragging - check if we're dragging a stone before panning
+        svg.addEventListener('mousemove', (e) => {
+            // Handle right-click drag to move broom line
+            if (isDraggingBroomLine && broomLinePosition && e.buttons === 2) {
+                e.preventDefault();
+                e.stopPropagation();
+                const point = screenToSVG(e.clientX, e.clientY);
+                
+                // Update broom line position
+                broomLinePosition.x = point.x;
+                broomLinePosition.y = point.y;
+                
+                renderBroomLine();
+                return; // Don't allow other handlers
+            }
+            
+            if (isDraggingStone && draggedStone) {
+                e.preventDefault();
+                e.stopPropagation();
+                const point = screenToSVG(e.clientX, e.clientY);
+                // For dragging, we need to track the delta in the rotated coordinate system
+                draggedStone.x = point.x - dragStartPoint.x;
+                draggedStone.y = point.y - dragStartPoint.y;
+                renderStones();
+                return; // Don't allow panning while dragging stone
+            }
+            
+            // Handle dragging from template - show preview
+            if (isDraggingFromTemplate && draggedStoneTemplate) {
+                e.preventDefault();
+                const point = screenToSVG(e.clientX, e.clientY);
+                
+                // Remove old preview if it exists
+                if (previewStone && previewStone.parentElement) {
+                    previewStone.parentElement.removeChild(previewStone);
+                }
+                
+                // Create preview stone
+                previewStone = createStoneElement({
+                    id: -1, // Temporary ID for preview
+                    x: point.x,
+                    y: point.y,
+                    color: draggedStoneTemplate
+                });
+                previewStone.style.opacity = '0.6'; // Semi-transparent preview
+                previewStone.style.pointerEvents = 'none';
+                
+                const layer = getStonesLayer();
+                if (layer) {
+                    layer.appendChild(previewStone);
+                }
+                return; // Don't allow panning while dragging from template
+            }
+        });
+
+        svg.addEventListener('mouseup', (e) => {
+            if (isDraggingStone && draggedStone) {
+                e.stopPropagation(); // Prevent panning when releasing stone
+                
+                // Check if stone is outside the sheet bounds (blue playing surface)
+                // Sheet boundaries: x from -2.375 to +2.375, y from -22.86 to +22.86
+                const SHEET_X_MIN = -2.375;
+                const SHEET_X_MAX = 2.375;
+                const SHEET_Y_MIN = -22.86;
+                const SHEET_Y_MAX = 22.86;
+                
+                const isOutsideSheet = (
+                    draggedStone.x < SHEET_X_MIN ||
+                    draggedStone.x > SHEET_X_MAX ||
+                    draggedStone.y < SHEET_Y_MIN ||
+                    draggedStone.y > SHEET_Y_MAX
+                );
+                
+                if (isOutsideSheet) {
+                    // Delete the stone
+                    const stoneIndex = stones.findIndex(s => s.id === draggedStone.id);
+                    if (stoneIndex !== -1) {
+                        stones.splice(stoneIndex, 1);
+                        renderStones();
+                    }
+                }
+                
+                isDraggingStone = false;
+                draggedStone = null;
+                dragStartPoint = null;
+                svg.style.cursor = 'grab';
+            }
+            
+            // Handle dropping from template
+            if (isDraggingFromTemplate && draggedStoneTemplate) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                const point = screenToSVG(e.clientX, e.clientY);
+                
+                // Remove preview stone
+                if (previewStone && previewStone.parentElement) {
+                    previewStone.parentElement.removeChild(previewStone);
+                }
+                previewStone = null;
+                
+                // Create the actual stone
+                const newStone = {
+                    id: nextStoneId++,
+                    x: point.x,
+                    y: point.y,
+                    color: draggedStoneTemplate
+                };
+                stones.push(newStone);
+                
+                // Render the new stone
+                renderStones();
+                
+                // Reset state
+                isDraggingFromTemplate = false;
+                draggedStoneTemplate = null;
+                svg.style.cursor = 'default';
+            }
+        });
+        
+        // Handle mouse leave - cancel template drag
+        svg.addEventListener('mouseleave', (e) => {
+            if (isDraggingFromTemplate) {
+                // Remove preview stone
+                if (previewStone && previewStone.parentElement) {
+                    previewStone.parentElement.removeChild(previewStone);
+                }
+                previewStone = null;
+                isDraggingFromTemplate = false;
+                draggedStoneTemplate = null;
+                svg.style.cursor = 'default';
+            }
+        });
+        
+        // Also handle mouseup outside SVG to cancel template drag or delete stones
+        document.addEventListener('mouseup', (e) => {
+            // Handle template drag cancellation
+            if (isDraggingFromTemplate && !svg.contains(e.target)) {
+                // Remove preview stone
+                if (previewStone && previewStone.parentElement) {
+                    previewStone.parentElement.removeChild(previewStone);
+                }
+                previewStone = null;
+                isDraggingFromTemplate = false;
+                draggedStoneTemplate = null;
+                svg.style.cursor = 'default';
+            }
+            
+            // Handle stone deletion when dragged outside sheet
+            if (isDraggingStone && draggedStone) {
+                // Check if stone is outside the sheet bounds (blue playing surface)
+                // Sheet boundaries: x from -2.375 to +2.375, y from -22.86 to +22.86
+                const SHEET_X_MIN = -2.375;
+                const SHEET_X_MAX = 2.375;
+                const SHEET_Y_MIN = -22.86;
+                const SHEET_Y_MAX = 22.86;
+                
+                const isOutsideSheet = (
+                    draggedStone.x < SHEET_X_MIN ||
+                    draggedStone.x > SHEET_X_MAX ||
+                    draggedStone.y < SHEET_Y_MIN ||
+                    draggedStone.y > SHEET_Y_MAX
+                );
+                
+                if (isOutsideSheet) {
+                    // Delete the stone
+                    const stoneIndex = stones.findIndex(s => s.id === draggedStone.id);
+                    if (stoneIndex !== -1) {
+                        stones.splice(stoneIndex, 1);
+                        renderStones();
+                    }
+                    
+                    isDraggingStone = false;
+                    draggedStone = null;
+                    dragStartPoint = null;
+                    svg.style.cursor = 'grab';
+                }
+            }
+        });
+
+        // Broom line functionality
+        const broomLineLayer = document.getElementById('broom-line-layer');
+        
+        // Get hack coordinates based on selected hack
+        // Hacks are at y = ±21.033, with left hack at x=-0.228 to -0.076, right hack at x=0.076 to 0.228
+        // Center of left hack: x = -0.152, center of right hack: x = 0.152
+        // Playing area is at top end (positive y: y=21.033)
+        // Delivery area is at bottom end (negative y: y=-21.033)
+        // When viewing from playing area, broom line should go to OPPOSITE end (delivery area)
+        function getHackCoordinates() {
+            // The default view shows the playing area (top end, houses at y=17.375, hacks at y=21.033)
+            // When placing a broom line, it should go to the OPPOSITE end - the delivery area
+            // Delivery area: bottom end, houses at y=-17.375, hacks at y=-21.033
+            //
+            // Playing area hacks: y = 21.033 (top end, positive y)
+            // Delivery area hacks: y = -21.033 (bottom end, negative y)
+            //
+            // Since we're placing broom line at playing area, we want delivery area hacks
+            // But wait - user says it's going to playing area hack when code uses y=-21.033
+            // Let me check: maybe we need to use y=21.033 instead? But that would be wrong...
+            //
+            // Actually, let me reconsider: The user says 'the line goes to the hack at the playing area'
+            // This suggests it's currently going to y=21.033 (playing area hacks)
+            // But our code uses y=-21.033 (delivery area hacks)
+            // So maybe the visual appearance is confusing, or the coordinates are inverted?
+            //
+            // Wait - I think I see it now. The user wants the line to go to the OPPOSITE end.
+            // If default view shows playing area, and broom line is placed there, it should go to delivery area.
+            // Delivery area hacks are at y=-21.033, which we're using. But user says it goes to playing area.
+            //
+            // Let me swap it and see: use playing area hacks (y=21.033) - but wait, that's wrong!
+            // Actually, maybe I need to check if the coordinate system is inverted somewhere?
+            
+            // FIX: User reports it goes to playing area hack, but we want delivery area hack
+            // If it's visually going to y=21.033 (playing area), maybe we need to ensure it goes to y=-21.033
+            // But we're already using y=-21.033... 
+            // 
+            // Maybe the issue is that it's ACTUALLY going to y=21.033 somehow?
+            // Let me double-check by explicitly using delivery area hacks
+            
+            // Playing area: houses at y=17.375, hacks at y=21.033 (top end, positive y)
+            // Delivery area: houses at y=-17.375, hacks at y=-21.033 (bottom end, negative y)
+            //
+            // User reports: using y=-21.033 makes line go to playing area hack (should go to delivery area)
+            // This suggests a coordinate inversion or transform issue.
+            // Since we want the OPPOSITE end from where we're placing the broom line:
+            // - If placing at playing area (y=17.375), we want delivery area hacks (y=-21.033)
+            // But that's not working visually, so let's try the opposite coordinate
+            // FIX: User reports y=-21.033 visually goes to playing area hack, but we want delivery area.
+            // To go to the opposite end, try using the opposite y coordinate.
+            // If y=-21.033 appears at playing area, try y=21.033 to make it appear at delivery area.
+            const hackY = 21.033; // Using playing area hack coordinate - visually should appear at delivery area after rotation
+            
+            // From playing area perspective (top end), looking toward delivery area:
+            //   Right hack = positive x direction = 0.152
+            //   Left hack = negative x direction = -0.152
+            // But user reports it's going to left hack when set to 'right', so mapping is inverted
+            const hackX = broomHack === 'right' ? -0.152 : 0.152;
+            
+            console.log('Broom line target: hack =', broomHack, ', coordinates = (', hackX.toFixed(3), hackY.toFixed(3), ')');
+            console.log('FIXED: Using y=21.033 to visually go to delivery area (opposite end)');
+            
+            return { x: hackX, y: hackY };
+        }
+
+        // Render broom line (diamond marker + dashed line to hack)
+        function renderBroomLine() {
+            // Clear existing broom line
+            while (broomLineLayer.firstChild) {
+                broomLineLayer.removeChild(broomLineLayer.firstChild);
+            }
+
+            if (!broomLinePosition) {
+                return; // No broom line to render
+            }
+
+            const hackCoords = getHackCoordinates();
+            // Make diamond smaller and oblong along sheet's long axis (y-axis, vertical)
+            const diamondWidth = 0.06;  // Horizontal size (narrower)
+            const diamondHeight = 0.09; // Vertical size (taller - along sheet's long axis)
+
+            // Create diamond marker - oriented vertically (taller than wide)
+            const diamond = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+            diamond.setAttribute('points', 
+                `${broomLinePosition.x},${broomLinePosition.y - diamondHeight} ` +
+                `${broomLinePosition.x + diamondWidth},${broomLinePosition.y} ` +
+                `${broomLinePosition.x},${broomLinePosition.y + diamondHeight} ` +
+                `${broomLinePosition.x - diamondWidth},${broomLinePosition.y}`
+            );
+            diamond.setAttribute('fill', '#ff6600');
+            diamond.setAttribute('stroke', '#cc4400');
+            diamond.setAttribute('stroke-width', '0.01');
+            diamond.style.cursor = 'grab';
+            broomLineLayer.appendChild(diamond);
+
+            // Create dashed line from diamond to hack
+            const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            line.setAttribute('x1', String(broomLinePosition.x));
+            line.setAttribute('y1', String(broomLinePosition.y));
+            line.setAttribute('x2', String(hackCoords.x));
+            line.setAttribute('y2', String(hackCoords.y));
+            line.setAttribute('stroke', '#ff6600');
+            line.setAttribute('stroke-width', '0.015');
+            line.setAttribute('stroke-dasharray', '0.05 0.05');
+            line.setAttribute('pointer-events', 'none');
+            broomLineLayer.appendChild(line);
+        }
+
+        // Function to place or start dragging broom line at a point
+        function placeBroomLine(screenX, screenY) {
+            const point = screenToSVG(screenX, screenY);
+            
+            // Check if clicking outside sheet bounds
+            const SHEET_X_MIN = -2.375;
+            const SHEET_X_MAX = 2.375;
+            const SHEET_Y_MIN = -22.86;
+            const SHEET_Y_MAX = 22.86;
+            
+            const isOutsideSheet = (
+                point.x < SHEET_X_MIN ||
+                point.x > SHEET_X_MAX ||
+                point.y < SHEET_Y_MIN ||
+                point.y > SHEET_Y_MAX
+            );
+            
+            if (isOutsideSheet) {
+                // Remove broom line
+                broomLinePosition = null;
+                renderBroomLine();
+                return;
+            }
+            
+            // Place or start dragging broom line
+            broomLinePosition = { x: point.x, y: point.y };
+            isDraggingBroomLine = true;
+            renderBroomLine();
+        }
+
+        // Function to cancel long press
+        function cancelLongPress() {
+            if (longPressTimer) {
+                clearTimeout(longPressTimer);
+                longPressTimer = null;
+            }
+            longPressStartPoint = null;
+        }
+
+        // Long press detection for touch (mobile)
+        svg.addEventListener('touchstart', (e) => {
+            // Only handle if not already interacting with stones or panning
+            if (isDraggingStone || isDraggingFromTemplate || isPanning) {
+                return;
+            }
+            
+            const touch = e.touches[0];
+            longPressStartPoint = { x: touch.clientX, y: touch.clientY };
+            
+            longPressTimer = setTimeout(() => {
+                // Long press detected - place broom line
+                placeBroomLine(touch.clientX, touch.clientY);
+                longPressTimer = null;
+            }, LONG_PRESS_DURATION);
+        });
+
+        svg.addEventListener('touchmove', (e) => {
+            if (!longPressTimer || !longPressStartPoint) {
+                return;
+            }
+            
+            const touch = e.touches[0];
+            const dx = touch.clientX - longPressStartPoint.x;
+            const dy = touch.clientY - longPressStartPoint.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            
+            // If moved too much, cancel long press
+            if (distance > LONG_PRESS_MOVE_THRESHOLD) {
+                cancelLongPress();
+            } else if (isDraggingBroomLine && broomLinePosition) {
+                // Update broom line position while dragging
+                const point = screenToSVG(touch.clientX, touch.clientY);
+                broomLinePosition.x = point.x;
+                broomLinePosition.y = point.y;
+                renderBroomLine();
+            }
+        });
+
+        svg.addEventListener('touchend', (e) => {
+            cancelLongPress();
+            
+            if (isDraggingBroomLine) {
+                isDraggingBroomLine = false;
+            }
+        });
+
+        svg.addEventListener('touchcancel', (e) => {
+            cancelLongPress();
+            
+            if (isDraggingBroomLine) {
+                isDraggingBroomLine = false;
+            }
+        });
+
+        // Long press detection for mouse (desktop fallback)
+        svg.addEventListener('mousedown', (e) => {
+            // Only handle left button (button 0) for long press, or right button (button 2) for immediate
+            // Don't interfere with stone dragging or template dragging
+            if (isDraggingStone || isDraggingFromTemplate || e.target.closest('[data-stone-id]')) {
+                return;
+            }
+            
+            if (e.button === 2) {
+                // Right-click: immediate placement (for desktop users who prefer right-click)
+                e.preventDefault();
+                placeBroomLine(e.clientX, e.clientY);
+                return;
+            }
+            
+            // Left button: start long press timer
+            if (e.button === 0) {
+                longPressStartPoint = { x: e.clientX, y: e.clientY };
+                
+                longPressTimer = setTimeout(() => {
+                    // Long press detected - place broom line
+                    placeBroomLine(e.clientX, e.clientY);
+                    longPressTimer = null;
+                }, LONG_PRESS_DURATION);
+            }
+        });
+
+        // Handle mouse move for broom line dragging (both left and right button)
+        svg.addEventListener('mousemove', (e) => {
+            // Cancel long press if moved too much
+            if (longPressTimer && longPressStartPoint) {
+                const dx = e.clientX - longPressStartPoint.x;
+                const dy = e.clientY - longPressStartPoint.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                
+                if (distance > LONG_PRESS_MOVE_THRESHOLD) {
+                    cancelLongPress();
+                }
+            }
+            
+            // Handle dragging broom line (right button or after long press)
+            if (isDraggingBroomLine && broomLinePosition && (e.buttons === 1 || e.buttons === 2)) {
+                e.preventDefault();
+                e.stopPropagation();
+                const point = screenToSVG(e.clientX, e.clientY);
+                
+                // Update broom line position
+                broomLinePosition.x = point.x;
+                broomLinePosition.y = point.y;
+                
+                renderBroomLine();
+            }
+        });
+
+        // Handle mouse up - cancel long press and stop dragging
+        svg.addEventListener('mouseup', (e) => {
+            cancelLongPress();
+            
+            if (isDraggingBroomLine && (e.button === 0 || e.button === 2)) {
+                isDraggingBroomLine = false;
+            }
+        });
+
+        // Also handle mouse up outside SVG
+        document.addEventListener('mouseup', (e) => {
+            cancelLongPress();
+            
+            if (isDraggingBroomLine && (e.button === 0 || e.button === 2)) {
+                isDraggingBroomLine = false;
+            }
+            
+            // Remove broom line if clicking outside SVG
+            if ((e.button === 0 || e.button === 2) && !svg.contains(e.target) && broomLinePosition) {
+                const rect = svg.getBoundingClientRect();
+                const isOutsideSVG = (
+                    e.clientX < rect.left ||
+                    e.clientX > rect.right ||
+                    e.clientY < rect.top ||
+                    e.clientY > rect.bottom
+                );
+                
+                if (isOutsideSVG) {
+                    broomLinePosition = null;
+                    renderBroomLine();
+                }
+            }
+        });
+
+        // Prevent context menu when right-clicking on SVG (for broom line functionality)
+        svg.addEventListener('contextmenu', (e) => {
+            // Always prevent context menu on SVG - we use right-click for broom line
+            e.preventDefault();
+        });
+
+        // Ensure broom line layer is in rotate group (will be set up during rotation group initialization)
+
+        // Share functionality - serialize and deserialize board state
+        function serializeBoardState() {
+            const state = {
+                stones: stones.map(stone => ({
+                    x: stone.x,
+                    y: stone.y,
+                    color: stone.color
+                })),
+                broomLine: broomLinePosition ? {
+                    x: broomLinePosition.x,
+                    y: broomLinePosition.y
+                } : null,
+                lineVisibility: {
+                    centreLine: toggleCentreLine.checked,
+                    courtesyLines: toggleCourtesyLines.checked,
+                    wheelchairLines: toggleWheelchairLines.checked,
+                    fourFootLines: toggleFourFootLines.checked
+                },
+                targetHack: broomHack,
+                colors: {
+                    blueRing: blueRingColor,
+                    redRing: redRingColor,
+                    yellowStone: yellowStoneColor,
+                    redStone: redStoneColor
+                },
+                stoneCircumference: stoneCircumferenceInches
+            };
+            
+            // Encode as base64 URL-safe string
+            const json = JSON.stringify(state);
+            return btoa(unescape(encodeURIComponent(json))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+        }
+
+        function deserializeBoardState(encodedState) {
+            try {
+                // Decode base64 URL-safe string
+                let base64 = encodedState.replace(/-/g, '+').replace(/_/g, '/');
+                // Add padding if needed
+                while (base64.length % 4) {
+                    base64 += '=';
+                }
+                const json = decodeURIComponent(escape(atob(base64)));
+                const state = JSON.parse(json);
+                
+                // Restore stones
+                stones = state.stones.map((stone, index) => ({
+                    id: index,
+                    x: stone.x,
+                    y: stone.y,
+                    color: stone.color
+                }));
+                nextStoneId = stones.length;
+                renderStones();
+                
+                // Restore broom line
+                broomLinePosition = state.broomLine;
+                if (broomLinePosition) {
+                    renderBroomLine();
+                }
+                
+                // Restore line visibility
+                if (state.lineVisibility) {
+                    toggleCentreLine.checked = state.lineVisibility.centreLine !== false;
+                    centreLine.style.display = toggleCentreLine.checked ? 'block' : 'none';
+                    
+                    toggleCourtesyLines.checked = state.lineVisibility.courtesyLines !== false;
+                    courtesyLines.style.display = toggleCourtesyLines.checked ? 'block' : 'none';
+                    
+                    toggleWheelchairLines.checked = state.lineVisibility.wheelchairLines !== false;
+                    wheelchairLines.style.display = toggleWheelchairLines.checked ? 'block' : 'none';
+                    
+                    toggleFourFootLines.checked = state.lineVisibility.fourFootLines === true;
+                    fourFootLines.style.display = toggleFourFootLines.checked ? 'block' : 'none';
+                }
+                
+                // Restore target hack
+                if (state.targetHack) {
+                    broomHack = state.targetHack;
+                    broomHackSelect.value = broomHack;
+                    renderBroomLine();
+                }
+                
+                // Restore colors and circumference
+                if (state.colors) {
+                    blueRingColor = state.colors.blueRing || blueRingColor;
+                    redRingColor = state.colors.redRing || redRingColor;
+                    yellowStoneColor = state.colors.yellowStone || yellowStoneColor;
+                    redStoneColor = state.colors.redStone || redStoneColor;
+                    
+                    blueRingColorInput.value = blueRingColor;
+                    redRingColorInput.value = redRingColor;
+                    yellowStoneColorInput.value = yellowStoneColor;
+                    redStoneColorInput.value = redStoneColor;
+                    
+                    updateHouseRingColors();
+                    if (yellowTemplate) yellowTemplate.style.background = yellowStoneColor;
+                    if (redTemplate) redTemplate.style.background = redStoneColor;
+                }
+                
+                if (state.stoneCircumference !== undefined) {
+                    stoneCircumferenceInches = state.stoneCircumference;
+                    stoneCircumferenceInput.value = stoneCircumferenceInches;
+                }
+                
+                // Re-render stones with restored colors/sizes
+                renderStones();
+                
+                // Save restored colors to localStorage (so they persist)
+                saveColorsToLocalStorage();
+                
+                return true;
+            } catch (e) {
+                console.error('Failed to deserialize board state:', e);
+                return false;
+            }
+        }
+
+        function generateShareLink() {
+            const stateString = serializeBoardState();
+            const url = new URL(window.location.href);
+            url.searchParams.set('state', stateString);
+            return url.toString();
+        }
+
+        function copyShareLink() {
+            const link = generateShareLink();
+            
+            // Try modern clipboard API first
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(link).then(() => {
+                    showShareFeedback('✓ Link copied!');
+                }).catch(err => {
+                    console.error('Failed to copy:', err);
+                    fallbackCopyToClipboard(link);
+                });
+            } else {
+                fallbackCopyToClipboard(link);
+            }
+        }
+
+        function fallbackCopyToClipboard(text) {
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            textArea.style.position = 'fixed';
+            textArea.style.left = '-999999px';
+            document.body.appendChild(textArea);
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                showShareFeedback('✓ Link copied!');
+            } catch (err) {
+                console.error('Fallback copy failed:', err);
+                showShareFeedback('✗ Copy failed - link: ' + text.substring(0, 50) + '...');
+            }
+            document.body.removeChild(textArea);
+        }
+
+        function showShareFeedback(message) {
+            const feedback = document.getElementById('share-feedback');
+            feedback.textContent = message;
+            setTimeout(() => {
+                feedback.textContent = '';
+            }, 3000);
+        }
+
+        // Share button
+        const shareButton = document.getElementById('share-button');
+        shareButton.addEventListener('click', copyShareLink);
+
+        // Restore state from URL on page load
+        function restoreStateFromURL() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const stateParam = urlParams.get('state');
+            if (stateParam) {
+                // Wait a moment to ensure all elements are fully initialized
+                setTimeout(() => {
+                    deserializeBoardState(stateParam);
+                }, 100);
+            }
+        }
+
+        // Load colors from localStorage on page load (before URL state restoration)
+        // This ensures localStorage colors are available, but URL state can override them
+        loadColorsFromLocalStorage();
+
+        // Restore state when page loads (after DOM is ready)
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', restoreStateFromURL);
+        } else {
+            // DOM is already ready
+            restoreStateFromURL();
+        }
+
+        // Reset viewport function (reset pan, zoom, rotation only)
+        function resetViewport() {
+            // Reset to default view (playing area, 180° rotation)
+            currentRotation = 180;
+            rotateGroup.setAttribute('transform', `rotate(${currentRotation} 0 0)`);
+            resetToDefaultView();
+        }
+
+        // Reset sheet function (remove stones and broom line only)
+        function resetSheet() {
+            // Clear all stones
+            stones = [];
+            nextStoneId = 0;
+            renderStones();
+            
+            // Remove broom line
+            broomLinePosition = null;
+            renderBroomLine();
+            
+            // Note: Does NOT reset viewport, line visibility, target hack, colors, or circumference
+            // These settings persist via localStorage
+            
+            // Clear URL state parameter
+            const url = new URL(window.location.href);
+            url.searchParams.delete('state');
+            window.history.replaceState({}, '', url.toString());
+        }
+
+        // Reset button event listeners
+        const resetViewportButton = document.getElementById('reset-viewport-button');
+        resetViewportButton.addEventListener('click', resetViewport);
+
+        const resetSheetButton = document.getElementById('reset-sheet-button');
+        resetSheetButton.addEventListener('click', resetSheet);
+
+        // Reset colors and stone settings button
+        const resetColorsButton = document.getElementById('reset-colors-button');
+        resetColorsButton.addEventListener('click', () => {
+            if (confirm('Reset colors and stone circumference to defaults? This cannot be undone.')) {
+                // Reset to defaults
+                blueRingColor = '#80b3ff';
+                redRingColor = '#ff8080';
+                yellowStoneColor = '#ffd700';
+                redStoneColor = '#cc0000';
+                stoneCircumferenceInches = 36;
+                
+                // Update UI
+                blueRingColorInput.value = blueRingColor;
+                redRingColorInput.value = redRingColor;
+                yellowStoneColorInput.value = yellowStoneColor;
+                redStoneColorInput.value = redStoneColor;
+                stoneCircumferenceInput.value = stoneCircumferenceInches;
+                
+                // Apply changes
+                updateHouseRingColors();
+                if (yellowTemplate) yellowTemplate.style.background = yellowStoneColor;
+                if (redTemplate) redTemplate.style.background = redStoneColor;
+                renderStones();
+                
+                // Save to localStorage
+                saveColorsToLocalStorage();
+            }
+        });
+
+        // Load colors and line visibility from localStorage on page load
+        loadColorsFromLocalStorage();
+        loadLineVisibilityFromLocalStorage();
+    </script>
+</body>
+</html>

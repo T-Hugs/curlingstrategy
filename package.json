@@ -1,0 +1,25 @@
+{
+  "name": "curlstrat",
+  "version": "1.0.0",
+  "description": "Virtual curling strategy board",
+  "type": "module",
+  "main": "dist/server.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "dev": "tsx watch server.ts"
+  },
+  "keywords": ["curling", "strategy"],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.10.6",
+    "tsx": "^4.7.1",
+    "typescript": "^5.3.3"
+  }
+}
