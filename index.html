@@ -59,10 +59,6 @@
             margin-bottom: 0;
         }
 
-        .settings-section-highlight {
-            background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
-        }
-
         .settings-header {
             margin: 0 0 12px 0;
             font-size: 13px;
@@ -483,59 +479,41 @@
                 </pattern>
             </defs>
 
-            <!-- Sheet boundary (light blue ice) -->
-            <!-- Length: 45.72m (from -22.86 to +22.86), Width: 4.75m (from -2.375 to +2.375) -->
+            <!-- Sheet boundary -->
             <rect x="-2.375" y="-22.86" width="4.75" height="45.72"
                   fill="#f0f8ff" stroke="#333" stroke-width="0.02" id="sheet-background"/>
 
-            <!-- Back lines (black) - 13mm max width -->
-            <!-- Outside edge is 1.829m from center of tee line -->
-            <!-- Bottom: -17.375 - 1.829 = -19.204m, Top: 17.375 + 1.829 = 19.204m -->
+            <!-- Back lines -->
             <line x1="-2.375" y1="-19.204" x2="2.375" y2="-19.204"
                   stroke="#000000" stroke-width="0.013" stroke-linecap="square"/>
             <line x1="-2.375" y1="19.204" x2="2.375" y2="19.204"
                   stroke="#000000" stroke-width="0.013" stroke-linecap="square"/>
 
-            <!-- Hog lines (yellow) - 102mm (0.102m) width -->
-            <!-- Inside edge is 6.401m from center of tee line -->
-            <!-- Bottom: -17.375 + 6.401 = -10.974m, Top: 17.375 - 6.401 = 10.974m -->
-            <!-- Represented as a filled rectangle to show proper width -->
+            <!-- Hog lines -->
             <rect x="-2.375" y="-10.974" width="4.75" height="0.102"
                   fill="#ffcc00" stroke="#cc9900" stroke-width="0.005"/>
             <rect x="-2.375" y="10.872" width="4.75" height="0.102"
                   fill="#ffcc00" stroke="#cc9900" stroke-width="0.005"/>
 
-            <!-- Wheelchair lines (thin wool lines) - 457mm (0.457m) from center line -->
-            <!-- Extend from hog line all the way to the tee line (y = ±17.375) -->
-            <!-- The house circles will cover the portion that extends into the house -->
-            <!-- Bottom end: from y=-10.974 (hog line) to y=-17.375 (tee line) -->
-            <!-- Top end: from y=10.974 (hog line) to y=17.375 (tee line) -->
-            <!-- Left side: outside edge at x=-0.457m -->
+            <!-- Wheelchair lines -->
             <g id="wheelchair-lines">
                 <line x1="-0.457" y1="-10.974" x2="-0.457" y2="-17.375"
                       stroke="#666" stroke-width="0.003" stroke-linecap="square"/>
-                <!-- Right side: outside edge at x=0.457m -->
                 <line x1="0.457" y1="-10.974" x2="0.457" y2="-17.375"
                       stroke="#666" stroke-width="0.003" stroke-linecap="square"/>
-                <!-- Top end - left side -->
                 <line x1="-0.457" y1="10.974" x2="-0.457" y2="17.375"
                       stroke="#666" stroke-width="0.003" stroke-linecap="square"/>
-                <!-- Top end - right side -->
                 <line x1="0.457" y1="10.974" x2="0.457" y2="17.375"
                       stroke="#666" stroke-width="0.003" stroke-linecap="square"/>
             </g>
 
-            <!-- Hack lines (green) - 457mm (0.457m) length, 13mm max width -->
-            <!-- Parallel to tee line, at each end of center line (at ±21.033m) -->
+            <!-- Hack lines -->
             <line x1="-0.2285" y1="-21.033" x2="0.2285" y2="-21.033"
                   stroke="#009900" stroke-width="0.013" stroke-linecap="square"/>
             <line x1="-0.2285" y1="21.033" x2="0.2285" y2="21.033"
                   stroke="#009900" stroke-width="0.013" stroke-linecap="square"/>
 
-            <!-- Courtesy lines (purple) - 152mm (0.152m) length, 13mm max width -->
-            <!-- 1.219m outside and parallel to hog lines, on each side (closer to center) -->
-            <!-- Bottom: -10.974 + 1.219 = -9.755m, Top: 10.974 - 1.219 = 9.755m -->
-            <!-- Left side: from x=-2.375 to x=-2.223, Right side: from x=2.223 to x=2.375 -->
+            <!-- Courtesy lines -->
             <g id="courtesy-lines">
                 <line x1="-2.375" y1="-9.755" x2="-2.223" y2="-9.755"
                       stroke="#990099" stroke-width="0.013" stroke-linecap="square"/>
@@ -547,9 +525,7 @@
                       stroke="#990099" stroke-width="0.013" stroke-linecap="square"/>
             </g>
 
-            <!-- 4-foot lines - 2 feet (0.610m) from center line, parallel to center line -->
-            <!-- Extend all the way to the house (to the tee line center at y=±17.375) -->
-            <!-- Left line at x=-0.610m, Right line at x=0.610m -->
+            <!-- 4-foot lines -->
             <g id="four-foot-lines" style="display: none;">
                 <line x1="-0.610" y1="-17.375" x2="-0.610" y2="17.375"
                       stroke="#888" stroke-width="0.01" stroke-linecap="square"/>
@@ -557,133 +533,74 @@
                       stroke="#888" stroke-width="0.01" stroke-linecap="square"/>
             </g>
 
-            <!-- Concentric circles at each end (House) -->
-            <!-- House at bottom end (y = -17.375m) -->
-            <!-- Fill rings from outer to inner -->
-            <!-- 12-foot ring: area between 12ft circle and 8ft circle - blue -->
+            <!-- House circles (bottom end: y = -17.375m) -->
             <circle cx="0" cy="-17.375" r="1.829" fill="#80b3ff"/>
-            <!-- 8-foot ring: area between 8ft circle and 4ft circle - white -->
             <circle cx="0" cy="-17.375" r="1.219" fill="#ffffff" data-eight-foot-ring="true"/>
-            <!-- 4-foot ring: area between 4ft circle and button - red -->
             <circle cx="0" cy="-17.375" r="0.610" fill="#ff8080"/>
-            <!-- Button area: background color -->
             <circle cx="0" cy="-17.375" r="0.152" fill="#f0f8ff" data-button-fill="true"/>
-            <!-- Circle outlines -->
-            <!-- Adjust radius so stroke completely overlaps back line at tangent point -->
-            <!-- Back line path is at r=1.829, stroke extends from r=1.816 to r=1.842 (both sides) -->
-            <!-- To fully cover back line stroke, circle path should be at r=1.829 -->
-            <!-- This gives circle stroke from r=1.816 to r=1.842, fully covering back line stroke -->
+            <!-- Circle stroke radius set to fully overlap back line at tangent point -->
             <circle cx="0" cy="-17.375" r="1.829" fill="none" stroke="#333" stroke-width="0.013"/>
             <circle cx="0" cy="-17.375" r="1.2125" fill="none" stroke="#333" stroke-width="0.013"/>
             <circle cx="0" cy="-17.375" r="0.6035" fill="none" stroke="#333" stroke-width="0.013"/>
             <circle cx="0" cy="-17.375" r="0.1455" fill="none" stroke="#333" stroke-width="0.013" data-button-outline="true"/>
 
-            <!-- House at top end (y = 17.375m) -->
-            <!-- Fill rings from outer to inner -->
-            <!-- 12-foot ring: area between 12ft circle and 8ft circle - blue -->
+            <!-- House circles (top end: y = 17.375m) -->
             <circle cx="0" cy="17.375" r="1.829" fill="#80b3ff"/>
-            <!-- 8-foot ring: area between 8ft circle and 4ft circle - white -->
             <circle cx="0" cy="17.375" r="1.219" fill="#ffffff" data-eight-foot-ring="true"/>
-            <!-- 4-foot ring: area between 4ft circle and button - red -->
             <circle cx="0" cy="17.375" r="0.610" fill="#ff8080"/>
-            <!-- Button area: background color -->
             <circle cx="0" cy="17.375" r="0.152" fill="#f0f8ff" data-button-fill="true"/>
-            <!-- Circle outlines -->
-            <!-- Adjust radius so stroke completely overlaps back line at tangent point -->
-            <!-- Back line path is at r=1.829, stroke extends from r=1.816 to r=1.842 (both sides) -->
-            <!-- To fully cover back line stroke, circle path should be at r=1.829 -->
-            <!-- This gives circle stroke from r=1.816 to r=1.842, fully covering back line stroke -->
             <circle cx="0" cy="17.375" r="1.829" fill="none" stroke="#333" stroke-width="0.013"/>
             <circle cx="0" cy="17.375" r="1.2125" fill="none" stroke="#333" stroke-width="0.013"/>
             <circle cx="0" cy="17.375" r="0.6035" fill="none" stroke="#333" stroke-width="0.013"/>
             <circle cx="0" cy="17.375" r="0.1455" fill="none" stroke="#333" stroke-width="0.013" data-button-outline="true"/>
 
-            <!-- Center holes (tees) - at intersection of tee line and center line -->
+            <!-- Center holes (tees) -->
             <circle cx="0" cy="-17.375" r="0.02" fill="#333"/>
             <circle cx="0" cy="17.375" r="0.02" fill="#333"/>
 
-            <!-- Center line (black) - 13mm max width -->
-            <!-- Extends from -21.033m to +21.033m (3.658m beyond each tee line) -->
-            <!-- Drawn on top of house -->
+            <!-- Center line -->
             <g id="center-line">
                 <line x1="0" y1="-21.033" x2="0" y2="21.033"
                       stroke="#000000" stroke-width="0.013" stroke-linecap="square"/>
             </g>
 
-            <!-- Tee lines (black) - 13mm max width -->
-            <!-- Center is 17.375m from middle of sheet (at ±17.375m) -->
-            <!-- Drawn on top of house -->
+            <!-- Tee lines -->
             <line x1="-2.375" y1="-17.375" x2="2.375" y2="-17.375"
                   stroke="#000000" stroke-width="0.013" stroke-linecap="square"/>
             <line x1="-2.375" y1="17.375" x2="2.375" y2="17.375"
                   stroke="#000000" stroke-width="0.013" stroke-linecap="square"/>
 
-            <!-- Mixed Doubles Markers -->
-            <!-- 9 markers on each side (18 total) -->
-            <!-- First 3 on each side are on center line at 4'6", 7'6", and 10'6" from outer ring -->
-            <!-- Markers are between the hog line and the house -->
-            <!-- Reference point: Where center line intersects the outer ring of the house (12-foot circle) closest to the hog line -->
-            <!-- House center: bottom at y=-17.375, top at y=17.375 -->
-            <!-- Outer ring radius: 1.829m (12-foot circle) -->
-            <!-- Outer ring edge closest to hog line: -->
-            <!--   Bottom house: -17.375 + 1.829 = -15.546m (hog line is at -10.974, more positive) -->
-            <!--   Top house: 17.375 - 1.829 = 15.546m (hog line is at 10.974, more negative) -->
-            <!-- Distances from this reference point going toward the hog line: -->
-            <!--   4'6" = 1.372m, 7'6" = 2.286m, 10'6" = 3.200m -->
-            <!-- Bottom house markers: -15.546 + distances = -14.174, -13.260, -12.346 -->
-            <!-- Top house markers: 15.546 - distances = 14.174, 13.260, 12.346 -->
+            <!-- Mixed Doubles Markers (9 per side) -->
             <g id="mixed-doubles-markers" style="display: none;">
-                <!-- Bottom house markers (negative y) -->
-                <!-- Center line markers: measured from outer ring edge closest to hog line (-15.546) toward hog line -->
+                <!-- Bottom house (center line markers) -->
                 <circle cx="0" cy="-14.174" r="0.02" fill="#cc0000" stroke="none"/>
                 <circle cx="0" cy="-13.260" r="0.02" fill="#cc0000" stroke="none"/>
                 <circle cx="0" cy="-12.346" r="0.02" fill="#cc0000" stroke="none"/>
-                
-                <!-- Off-center markers for bottom house -->
-                <!-- From 4'6" marker (-14.174): 3'7" = 1.092m from center line -->
+                <!-- Bottom house (off-center markers) -->
                 <circle cx="-1.092" cy="-14.174" r="0.02" fill="#cc0000" stroke="none"/>
                 <circle cx="1.092" cy="-14.174" r="0.02" fill="#cc0000" stroke="none"/>
-                
-                <!-- From 7'6" marker (-13.260): 3'6" = 1.067m from center line -->
                 <circle cx="-1.067" cy="-13.260" r="0.02" fill="#cc0000" stroke="none"/>
                 <circle cx="1.067" cy="-13.260" r="0.02" fill="#cc0000" stroke="none"/>
-                
-                <!-- From 10'6" marker (-12.346): 3'5" = 1.041m from center line -->
                 <circle cx="-1.041" cy="-12.346" r="0.02" fill="#cc0000" stroke="none"/>
                 <circle cx="1.041" cy="-12.346" r="0.02" fill="#cc0000" stroke="none"/>
-                
-                <!-- Top house markers (positive y) - mirrored -->
-                <!-- Center line markers: measured from outer ring edge closest to hog line (15.546) toward hog line -->
+                <!-- Top house (center line markers) -->
                 <circle cx="0" cy="14.174" r="0.02" fill="#cc0000" stroke="none"/>
                 <circle cx="0" cy="13.260" r="0.02" fill="#cc0000" stroke="none"/>
                 <circle cx="0" cy="12.346" r="0.02" fill="#cc0000" stroke="none"/>
-                
-                <!-- Off-center markers for top house -->
-                <!-- From 4'6" marker (14.174): 3'7" = 1.092m from center line -->
+                <!-- Top house (off-center markers) -->
                 <circle cx="-1.092" cy="14.174" r="0.02" fill="#cc0000" stroke="none"/>
                 <circle cx="1.092" cy="14.174" r="0.02" fill="#cc0000" stroke="none"/>
-                
-                <!-- From 7'6" marker (13.260): 3'6" = 1.067m from center line -->
                 <circle cx="-1.067" cy="13.260" r="0.02" fill="#cc0000" stroke="none"/>
                 <circle cx="1.067" cy="13.260" r="0.02" fill="#cc0000" stroke="none"/>
-                
-                <!-- From 10'6" marker (12.346): 3'5" = 1.041m from center line -->
                 <circle cx="-1.041" cy="12.346" r="0.02" fill="#cc0000" stroke="none"/>
                 <circle cx="1.041" cy="12.346" r="0.02" fill="#cc0000" stroke="none"/>
             </g>
 
-            <!-- Hacks (brown rectangles) -->
-            <!-- Inside edge of each hack is 76mm (0.076m) from midpoint of center line -->
-            <!-- Width of each hack max 152mm (0.152m) -->
-            <!-- Material inside edge is on hack line, hack extends max 203mm (0.203m) in front -->
-            <!-- Hack line is at y = ±21.033m -->
-            <!-- Bottom hacks: hack line at y=-21.033, extends toward more negative y (in front) -->
+            <!-- Hacks -->
             <rect x="-0.228" y="-21.236" width="0.152" height="0.203"
                   fill="#8B4513" stroke="#654321" stroke-width="0.005"/>
             <rect x="0.076" y="-21.236" width="0.152" height="0.203"
                   fill="#8B4513" stroke="#654321" stroke-width="0.005"/>
-            
-            <!-- Top hacks: hack line at y=21.033, extends toward more positive y (in front) -->
             <rect x="-0.228" y="21.033" width="0.152" height="0.203"
                   fill="#8B4513" stroke="#654321" stroke-width="0.005"/>
             <rect x="0.076" y="21.033" width="0.152" height="0.203"
@@ -699,29 +616,29 @@
         <!-- Line/Marker Visibility -->
         <div class="settings-section">
             <h3 class="settings-header settings-header-expandable" onclick="toggleLineVisibility()">
-                <span>Lines & Markers</span>
+                <span>Lines & markers</span>
                 <span id="line-visibility-arrow" class="expando-arrow">▶</span>
             </h3>
             <div id="line-visibility-content" class="expando-content">
                 <div class="control-item">
                     <input type="checkbox" id="toggle-center-line" checked>
-                    <label for="toggle-center-line">Center Line</label>
+                    <label for="toggle-center-line">Center line</label>
                 </div>
                 <div class="control-item">
                     <input type="checkbox" id="toggle-courtesy-lines" checked>
-                    <label for="toggle-courtesy-lines">Courtesy Lines</label>
+                    <label for="toggle-courtesy-lines">Courtesy lines</label>
                 </div>
                 <div class="control-item">
                     <input type="checkbox" id="toggle-wheelchair-lines" checked>
-                    <label for="toggle-wheelchair-lines">Wheelchair Lines</label>
+                    <label for="toggle-wheelchair-lines">Wheelchair lines</label>
                 </div>
                 <div class="control-item">
                     <input type="checkbox" id="toggle-four-foot-lines">
-                    <label for="toggle-four-foot-lines">4-Foot Lines</label>
+                    <label for="toggle-four-foot-lines">4-foot lines</label>
                 </div>
                 <div class="control-item">
                     <input type="checkbox" id="toggle-mixed-doubles-markers">
-                    <label for="toggle-mixed-doubles-markers">Mixed Doubles Markers</label>
+                    <label for="toggle-mixed-doubles-markers">Mixed doubles markers</label>
                 </div>
             </div>
         </div>
@@ -729,55 +646,44 @@
         <!-- Colors & Settings -->
         <div class="settings-section">
             <h3 class="settings-header settings-header-expandable" onclick="toggleColorsSettings()">
-                <span>Colors & Settings</span>
+                <span>Colors & settings</span>
                 <span id="colors-settings-arrow" class="expando-arrow">▶</span>
             </h3>
             <div id="colors-settings-content" class="expando-content">
                 <div class="settings-subsection">
                     <div class="color-picker-wrapper">
-                        <label for="blue-ring-color">12-Foot Ring</label>
+                        <label for="blue-ring-color">12-foot ring</label>
                         <input type="color" id="blue-ring-color" value="#80b3ff" class="color-picker-input">
                     </div>
                     <div class="color-picker-wrapper">
-                        <label for="eight-foot-ring-color">8-Foot Ring</label>
+                        <label for="eight-foot-ring-color">8-foot ring</label>
                         <input type="color" id="eight-foot-ring-color" value="#ffffff" class="color-picker-input">
                     </div>
                     <div class="color-picker-wrapper">
-                        <label for="red-ring-color">4-Foot Ring</label>
+                        <label for="red-ring-color">4-foot ring</label>
                         <input type="color" id="red-ring-color" value="#ff8080" class="color-picker-input">
                     </div>
                     <div class="color-picker-wrapper">
-                        <label for="light-stone-color">Light Stone</label>
+                        <label for="light-stone-color">Light stone</label>
                         <input type="color" id="light-stone-color" value="#ffd700" class="color-picker-input">
                     </div>
                     <div class="color-picker-wrapper">
-                        <label for="dark-stone-color">Dark Stone</label>
+                        <label for="dark-stone-color">Dark stone</label>
                         <input type="color" id="dark-stone-color" value="#cc0000" class="color-picker-input">
                     </div>
                     <div class="color-picker-wrapper">
-                        <label for="sheet-background-color">Sheet Background</label>
+                        <label for="sheet-background-color">Sheet background</label>
                         <input type="color" id="sheet-background-color" value="#f0f8ff" class="color-picker-input">
                     </div>
                 </div>
                 
                 <div class="settings-subsection">
                     <div class="form-group">
-                        <label for="stone-circumference">Stone Circumference (inches)</label>
+                        <label for="stone-circumference">Stone circumference (inches)</label>
                         <input type="number" id="stone-circumference" value="36" min="1" max="100" step="0.1" class="form-input">
                     </div>
                     <div class="form-group">
-                        <label for="mixed-doubles-placement">Mixed Doubles Placement</label>
-                        <select id="mixed-doubles-placement" class="form-select">
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                            <option value="5">5</option>
-                            <option value="6">6</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="button-size">Button Size</label>
+                        <label for="button-size">Button size</label>
                         <select id="button-size" class="form-select">
                             <option value="standard">Standard (12")</option>
                             <option value="large">Large (18")</option>
@@ -786,16 +692,16 @@
                 </div>
                 
                 <button id="reset-colors-button" class="btn btn-secondary btn-sm" title="Reset colors and stone settings to defaults">
-                    Reset Appearance
+                    Reset appearance
                 </button>
             </div>
         </div>
         
         <!-- Line of Delivery -->
         <div class="settings-section">
-            <h3 class="settings-header">Line of Delivery</h3>
+            <h3 class="settings-header">Line of delivery</h3>
             <div class="form-group">
-                <label for="broom-hack-select">Target Hack</label>
+                <label for="broom-hack-select">Target hack</label>
                 <select id="broom-hack-select" class="form-select">
                     <option value="right">Righty</option>
                     <option value="left">Lefty</option>
@@ -807,17 +713,17 @@
         <!-- View Controls -->
         <div class="settings-section">
             <h3 class="settings-header">View</h3>
-            <button id="rotate-cw-button" class="btn btn-icon btn-full" title="Rotate clockwise">Rotate View</button>
+            <button id="rotate-cw-button" class="btn btn-icon btn-full" title="Rotate clockwise">Rotate view</button>
             <div class="button-group" style="margin-top: 8px;">
-                <button id="reset-viewport-button" class="btn btn-warning" title="Reset viewport">Reset Viewport</button>
-                <button id="reset-sheet-button" class="btn btn-danger" title="Remove stones & broom">Reset Sheet</button>
+                <button id="reset-viewport-button" class="btn btn-warning" title="Reset viewport">Reset viewport</button>
+                <button id="reset-sheet-button" class="btn btn-danger" title="Remove stones & broom">Reset sheet</button>
             </div>
         </div>
         
         <!-- Share -->
         <div class="settings-section">
             <button id="share-button" class="btn btn-success btn-full" title="Copy shareable link">
-                📋 Copy Share Link
+                📋 Copy share link
             </button>
             <div id="share-feedback" class="feedback-text"></div>
         </div>
@@ -836,19 +742,33 @@
                 </div>
             </div>
             <button id="swap-stone-colors-button" class="btn btn-link btn-full" title="Swap all stone colors">
-                ⇄ Swap Colors
+                ⇄ Swap colors
             </button>
         </div>
         
-        <!-- Quick Set -->
+        <!-- Mixed Doubles -->
         <div class="settings-section">
-            <h3 class="settings-header">Quick Set</h3>
-            <select id="quick-set-select" class="form-select">
-                <option value="">Select a setup</option>
-                <option value="mixed-doubles-standard">Mixed doubles standard</option>
-                <option value="mixed-doubles-power-play-left">Mixed doubles power play (left)</option>
-                <option value="mixed-doubles-power-play-right">Mixed doubles power play (right)</option>
-            </select>
+            <h3 class="settings-header">Mixed doubles</h3>
+            <div class="form-group">
+                <label for="mixed-doubles-placement">Mixed doubles placement</label>
+                <select id="mixed-doubles-placement" class="form-select">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="quick-set-select">Prepositioned stones</label>
+                <select id="quick-set-select" class="form-select">
+                    <option value="">Select a setup</option>
+                    <option value="mixed-doubles-standard">Standard</option>
+                    <option value="mixed-doubles-power-play-left">Power play (left)</option>
+                    <option value="mixed-doubles-power-play-right">Power play (right)</option>
+                </select>
+            </div>
         </div>
         
         <!-- Snapshots -->
@@ -861,7 +781,7 @@
                 <!-- Snapshots will be inserted here -->
             </div>
             <button id="clear-all-snapshots-button" class="btn btn-secondary btn-sm btn-full" style="display: none;" title="Clear all snapshots">
-                Clear All
+                Clear all
             </button>
         </div>
         
@@ -997,7 +917,7 @@
             renderBroomLine();
         });
 
-        // Quick set functionality
+        // Mixed Doubles functionality
         const quickSetSelect = document.getElementById('quick-set-select');
         quickSetSelect.addEventListener('change', (e) => {
             const setup = e.target.value;
@@ -1008,317 +928,102 @@
             } else if (setup === 'mixed-doubles-power-play-right') {
                 applyMixedDoublesPowerPlayLeft(); // Right option actually uses left power play
             }
+            
+            // Enable Mixed Doubles Markers visibility when a setup is selected
+            if (setup) {
+                toggleMixedDoublesMarkers.checked = true;
+                mixedDoublesMarkers.style.display = 'block';
+                saveLineVisibilityToLocalStorage();
+            }
+            
             // Reset dropdown to default
             e.target.value = '';
         });
 
         function applyMixedDoublesStandard() {
-            // Remove existing stones
             stones = [];
-            
-            // Get stone radius
             const radius = getStoneRadius();
             
-            // 4-foot circle: center at (0, -17.375), radius 0.610m
-            // Red stone: circumference shares a point with center line and 4-foot circle
-            // Stone is INSIDE the 4-foot circle, behind the tee line (closer to back line)
-            // Since stone bisects center line, its center is at x=0
-            // Distance from stone center to circle center = circle_radius - stone_radius (touching from inside)
-            // Circle center is at y=-17.375, stone is behind tee line (more negative y)
-            // So stone center y = -17.375 - (0.610 - radius) = -17.375 - 0.610 + radius
+            // Red stone: Inside 4-foot circle, behind tee line, on center line
             const redStoneY = -17.375 - 0.610 + radius;
             
-            // Yellow stone position depends on mixed doubles placement setting
-            // Mixed doubles markers (from closest to house to farthest):
-            //   4'6": y = -14.174 (nearest)
-            //   7'6": y = -13.260 (middle)
-            //   10'6": y = -12.346 (farthest)
-            // For mixed doubles standard, both stones bisect the center line (x = 0)
-            // For placements 1, 3, 5: use center line markers at nearest, middle, farthest
-            // For placements 2, 4, 6: also use center line markers at nearest, middle, farthest (same markers)
-            let yellowStoneX, yellowStoneY;
+            // Yellow stone: On center line, at marker position based on placement setting
+            const markerYPositions = [-14.174, -13.260, -12.346];  // Nearest, Middle, Farthest
+            const markerIndex = Math.floor((mixedDoublesPlacement - 1) / 2);
+            const markerY = markerYPositions[markerIndex];
+            const yellowStoneY = (mixedDoublesPlacement % 2 === 1) ? markerY - radius : markerY + radius;
             
-            // All placements use center line markers (x = 0)
-            yellowStoneX = 0;
+            // Add stones
+            stones.push(
+                { id: nextStoneId++, x: 0, y: redStoneY, color: 'red' },
+                { id: nextStoneId++, x: 0, y: yellowStoneY, color: 'yellow' }
+            );
             
-            if (mixedDoublesPlacement === 1 || mixedDoublesPlacement === 2) {
-                // Nearest center line marker (4'6" at y = -14.174)
-                if (mixedDoublesPlacement === 1) {
-                    // Placement 1: stone on house side of marker
-                    yellowStoneY = -14.174 - radius;
-                } else {
-                    // Placement 2: stone on hog line side of marker (one diameter closer to hog line)
-                    yellowStoneY = -14.174 + radius;
-                }
-            } else if (mixedDoublesPlacement === 3 || mixedDoublesPlacement === 4) {
-                // Middle center line marker (7'6" at y = -13.260)
-                if (mixedDoublesPlacement === 3) {
-                    // Placement 3: stone on house side of marker
-                    yellowStoneY = -13.260 - radius;
-                } else {
-                    // Placement 4: stone on hog line side of marker (one diameter closer to hog line)
-                    yellowStoneY = -13.260 + radius;
-                }
-            } else if (mixedDoublesPlacement === 5 || mixedDoublesPlacement === 6) {
-                // Farthest center line marker (10'6" at y = -12.346)
-                if (mixedDoublesPlacement === 5) {
-                    // Placement 5: stone on house side of marker
-                    yellowStoneY = -12.346 - radius;
-                } else {
-                    // Placement 6: stone on hog line side of marker (one diameter closer to hog line)
-                    yellowStoneY = -12.346 + radius;
-                }
-            }
-            
-            // Add red stone (dark)
-            stones.push({
-                id: nextStoneId++,
-                x: 0,
-                y: redStoneY,
-                color: 'red'
-            });
-            
-            // Add yellow stone (light)
-            stones.push({
-                id: nextStoneId++,
-                x: yellowStoneX,
-                y: yellowStoneY,
-                color: 'yellow'
-            });
-            
-            // Resolve any collisions
-            stones.forEach(stone => {
-                resolveCollisions(stone);
-            });
-            
-            // Render the stones
+            stones.forEach(stone => resolveCollisions(stone));
             renderStones();
         }
 
         function applyMixedDoublesPowerPlayLeft() {
-            // Remove existing stones
             stones = [];
-            
-            // Get stone radius
             const radius = getStoneRadius();
             
-            // Red stone: A single point on the stone's circumference is shared with both the tee line and the 8-foot circle
-            // Tee line: y = -17.375
-            // 8-foot circle: center at (0, -17.375), radius 1.219m
-            // The intersection point of the tee line and the left side of the circle is at:
-            //   x = -1.219, y = -17.375 (where the circle intersects the tee line on the left)
-            // This point must be on the stone's circumference
-            // If the stone center is at (x_stone, y_stone), and this point is on the stone's circumference:
-            //   Distance from (x_stone, y_stone) to (-1.219, -17.375) = radius
-            //   (x_stone + 1.219)^2 + (y_stone + 17.375)^2 = radius^2
-            // The stone should be positioned such that this intersection point is on its circumference
-            // Since the stone is on the left side and above the tee line, we can solve for x_stone
-            // Given y_stone = -17.375 + radius (stone center above tee line), we get:
-            //   (x_stone + 1.219)^2 + radius^2 = radius^2
-            //   (x_stone + 1.219)^2 = 0
-            //   x_stone = -1.219
-            // But that would place the stone center at the intersection point, which is wrong.
-            // Let me reconsider: The intersection point is on the stone's circumference, so the stone center
-            // must be at a distance of radius from that point. Since the stone is above the tee line and to the left,
-            // the stone center should be at: (-1.219, -17.375 + radius) or slightly to the right
-            // Actually, if we want the stone to be closer to the center line, we need to move the stone center
-            // to the right (less negative x). Let's position it such that the intersection point is on the stone's edge.
-            // The intersection point is at (-1.219, -17.375)
-            // Stone center at (x, -17.375 + radius) where x > -1.219 (closer to center line)
-            // Distance from stone center to intersection = radius
-            // sqrt((x - (-1.219))^2 + ((-17.375 + radius) - (-17.375))^2) = radius
-            // sqrt((x + 1.219)^2 + radius^2) = radius
-            // (x + 1.219)^2 + radius^2 = radius^2
-            // (x + 1.219)^2 = 0
-            // This gives x = -1.219, which is the intersection point itself.
-            // 
-            // Let me think differently: The intersection point is on both the tee line and the circle.
-            // For this point to also be on the stone's circumference, the stone center must be at distance 'radius' from it.
-            // Since we want the stone closer to center line, we move the stone center to the right.
-            // But we also need the stone to be positioned so that the intersection point is on its edge.
-            // If stone center is at (x, y) and intersection is at (-1.219, -17.375), then:
-            // (x + 1.219)^2 + (y + 17.375)^2 = radius^2
-            // If y = -17.375 + radius (stone above tee line), then:
-            // (x + 1.219)^2 + radius^2 = radius^2
-            // This forces x = -1.219, which is wrong.
-            //
-            // Actually, I think the issue is that the stone center should be positioned such that the intersection point
-            // is on the stone's circumference, but the stone might not be centered above the tee line.
-            // Let me solve: (x + 1.219)^2 + (y + 17.375)^2 = radius^2
-            // If we want x closer to center (say x = -0.8), then:
-            // (-0.8 + 1.219)^2 + (y + 17.375)^2 = radius^2
-            // 0.419^2 + (y + 17.375)^2 = radius^2
-            // (y + 17.375)^2 = radius^2 - 0.175561
-            // y + 17.375 = sqrt(radius^2 - 0.175561)  (taking positive since stone is above tee line)
-            // y = -17.375 + sqrt(radius^2 - 0.175561)
-            // Red stone: The intersection point of the tee line and 8-foot circle is on the stone's circumference
-            // A line parallel to the center line (vertical line) through this point bisects the stone
-            // Intersection point: (-1.219, -17.375) where tee line (y = -17.375) meets 8-foot circle (radius 1.219)
-            // If a vertical line through (-1.219, -17.375) bisects the stone, the stone center's x = -1.219
-            // The intersection point is on the stone's circumference, so distance from stone center to intersection = radius
-            // Stone center: (-1.219, y_stone)
-            // Distance: |y_stone - (-17.375)| = radius
-            // Since stone is above tee line (in playing area), y_stone > -17.375
-            // So: y_stone = -17.375 + radius
+            // Red stone: At tee line and 8-foot circle intersection (left side)
+            // A vertical line through this point bisects the stone
             const teeLineY = -17.375;
             const circleRadius = 1.219;
-            const intersectionX = -circleRadius; // -1.219
-            const intersectionY = teeLineY; // -17.375
+            const redStoneX = -circleRadius;
+            const redStoneY = teeLineY + radius;
             
-            // Stone center x equals intersection x (vertical line bisects stone)
-            const redStoneX = intersectionX;
-            // Stone center y is one radius above the intersection point
-            const redStoneY = intersectionY + radius;
+            // Yellow stone: At left side marker, placement varies by mixedDoublesPlacement setting
+            const markerData = [
+                { x: -1.092, y: -14.174 },  // Nearest
+                { x: -1.067, y: -13.260 },  // Middle
+                { x: -1.041, y: -12.346 }   // Farthest
+            ];
+            const markerIndex = Math.floor((mixedDoublesPlacement - 1) / 2);
+            const marker = markerData[markerIndex];
+            const yellowStoneX = marker.x;
+            const yellowStoneY = (mixedDoublesPlacement % 2 === 1) ? marker.y - radius : marker.y + radius;
             
-            // Yellow stone: Same vertical position as standard placement, always on same side as red stone (left)
-            // Mixed doubles markers (from closest to house to farthest):
-            //   4'6": y = -14.174 (nearest), left marker at x = -1.092
-            //   7'6": y = -13.260 (middle), left marker at x = -1.067
-            //   10'6": y = -12.346 (farthest), left marker at x = -1.041
-            // Yellow stone always uses left side markers (same side as red stone)
-            // Vertical position matches standard placement logic
-            let yellowStoneX, yellowStoneY;
+            // Add stones
+            stones.push(
+                { id: nextStoneId++, x: redStoneX, y: redStoneY, color: 'red' },
+                { id: nextStoneId++, x: yellowStoneX, y: yellowStoneY, color: 'yellow' }
+            );
             
-            if (mixedDoublesPlacement === 1 || mixedDoublesPlacement === 2) {
-                // Nearest left side marker (4'6" marker at x = -1.092, y = -14.174)
-                yellowStoneX = -1.092;
-                if (mixedDoublesPlacement === 1) {
-                    // Placement 1: stone on house side of marker
-                    yellowStoneY = -14.174 - radius;
-                } else {
-                    // Placement 2: stone on hog line side of marker (one diameter closer to hog line)
-                    yellowStoneY = -14.174 + radius;
-                }
-            } else if (mixedDoublesPlacement === 3 || mixedDoublesPlacement === 4) {
-                // Middle left side marker (7'6" marker at x = -1.067, y = -13.260)
-                yellowStoneX = -1.067;
-                if (mixedDoublesPlacement === 3) {
-                    // Placement 3: stone on house side of marker
-                    yellowStoneY = -13.260 - radius;
-                } else {
-                    // Placement 4: stone on hog line side of marker (one diameter closer to hog line)
-                    yellowStoneY = -13.260 + radius;
-                }
-            } else if (mixedDoublesPlacement === 5 || mixedDoublesPlacement === 6) {
-                // Farthest left side marker (10'6" marker at x = -1.041, y = -12.346)
-                yellowStoneX = -1.041;
-                if (mixedDoublesPlacement === 5) {
-                    // Placement 5: stone on house side of marker
-                    yellowStoneY = -12.346 - radius;
-                } else {
-                    // Placement 6: stone on hog line side of marker (one diameter closer to hog line)
-                    yellowStoneY = -12.346 + radius;
-                }
-            }
-            
-            // Add red stone (dark)
-            stones.push({
-                id: nextStoneId++,
-                x: redStoneX,
-                y: redStoneY,
-                color: 'red'
-            });
-            
-            // Add yellow stone (light)
-            stones.push({
-                id: nextStoneId++,
-                x: yellowStoneX,
-                y: yellowStoneY,
-                color: 'yellow'
-            });
-            
-            // Resolve any collisions
-            stones.forEach(stone => {
-                resolveCollisions(stone);
-            });
-            
-            // Render the stones
+            stones.forEach(stone => resolveCollisions(stone));
             renderStones();
         }
 
         function applyMixedDoublesPowerPlayRight() {
-            // Remove existing stones
             stones = [];
-            
-            // Get stone radius
             const radius = getStoneRadius();
             
-            // Red stone: Same as left power play but reflected over center line
-            // Intersection point of tee line and 8-foot circle on right side: (1.219, -17.375)
-            // A vertical line through this point bisects the stone
+            // Red stone: At tee line and 8-foot circle intersection (right side)
             const teeLineY = -17.375;
             const circleRadius = 1.219;
-            const intersectionX = circleRadius; // 1.219 (right side, positive)
-            const intersectionY = teeLineY; // -17.375
-            
-            // Stone center x equals intersection x (vertical line bisects stone)
+            const intersectionX = circleRadius;
             const redStoneX = intersectionX;
-            // Stone center y is one radius above the intersection point
-            const redStoneY = intersectionY + radius;
+            const redStoneY = teeLineY + radius;
             
-            // Yellow stone: Same vertical position as standard placement, always on same side as red stone (right)
-            // Mixed doubles markers (from closest to house to farthest):
-            //   4'6": y = -14.174 (nearest), right marker at x = 1.092
-            //   7'6": y = -13.260 (middle), right marker at x = 1.067
-            //   10'6": y = -12.346 (farthest), right marker at x = 1.041
-            // Yellow stone always uses right side markers (same side as red stone)
-            // Vertical position matches standard placement logic
-            let yellowStoneX, yellowStoneY;
+            // Yellow stone: At right side marker, placement varies by mixedDoublesPlacement setting
+            const markerData = [
+                { x: 1.092, y: -14.174 },  // Nearest
+                { x: 1.067, y: -13.260 },  // Middle
+                { x: 1.041, y: -12.346 }   // Farthest
+            ];
+            const markerIndex = Math.floor((mixedDoublesPlacement - 1) / 2);
+            const marker = markerData[markerIndex];
+            const yellowStoneX = marker.x;
+            const yellowStoneY = (mixedDoublesPlacement % 2 === 1) ? marker.y - radius : marker.y + radius;
             
-            if (mixedDoublesPlacement === 1 || mixedDoublesPlacement === 2) {
-                // Nearest right side marker (4'6" marker at x = 1.092, y = -14.174)
-                yellowStoneX = 1.092;
-                if (mixedDoublesPlacement === 1) {
-                    // Placement 1: stone on house side of marker
-                    yellowStoneY = -14.174 - radius;
-                } else {
-                    // Placement 2: stone on hog line side of marker (one diameter closer to hog line)
-                    yellowStoneY = -14.174 + radius;
-                }
-            } else if (mixedDoublesPlacement === 3 || mixedDoublesPlacement === 4) {
-                // Middle right side marker (7'6" marker at x = 1.067, y = -13.260)
-                yellowStoneX = 1.067;
-                if (mixedDoublesPlacement === 3) {
-                    // Placement 3: stone on house side of marker
-                    yellowStoneY = -13.260 - radius;
-                } else {
-                    // Placement 4: stone on hog line side of marker (one diameter closer to hog line)
-                    yellowStoneY = -13.260 + radius;
-                }
-            } else if (mixedDoublesPlacement === 5 || mixedDoublesPlacement === 6) {
-                // Farthest right side marker (10'6" marker at x = 1.041, y = -12.346)
-                yellowStoneX = 1.041;
-                if (mixedDoublesPlacement === 5) {
-                    // Placement 5: stone on house side of marker
-                    yellowStoneY = -12.346 - radius;
-                } else {
-                    // Placement 6: stone on hog line side of marker (one diameter closer to hog line)
-                    yellowStoneY = -12.346 + radius;
-                }
-            }
+            // Add stones
+            stones.push(
+                { id: nextStoneId++, x: redStoneX, y: redStoneY, color: 'red' },
+                { id: nextStoneId++, x: yellowStoneX, y: yellowStoneY, color: 'yellow' }
+            );
             
-            // Add red stone (dark)
-            stones.push({
-                id: nextStoneId++,
-                x: redStoneX,
-                y: redStoneY,
-                color: 'red'
-            });
-            
-            // Add yellow stone (light)
-            stones.push({
-                id: nextStoneId++,
-                x: yellowStoneX,
-                y: yellowStoneY,
-                color: 'yellow'
-            });
-            
-            // Resolve any collisions
-            stones.forEach(stone => {
-                resolveCollisions(stone);
-            });
-            
-            // Render the stones
+            stones.forEach(stone => resolveCollisions(stone));
             renderStones();
         }
 
@@ -1951,82 +1656,37 @@
             rotateGroup.appendChild(stonesLayerInGroup);
         }
         
-        // Function to reset view to playing area (back line to hog line)
-        // The playing area is always at the top end: y = 10.4 to 19.7, x = -3.0 to 3.0
-        // After rotation, we adjust viewBox to center on the same physical area
+        // Reset view to show playing area (back line to hog line) at current rotation
         function resetToDefaultView() {
-            // Default playing area coordinates (top end: back line to hog line)
-            // This is the area we want to show at the default 180° rotation
             const defaultX = -3.0;
             const defaultY = 10.4;
             const defaultWidth = 6.0;
             const defaultHeight = 9.3;
+            const centerX = defaultX + defaultWidth / 2;
+            const centerY = defaultY + defaultHeight / 2;
             
-            // Calculate the center of the playing area in SVG coordinates
-            const centerX = defaultX + defaultWidth / 2;  // 0
-            const centerY = defaultY + defaultHeight / 2; // ~15.05
-            
-            // We always want to show the same playing area (top end: back line to hog line)
-            // But the viewBox coordinates change based on rotation
-            // At 180°: we show top end (y=10.4 to 19.7) - house appears at bottom
-            // At 0°: we need to show bottom end (y=-19.7 to -10.4) so house appears at bottom after 0° rotation
-            // At 90°: we show left side
-            // At 270°: we show right side
-            
-            // Set viewBox to center on the rotated position
-            // For 90° and 270°, swap width/height since we're viewing sideways
-            // But keep the same vertical extent as the default view (showing playing area)
+            // Swap width/height for horizontal orientations
             if (currentRotation === 90 || currentRotation === 270) {
-                viewBox.width = defaultHeight;  // 9.3 - vertical extent of playing area
-                viewBox.height = defaultWidth;   // 6.0 - width of sheet with padding
+                viewBox.width = defaultHeight;
+                viewBox.height = defaultWidth;
             } else {
-                viewBox.width = defaultWidth;    // 6.0 - width of sheet with padding
-                viewBox.height = defaultHeight;  // 9.3 - vertical extent of playing area
+                viewBox.width = defaultWidth;
+                viewBox.height = defaultHeight;
             }
             
-            // Calculate viewBox position based on rotation
+            // Set viewBox position based on rotation
             if (currentRotation === 0) {
-                // At 0°, show bottom end so house appears at bottom (mirror of 180°)
-                // Bottom end: back line at y=-19.204, hog line at y=-10.974
-                // We want the same view as 180°, so show from back line to hog line of bottom end
-                // Adding padding: back line -19.204, hog line -10.974, so center is ~-15.089
-                // We want height 9.3, so y should be -15.089 - 9.3/2 = -19.739, but we want to match the padding
-                // Top end: y=10.4 to 19.7 (height 9.3)
-                // Bottom end: y=-19.7 to -10.4 (height 9.3, mirrored)
-                viewBox.x = -defaultWidth / 2; // Center x
-                viewBox.y = -defaultY - defaultHeight; // Mirror of top end: -10.4 - 9.3 = -19.7
+                viewBox.x = -defaultWidth / 2;
+                viewBox.y = -defaultY - defaultHeight;
             } else if (currentRotation === 180) {
-                // At 180°, show top end (default)
                 viewBox.x = defaultX;
                 viewBox.y = defaultY;
-            } else if (currentRotation === 90) {
-                // At 90°, the top end (positive y in original) appears on the right side (positive x)
-                // The playing area center (0, 15.05) rotates to (-15.05, 0) in SVG rotation math
-                // But SVG rotation is counter-clockwise, so at 90° the top end appears on the RIGHT
-                // Actually, let me reconsider: rotating content 90° CCW makes top end appear on LEFT
-                // So we want to center on the delivery area position to show the playing area?
-                // No wait - the delivery area center (0, -15.05) rotates to (15.05, 0)
-                // We want the PLAYING area, which centers at (-15.05, 0)
+            } else if (currentRotation === 90 || currentRotation === 270) {
+                // Use delivery area center to show playing area after rotation
                 const angleRad = (currentRotation * Math.PI) / 180;
-                // Playing area center rotates to (-15.05, 0) - but this shows delivery area after rotation
-                // Delivery area center (0, -15.05) rotates to (15.05, 0) - this shows playing area after rotation
-                // So we need to use the INVERSE: show delivery area coordinates to see playing area
-                const deliveryCenterY = -centerY; // -15.05 (delivery area center)
+                const deliveryCenterY = -centerY;
                 const rotatedCenterX = centerX * Math.cos(angleRad) - deliveryCenterY * Math.sin(angleRad);
                 const rotatedCenterY = centerX * Math.sin(angleRad) + deliveryCenterY * Math.cos(angleRad);
-                
-                // At 90°, we're viewing sideways, so width/height are swapped
-                // Center on (15.05, 0) to show the playing area (which appears on the right after rotation)
-                viewBox.x = rotatedCenterX - viewBox.width / 2;
-                viewBox.y = rotatedCenterY - viewBox.height / 2;
-            } else if (currentRotation === 270) {
-                // At 270°, similar logic - use delivery area center to show playing area
-                const angleRad = (currentRotation * Math.PI) / 180;
-                const deliveryCenterY = -centerY; // -15.05 (delivery area center)
-                const rotatedCenterX = centerX * Math.cos(angleRad) - deliveryCenterY * Math.sin(angleRad);
-                const rotatedCenterY = centerX * Math.sin(angleRad) + deliveryCenterY * Math.cos(angleRad);
-                
-                // At 270°, center on (-15.05, 0) to show the playing area (which appears on the left after rotation)
                 viewBox.x = rotatedCenterX - viewBox.width / 2;
                 viewBox.y = rotatedCenterY - viewBox.height / 2;
             }
