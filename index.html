@@ -25,20 +25,99 @@
             position: fixed;
             top: 20px;
             right: 20px;
-            width: 280px;
-            background: rgba(255, 255, 255, 0.95);
-            padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            width: 300px;
+            max-height: calc(100vh - 40px);
+            overflow-y: auto;
+            background: #f8f9fa;
+            padding: 0;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
             z-index: 1000;
-            font-family: Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
             font-size: 14px;
         }
 
         .controls h3 {
-            margin: 0 0 10px 0;
-            font-size: 16px;
-            color: #333;
+            margin: 0;
+            font-size: 15px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        /* Settings Sections */
+        .settings-section {
+            background: white;
+            padding: 16px;
+            margin-bottom: 8px;
+        }
+
+        .settings-section:first-child {
+            border-radius: 12px 12px 0 0;
+        }
+
+        .settings-section:last-of-type {
+            margin-bottom: 0;
+        }
+
+        .settings-section-highlight {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
+        }
+
+        .settings-header {
+            margin: 0 0 12px 0;
+            font-size: 13px;
+            font-weight: 600;
+            color: #2c3e50;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .settings-header-expandable {
+            cursor: pointer;
+            user-select: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 4px 0;
+            transition: color 0.2s;
+        }
+
+        .settings-header-expandable:hover {
+            color: #0066cc;
+        }
+
+        .expando-arrow {
+            font-size: 10px;
+            transition: transform 0.2s;
+            color: #6c757d;
+        }
+
+        .expando-content {
+            display: none;
+            margin-top: 12px;
+        }
+
+        .settings-subsection {
+            padding: 12px 0;
+        }
+
+        .settings-subsection:not(:last-child) {
+            border-bottom: 1px solid #e9ecef;
+            margin-bottom: 12px;
+        }
+
+        .settings-header-with-action {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .settings-footer {
+            background: white;
+            padding: 12px 16px;
+            text-align: right;
+            border-radius: 0 0 12px 12px;
         }
 
         .control-item {
@@ -57,27 +136,175 @@
             user-select: none;
         }
 
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 12px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 500;
+            color: #495057;
+            margin-bottom: 6px;
+        }
+
+        .form-input,
+        .form-select {
+            width: 100%;
+            padding: 8px 10px;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            font-size: 13px;
+            color: #495057;
+            background: white;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            box-sizing: border-box;
+        }
+
+        .form-input:focus,
+        .form-select:focus {
+            outline: none;
+            border-color: #0066cc;
+            box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
+        }
+
         .color-picker-wrapper {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
             margin-bottom: 10px;
         }
 
         .color-picker-wrapper label {
             flex: 1;
             font-size: 12px;
+            font-weight: 500;
+            color: #495057;
             margin: 0;
         }
 
         .color-picker-input {
             flex: 1;
-            height: 32px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
+            height: 36px;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
             cursor: pointer;
             min-width: 60px;
             box-sizing: border-box;
+            transition: border-color 0.2s;
+        }
+
+        .color-picker-input:hover {
+            border-color: #0066cc;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 10px 16px;
+            border: none;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+            display: inline-block;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-full {
+            width: 100%;
+        }
+
+        .btn-sm {
+            padding: 7px 12px;
+            font-size: 12px;
+        }
+
+        .btn-icon {
+            flex: 1;
+            padding: 10px 16px;
+            font-size: 13px;
+            line-height: 1.4;
+            background: #0066cc;
+            color: white;
+        }
+
+        .btn-icon:hover {
+            background: #0052a3;
+        }
+
+        .btn-icon-small {
+            width: 32px;
+            height: 32px;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            line-height: 1;
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+        }
+
+        .btn-warning {
+            background: #ffc107;
+            color: #212529;
+        }
+
+        .btn-warning:hover {
+            background: #e0a800;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .btn-link {
+            background: transparent;
+            color: #0066cc;
+            border: 1px solid #0066cc;
+            padding: 8px 12px;
+        }
+
+        .btn-link:hover {
+            background: #0066cc;
+            color: white;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 8px;
         }
 
         /* Modal dialog styles */
@@ -137,33 +364,40 @@
             background: #5a6268;
         }
 
-        .stone-templates {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 1px solid #ddd;
+        /* Stone Templates */
+        .stone-placement-label {
+            text-align: center;
+            font-size: 11px;
+            color: #6c757d;
+            margin-bottom: 12px;
+            font-weight: 500;
         }
 
         .stone-templates-row {
             display: flex;
-            gap: 15px;
+            gap: 20px;
             justify-content: space-around;
+            margin-bottom: 12px;
         }
 
         .stone-template {
-            width: 40px;
-            height: 40px;
+            width: 48px;
+            height: 48px;
             border-radius: 50%;
             cursor: grab;
-            border: 2px solid #333;
-            transition: transform 0.1s;
+            border: 3px solid #333;
+            transition: all 0.2s;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+        }
+
+        .stone-template:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
         }
 
         .stone-template:active {
             cursor: grabbing;
-            transform: scale(0.95);
+            transform: scale(0.98);
         }
 
         .stone-template.yellow {
@@ -179,8 +413,63 @@
         .stone-template-label {
             text-align: center;
             font-size: 11px;
-            color: #666;
-            margin-top: 5px;
+            color: #6c757d;
+            margin-top: 6px;
+            font-weight: 500;
+        }
+
+        /* Help & Feedback Text */
+        .help-text {
+            font-size: 11px;
+            color: #6c757d;
+            font-style: italic;
+            line-height: 1.4;
+        }
+
+        .feedback-text {
+            font-size: 12px;
+            color: #28a745;
+            text-align: center;
+            min-height: 18px;
+            margin-top: 8px;
+        }
+
+        /* Snapshots */
+        .snapshots-list {
+            max-height: 250px;
+            overflow-y: auto;
+        }
+
+        .snapshots-list::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .snapshots-list::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+        }
+
+        .snapshots-list::-webkit-scrollbar-thumb {
+            background: #cbd5e0;
+            border-radius: 3px;
+        }
+
+        .snapshots-list::-webkit-scrollbar-thumb:hover {
+            background: #a0aec0;
+        }
+
+        /* About Link */
+        .about-link {
+            color: #0066cc;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .about-link:hover {
+            color: #0052a3;
+            text-decoration: underline;
         }
 
     </style>
@@ -197,7 +486,7 @@
             <!-- Sheet boundary (light blue ice) -->
             <!-- Length: 45.72m (from -22.86 to +22.86), Width: 4.75m (from -2.375 to +2.375) -->
             <rect x="-2.375" y="-22.86" width="4.75" height="45.72"
-                  fill="#f0f8ff" stroke="#333" stroke-width="0.02"/>
+                  fill="#f0f8ff" stroke="#333" stroke-width="0.02" id="sheet-background"/>
 
             <!-- Back lines (black) - 13mm max width -->
             <!-- Outside edge is 1.829m from center of tee line -->
@@ -274,32 +563,40 @@
             <!-- 12-foot ring: area between 12ft circle and 8ft circle - blue -->
             <circle cx="0" cy="-17.375" r="1.829" fill="#80b3ff"/>
             <!-- 8-foot ring: area between 8ft circle and 4ft circle - white -->
-            <circle cx="0" cy="-17.375" r="1.219" fill="#ffffff"/>
+            <circle cx="0" cy="-17.375" r="1.219" fill="#ffffff" data-eight-foot-ring="true"/>
             <!-- 4-foot ring: area between 4ft circle and button - red -->
             <circle cx="0" cy="-17.375" r="0.610" fill="#ff8080"/>
             <!-- Button area: background color -->
-            <circle cx="0" cy="-17.375" r="0.152" fill="#f0f8ff"/>
+            <circle cx="0" cy="-17.375" r="0.152" fill="#f0f8ff" data-button-fill="true"/>
             <!-- Circle outlines -->
+            <!-- Adjust radius so stroke completely overlaps back line at tangent point -->
+            <!-- Back line path is at r=1.829, stroke extends from r=1.816 to r=1.842 (both sides) -->
+            <!-- To fully cover back line stroke, circle path should be at r=1.829 -->
+            <!-- This gives circle stroke from r=1.816 to r=1.842, fully covering back line stroke -->
             <circle cx="0" cy="-17.375" r="1.829" fill="none" stroke="#333" stroke-width="0.013"/>
-            <circle cx="0" cy="-17.375" r="1.219" fill="none" stroke="#333" stroke-width="0.013"/>
-            <circle cx="0" cy="-17.375" r="0.610" fill="none" stroke="#333" stroke-width="0.013"/>
-            <circle cx="0" cy="-17.375" r="0.152" fill="none" stroke="#333" stroke-width="0.013"/>
+            <circle cx="0" cy="-17.375" r="1.2125" fill="none" stroke="#333" stroke-width="0.013"/>
+            <circle cx="0" cy="-17.375" r="0.6035" fill="none" stroke="#333" stroke-width="0.013"/>
+            <circle cx="0" cy="-17.375" r="0.1455" fill="none" stroke="#333" stroke-width="0.013" data-button-outline="true"/>
 
             <!-- House at top end (y = 17.375m) -->
             <!-- Fill rings from outer to inner -->
             <!-- 12-foot ring: area between 12ft circle and 8ft circle - blue -->
             <circle cx="0" cy="17.375" r="1.829" fill="#80b3ff"/>
             <!-- 8-foot ring: area between 8ft circle and 4ft circle - white -->
-            <circle cx="0" cy="17.375" r="1.219" fill="#ffffff"/>
+            <circle cx="0" cy="17.375" r="1.219" fill="#ffffff" data-eight-foot-ring="true"/>
             <!-- 4-foot ring: area between 4ft circle and button - red -->
             <circle cx="0" cy="17.375" r="0.610" fill="#ff8080"/>
             <!-- Button area: background color -->
-            <circle cx="0" cy="17.375" r="0.152" fill="#f0f8ff"/>
+            <circle cx="0" cy="17.375" r="0.152" fill="#f0f8ff" data-button-fill="true"/>
             <!-- Circle outlines -->
+            <!-- Adjust radius so stroke completely overlaps back line at tangent point -->
+            <!-- Back line path is at r=1.829, stroke extends from r=1.816 to r=1.842 (both sides) -->
+            <!-- To fully cover back line stroke, circle path should be at r=1.829 -->
+            <!-- This gives circle stroke from r=1.816 to r=1.842, fully covering back line stroke -->
             <circle cx="0" cy="17.375" r="1.829" fill="none" stroke="#333" stroke-width="0.013"/>
-            <circle cx="0" cy="17.375" r="1.219" fill="none" stroke="#333" stroke-width="0.013"/>
-            <circle cx="0" cy="17.375" r="0.610" fill="none" stroke="#333" stroke-width="0.013"/>
-            <circle cx="0" cy="17.375" r="0.152" fill="none" stroke="#333" stroke-width="0.013"/>
+            <circle cx="0" cy="17.375" r="1.2125" fill="none" stroke="#333" stroke-width="0.013"/>
+            <circle cx="0" cy="17.375" r="0.6035" fill="none" stroke="#333" stroke-width="0.013"/>
+            <circle cx="0" cy="17.375" r="0.1455" fill="none" stroke="#333" stroke-width="0.013" data-button-outline="true"/>
 
             <!-- Center holes (tees) - at intersection of tee line and center line -->
             <circle cx="0" cy="-17.375" r="0.02" fill="#333"/>
@@ -320,6 +617,60 @@
                   stroke="#000000" stroke-width="0.013" stroke-linecap="square"/>
             <line x1="-2.375" y1="17.375" x2="2.375" y2="17.375"
                   stroke="#000000" stroke-width="0.013" stroke-linecap="square"/>
+
+            <!-- Mixed Doubles Markers -->
+            <!-- 9 markers on each side (18 total) -->
+            <!-- First 3 on each side are on center line at 4'6", 7'6", and 10'6" from outer ring -->
+            <!-- Markers are between the hog line and the house -->
+            <!-- Reference point: Where center line intersects the outer ring of the house (12-foot circle) closest to the hog line -->
+            <!-- House center: bottom at y=-17.375, top at y=17.375 -->
+            <!-- Outer ring radius: 1.829m (12-foot circle) -->
+            <!-- Outer ring edge closest to hog line: -->
+            <!--   Bottom house: -17.375 + 1.829 = -15.546m (hog line is at -10.974, more positive) -->
+            <!--   Top house: 17.375 - 1.829 = 15.546m (hog line is at 10.974, more negative) -->
+            <!-- Distances from this reference point going toward the hog line: -->
+            <!--   4'6" = 1.372m, 7'6" = 2.286m, 10'6" = 3.200m -->
+            <!-- Bottom house markers: -15.546 + distances = -14.174, -13.260, -12.346 -->
+            <!-- Top house markers: 15.546 - distances = 14.174, 13.260, 12.346 -->
+            <g id="mixed-doubles-markers" style="display: none;">
+                <!-- Bottom house markers (negative y) -->
+                <!-- Center line markers: measured from outer ring edge closest to hog line (-15.546) toward hog line -->
+                <circle cx="0" cy="-14.174" r="0.02" fill="#cc0000" stroke="none"/>
+                <circle cx="0" cy="-13.260" r="0.02" fill="#cc0000" stroke="none"/>
+                <circle cx="0" cy="-12.346" r="0.02" fill="#cc0000" stroke="none"/>
+                
+                <!-- Off-center markers for bottom house -->
+                <!-- From 4'6" marker (-14.174): 3'7" = 1.092m from center line -->
+                <circle cx="-1.092" cy="-14.174" r="0.02" fill="#cc0000" stroke="none"/>
+                <circle cx="1.092" cy="-14.174" r="0.02" fill="#cc0000" stroke="none"/>
+                
+                <!-- From 7'6" marker (-13.260): 3'6" = 1.067m from center line -->
+                <circle cx="-1.067" cy="-13.260" r="0.02" fill="#cc0000" stroke="none"/>
+                <circle cx="1.067" cy="-13.260" r="0.02" fill="#cc0000" stroke="none"/>
+                
+                <!-- From 10'6" marker (-12.346): 3'5" = 1.041m from center line -->
+                <circle cx="-1.041" cy="-12.346" r="0.02" fill="#cc0000" stroke="none"/>
+                <circle cx="1.041" cy="-12.346" r="0.02" fill="#cc0000" stroke="none"/>
+                
+                <!-- Top house markers (positive y) - mirrored -->
+                <!-- Center line markers: measured from outer ring edge closest to hog line (15.546) toward hog line -->
+                <circle cx="0" cy="14.174" r="0.02" fill="#cc0000" stroke="none"/>
+                <circle cx="0" cy="13.260" r="0.02" fill="#cc0000" stroke="none"/>
+                <circle cx="0" cy="12.346" r="0.02" fill="#cc0000" stroke="none"/>
+                
+                <!-- Off-center markers for top house -->
+                <!-- From 4'6" marker (14.174): 3'7" = 1.092m from center line -->
+                <circle cx="-1.092" cy="14.174" r="0.02" fill="#cc0000" stroke="none"/>
+                <circle cx="1.092" cy="14.174" r="0.02" fill="#cc0000" stroke="none"/>
+                
+                <!-- From 7'6" marker (13.260): 3'6" = 1.067m from center line -->
+                <circle cx="-1.067" cy="13.260" r="0.02" fill="#cc0000" stroke="none"/>
+                <circle cx="1.067" cy="13.260" r="0.02" fill="#cc0000" stroke="none"/>
+                
+                <!-- From 10'6" marker (12.346): 3'5" = 1.041m from center line -->
+                <circle cx="-1.041" cy="12.346" r="0.02" fill="#cc0000" stroke="none"/>
+                <circle cx="1.041" cy="12.346" r="0.02" fill="#cc0000" stroke="none"/>
+            </g>
 
             <!-- Hacks (brown rectangles) -->
             <!-- Inside edge of each hack is 76mm (0.076m) from midpoint of center line -->
@@ -345,107 +696,178 @@
         </svg>
 
     <div class="controls">
-        <h3>Line Visibility</h3>
-        <div class="control-item">
-            <input type="checkbox" id="toggle-center-line" checked>
-            <label for="toggle-center-line">Center Line</label>
+        <!-- Line/Marker Visibility -->
+        <div class="settings-section">
+            <h3 class="settings-header settings-header-expandable" onclick="toggleLineVisibility()">
+                <span>Lines & Markers</span>
+                <span id="line-visibility-arrow" class="expando-arrow">▶</span>
+            </h3>
+            <div id="line-visibility-content" class="expando-content">
+                <div class="control-item">
+                    <input type="checkbox" id="toggle-center-line" checked>
+                    <label for="toggle-center-line">Center Line</label>
+                </div>
+                <div class="control-item">
+                    <input type="checkbox" id="toggle-courtesy-lines" checked>
+                    <label for="toggle-courtesy-lines">Courtesy Lines</label>
+                </div>
+                <div class="control-item">
+                    <input type="checkbox" id="toggle-wheelchair-lines" checked>
+                    <label for="toggle-wheelchair-lines">Wheelchair Lines</label>
+                </div>
+                <div class="control-item">
+                    <input type="checkbox" id="toggle-four-foot-lines">
+                    <label for="toggle-four-foot-lines">4-Foot Lines</label>
+                </div>
+                <div class="control-item">
+                    <input type="checkbox" id="toggle-mixed-doubles-markers">
+                    <label for="toggle-mixed-doubles-markers">Mixed Doubles Markers</label>
+                </div>
+            </div>
         </div>
-        <div class="control-item">
-            <input type="checkbox" id="toggle-courtesy-lines" checked>
-            <label for="toggle-courtesy-lines">Courtesy Lines</label>
+        
+        <!-- Colors & Settings -->
+        <div class="settings-section">
+            <h3 class="settings-header settings-header-expandable" onclick="toggleColorsSettings()">
+                <span>Colors & Settings</span>
+                <span id="colors-settings-arrow" class="expando-arrow">▶</span>
+            </h3>
+            <div id="colors-settings-content" class="expando-content">
+                <div class="settings-subsection">
+                    <div class="color-picker-wrapper">
+                        <label for="blue-ring-color">12-Foot Ring</label>
+                        <input type="color" id="blue-ring-color" value="#80b3ff" class="color-picker-input">
+                    </div>
+                    <div class="color-picker-wrapper">
+                        <label for="eight-foot-ring-color">8-Foot Ring</label>
+                        <input type="color" id="eight-foot-ring-color" value="#ffffff" class="color-picker-input">
+                    </div>
+                    <div class="color-picker-wrapper">
+                        <label for="red-ring-color">4-Foot Ring</label>
+                        <input type="color" id="red-ring-color" value="#ff8080" class="color-picker-input">
+                    </div>
+                    <div class="color-picker-wrapper">
+                        <label for="light-stone-color">Light Stone</label>
+                        <input type="color" id="light-stone-color" value="#ffd700" class="color-picker-input">
+                    </div>
+                    <div class="color-picker-wrapper">
+                        <label for="dark-stone-color">Dark Stone</label>
+                        <input type="color" id="dark-stone-color" value="#cc0000" class="color-picker-input">
+                    </div>
+                    <div class="color-picker-wrapper">
+                        <label for="sheet-background-color">Sheet Background</label>
+                        <input type="color" id="sheet-background-color" value="#f0f8ff" class="color-picker-input">
+                    </div>
+                </div>
+                
+                <div class="settings-subsection">
+                    <div class="form-group">
+                        <label for="stone-circumference">Stone Circumference (inches)</label>
+                        <input type="number" id="stone-circumference" value="36" min="1" max="100" step="0.1" class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label for="mixed-doubles-placement">Mixed Doubles Placement</label>
+                        <select id="mixed-doubles-placement" class="form-select">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="button-size">Button Size</label>
+                        <select id="button-size" class="form-select">
+                            <option value="standard">Standard (12")</option>
+                            <option value="large">Large (18")</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <button id="reset-colors-button" class="btn btn-secondary btn-sm" title="Reset colors and stone settings to defaults">
+                    Reset Appearance
+                </button>
+            </div>
         </div>
-        <div class="control-item">
-            <input type="checkbox" id="toggle-wheelchair-lines" checked>
-            <label for="toggle-wheelchair-lines">Wheelchair Lines</label>
-        </div>
-        <div class="control-item">
-            <input type="checkbox" id="toggle-four-foot-lines">
-            <label for="toggle-four-foot-lines">4-Foot Lines</label>
-        </div>
-        <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #ddd;">
-            <h3 style="margin: 0 0 10px 0; font-size: 14px; color: #333;">Broom Line</h3>
-            <div class="control-item">
-                <label for="broom-hack-select" style="margin-right: 8px;">Target Hack:</label>
-                <select id="broom-hack-select" style="padding: 4px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px;">
+        
+        <!-- Line of Delivery -->
+        <div class="settings-section">
+            <h3 class="settings-header">Line of Delivery</h3>
+            <div class="form-group">
+                <label for="broom-hack-select">Target Hack</label>
+                <select id="broom-hack-select" class="form-select">
                     <option value="right">Righty</option>
                     <option value="left">Lefty</option>
                 </select>
             </div>
-            <div id="broom-line-instruction" style="font-size: 11px; color: #666; margin-top: 8px; font-style: italic;"></div>
+            <div id="broom-line-instruction" class="help-text"></div>
         </div>
-        <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #ddd;">
-            <h3 style="margin: 0 0 10px 0; font-size: 14px; color: #333; cursor: pointer; user-select: none;" onclick="toggleColorsSettings()">
-                Colors & Settings <span id="colors-settings-arrow" style="font-size: 12px;">▶</span>
-            </h3>
-            <div id="colors-settings-content" style="display: none;">
-            <div class="color-picker-wrapper">
-                <label for="blue-ring-color">12-Foot Ring:</label>
-                <input type="color" id="blue-ring-color" value="#80b3ff" class="color-picker-input">
+        
+        <!-- View Controls -->
+        <div class="settings-section">
+            <h3 class="settings-header">View</h3>
+            <button id="rotate-cw-button" class="btn btn-icon btn-full" title="Rotate clockwise">Rotate View</button>
+            <div class="button-group" style="margin-top: 8px;">
+                <button id="reset-viewport-button" class="btn btn-warning" title="Reset viewport">Reset Viewport</button>
+                <button id="reset-sheet-button" class="btn btn-danger" title="Remove stones & broom">Reset Sheet</button>
             </div>
-            <div class="color-picker-wrapper">
-                <label for="red-ring-color">4-Foot Ring:</label>
-                <input type="color" id="red-ring-color" value="#ff8080" class="color-picker-input">
-            </div>
-            <div class="color-picker-wrapper">
-                <label for="light-stone-color">Light Stone:</label>
-                <input type="color" id="light-stone-color" value="#ffd700" class="color-picker-input">
-            </div>
-            <div class="color-picker-wrapper">
-                <label for="dark-stone-color">Dark Stone:</label>
-                <input type="color" id="dark-stone-color" value="#cc0000" class="color-picker-input">
-            </div>
-            <div class="control-item" style="margin-bottom: 10px;">
-                <label for="stone-circumference" style="display: block; margin-bottom: 4px; font-size: 12px;">Stone Circumference (inches):</label>
-                <input type="number" id="stone-circumference" value="36" min="1" max="100" step="0.1" style="width: 100%; padding: 4px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px;">
-            </div>
-            <button id="reset-colors-button" style="width: 100%; padding: 6px; background: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; margin-top: 8px;" title="Reset colors and stone settings to defaults">
-                ↺ Reset Colors & Stone Settings
+        </div>
+        
+        <!-- Share -->
+        <div class="settings-section">
+            <button id="share-button" class="btn btn-success btn-full" title="Copy shareable link">
+                📋 Copy Share Link
             </button>
-            </div>
+            <div id="share-feedback" class="feedback-text"></div>
         </div>
-        <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #ddd;">
-            <h3 style="margin: 0 0 10px 0; font-size: 14px; color: #333;">Reset</h3>
-            <div style="display: flex; gap: 8px;">
-                <button id="reset-viewport-button" style="flex: 1; padding: 8px; background: #ffc107; color: #333; border: none; border-radius: 4px; cursor: pointer; font-size: 14px;" title="Reset viewport (pan, zoom, rotation)">
-                    ↺ Viewport
-                </button>
-                <button id="reset-sheet-button" style="flex: 1; padding: 8px; background: #dc3545; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px;" title="Remove all stones and broom line">
-                    ↻ Sheet
-                </button>
-            </div>
-        </div>
-        <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #ddd;">
-            <h3 style="margin: 0 0 10px 0; font-size: 14px; color: #333;">Share</h3>
-            <button id="share-button" style="width: 100%; padding: 8px; background: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; margin-bottom: 8px;" title="Copy shareable link">
-                📄 Copy Link
-            </button>
-            <div id="share-feedback" style="font-size: 12px; color: #28a745; text-align: center; min-height: 16px;"></div>
-        </div>
-        <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #ddd;">
-            <div style="display: flex; gap: 8px; margin-bottom: 15px;">
-                <button id="rotate-cw-button" style="flex: 1; padding: 8px; background: #0066cc; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 18px; line-height: 1;" title="Rotate clockwise">
-                    ↻
-                </button>
-                <button id="rotate-ccw-button" style="flex: 1; padding: 8px; background: #0066cc; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 18px; line-height: 1;" title="Rotate counterclockwise">
-                    ↺
-                </button>
-            </div>
-            <div class="stone-templates">
-                <div style="font-size: 11px; color: #666; text-align: center; margin-bottom: 0;">Drag stones onto the sheet.</div>
-                <div class="stone-templates-row">
-                    <div>
-                        <div class="stone-template yellow" id="light-stone-template" data-color="yellow"></div>
-                        <div class="stone-template-label">Light</div>
-                    </div>
-                    <div>
-                        <div class="stone-template red" id="dark-stone-template" data-color="red"></div>
-                        <div class="stone-template-label">Dark</div>
-                    </div>
+        
+        <!-- Stone Placement -->
+        <div class="settings-section">
+            <div class="stone-placement-label">Drag stones onto the sheet</div>
+            <div class="stone-templates-row">
+                <div>
+                    <div class="stone-template yellow" id="light-stone-template" data-color="yellow"></div>
+                    <div class="stone-template-label">Light</div>
+                </div>
+                <div>
+                    <div class="stone-template red" id="dark-stone-template" data-color="red"></div>
+                    <div class="stone-template-label">Dark</div>
                 </div>
             </div>
+            <button id="swap-stone-colors-button" class="btn btn-link btn-full" title="Swap all stone colors">
+                ⇄ Swap Colors
+            </button>
         </div>
-        <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #ddd; text-align: right;">
-            <a href="#" id="about-link" style="color: #0066cc; text-decoration: none; font-size: 12px;">About</a>
+        
+        <!-- Quick Set -->
+        <div class="settings-section">
+            <h3 class="settings-header">Quick Set</h3>
+            <select id="quick-set-select" class="form-select">
+                <option value="">Select a setup</option>
+                <option value="mixed-doubles-standard">Mixed doubles standard</option>
+                <option value="mixed-doubles-power-play-left">Mixed doubles power play (left)</option>
+                <option value="mixed-doubles-power-play-right">Mixed doubles power play (right)</option>
+            </select>
+        </div>
+        
+        <!-- Snapshots -->
+        <div class="settings-section">
+            <div class="settings-header-with-action">
+                <h3 class="settings-header">Snapshots</h3>
+                <button id="create-snapshot-button" class="btn btn-icon-small btn-success" title="Create snapshot">+</button>
+            </div>
+            <div id="snapshots-list" class="snapshots-list">
+                <!-- Snapshots will be inserted here -->
+            </div>
+            <button id="clear-all-snapshots-button" class="btn btn-secondary btn-sm btn-full" style="display: none;" title="Clear all snapshots">
+                Clear All
+            </button>
+        </div>
+        
+        <!-- About -->
+        <div class="settings-footer">
+            <a href="#" id="about-link" class="about-link">About</a>
         </div>
     </div>
 
@@ -458,16 +880,29 @@
     </div>
 
     <script type="module">
+        // Toggle Line/Marker Visibility section
+        window.toggleLineVisibility = function() {
+            const content = document.getElementById('line-visibility-content');
+            const arrow = document.getElementById('line-visibility-arrow');
+            if (content.style.display === 'none' || content.style.display === '') {
+                content.style.display = 'block';
+                arrow.style.transform = 'rotate(90deg)';
+            } else {
+                content.style.display = 'none';
+                arrow.style.transform = 'rotate(0deg)';
+            }
+        };
+        
         // Toggle Colors & Settings section
         window.toggleColorsSettings = function() {
             const content = document.getElementById('colors-settings-content');
             const arrow = document.getElementById('colors-settings-arrow');
-            if (content.style.display === 'none') {
+            if (content.style.display === 'none' || content.style.display === '') {
                 content.style.display = 'block';
-                arrow.textContent = '▼';
+                arrow.style.transform = 'rotate(90deg)';
             } else {
                 content.style.display = 'none';
-                arrow.textContent = '▶';
+                arrow.style.transform = 'rotate(0deg)';
             }
         };
 
@@ -485,11 +920,13 @@
         const courtesyLines = document.getElementById('courtesy-lines');
         const wheelchairLines = document.getElementById('wheelchair-lines');
         const fourFootLines = document.getElementById('four-foot-lines');
+        const mixedDoublesMarkers = document.getElementById('mixed-doubles-markers');
 
         const toggleCenterLine = document.getElementById('toggle-center-line');
         const toggleCourtesyLines = document.getElementById('toggle-courtesy-lines');
         const toggleWheelchairLines = document.getElementById('toggle-wheelchair-lines');
         const toggleFourFootLines = document.getElementById('toggle-four-foot-lines');
+        const toggleMixedDoublesMarkers = document.getElementById('toggle-mixed-doubles-markers');
 
         // Function to save line visibility to localStorage
         function saveLineVisibilityToLocalStorage() {
@@ -497,7 +934,8 @@
                 centerLine: toggleCenterLine.checked,
                 courtesyLines: toggleCourtesyLines.checked,
                 wheelchairLines: toggleWheelchairLines.checked,
-                fourFootLines: toggleFourFootLines.checked
+                fourFootLines: toggleFourFootLines.checked,
+                mixedDoublesMarkers: toggleMixedDoublesMarkers.checked
             };
             localStorage.setItem('curlstrat_lineVisibility', JSON.stringify(visibility));
         }
@@ -519,6 +957,9 @@
                     
                     toggleFourFootLines.checked = visibility.fourFootLines === true;
                     fourFootLines.style.display = toggleFourFootLines.checked ? 'block' : 'none';
+                    
+                    toggleMixedDoublesMarkers.checked = visibility.mixedDoublesMarkers === true;
+                    mixedDoublesMarkers.style.display = toggleMixedDoublesMarkers.checked ? 'block' : 'none';
                 }
             } catch (e) {
             }
@@ -544,6 +985,11 @@
             saveLineVisibilityToLocalStorage();
         });
 
+        toggleMixedDoublesMarkers.addEventListener('change', (e) => {
+            mixedDoublesMarkers.style.display = e.target.checked ? 'block' : 'none';
+            saveLineVisibilityToLocalStorage();
+        });
+
         // Broom line hack selection
         const broomHackSelect = document.getElementById('broom-hack-select');
         broomHackSelect.addEventListener('change', (e) => {
@@ -551,21 +997,383 @@
             renderBroomLine();
         });
 
+        // Quick set functionality
+        const quickSetSelect = document.getElementById('quick-set-select');
+        quickSetSelect.addEventListener('change', (e) => {
+            const setup = e.target.value;
+            if (setup === 'mixed-doubles-standard') {
+                applyMixedDoublesStandard();
+            } else if (setup === 'mixed-doubles-power-play-left') {
+                applyMixedDoublesPowerPlayRight(); // Left option actually uses right power play
+            } else if (setup === 'mixed-doubles-power-play-right') {
+                applyMixedDoublesPowerPlayLeft(); // Right option actually uses left power play
+            }
+            // Reset dropdown to default
+            e.target.value = '';
+        });
+
+        function applyMixedDoublesStandard() {
+            // Remove existing stones
+            stones = [];
+            
+            // Get stone radius
+            const radius = getStoneRadius();
+            
+            // 4-foot circle: center at (0, -17.375), radius 0.610m
+            // Red stone: circumference shares a point with center line and 4-foot circle
+            // Stone is INSIDE the 4-foot circle, behind the tee line (closer to back line)
+            // Since stone bisects center line, its center is at x=0
+            // Distance from stone center to circle center = circle_radius - stone_radius (touching from inside)
+            // Circle center is at y=-17.375, stone is behind tee line (more negative y)
+            // So stone center y = -17.375 - (0.610 - radius) = -17.375 - 0.610 + radius
+            const redStoneY = -17.375 - 0.610 + radius;
+            
+            // Yellow stone position depends on mixed doubles placement setting
+            // Mixed doubles markers (from closest to house to farthest):
+            //   4'6": y = -14.174 (nearest)
+            //   7'6": y = -13.260 (middle)
+            //   10'6": y = -12.346 (farthest)
+            // For mixed doubles standard, both stones bisect the center line (x = 0)
+            // For placements 1, 3, 5: use center line markers at nearest, middle, farthest
+            // For placements 2, 4, 6: also use center line markers at nearest, middle, farthest (same markers)
+            let yellowStoneX, yellowStoneY;
+            
+            // All placements use center line markers (x = 0)
+            yellowStoneX = 0;
+            
+            if (mixedDoublesPlacement === 1 || mixedDoublesPlacement === 2) {
+                // Nearest center line marker (4'6" at y = -14.174)
+                if (mixedDoublesPlacement === 1) {
+                    // Placement 1: stone on house side of marker
+                    yellowStoneY = -14.174 - radius;
+                } else {
+                    // Placement 2: stone on hog line side of marker (one diameter closer to hog line)
+                    yellowStoneY = -14.174 + radius;
+                }
+            } else if (mixedDoublesPlacement === 3 || mixedDoublesPlacement === 4) {
+                // Middle center line marker (7'6" at y = -13.260)
+                if (mixedDoublesPlacement === 3) {
+                    // Placement 3: stone on house side of marker
+                    yellowStoneY = -13.260 - radius;
+                } else {
+                    // Placement 4: stone on hog line side of marker (one diameter closer to hog line)
+                    yellowStoneY = -13.260 + radius;
+                }
+            } else if (mixedDoublesPlacement === 5 || mixedDoublesPlacement === 6) {
+                // Farthest center line marker (10'6" at y = -12.346)
+                if (mixedDoublesPlacement === 5) {
+                    // Placement 5: stone on house side of marker
+                    yellowStoneY = -12.346 - radius;
+                } else {
+                    // Placement 6: stone on hog line side of marker (one diameter closer to hog line)
+                    yellowStoneY = -12.346 + radius;
+                }
+            }
+            
+            // Add red stone (dark)
+            stones.push({
+                id: nextStoneId++,
+                x: 0,
+                y: redStoneY,
+                color: 'red'
+            });
+            
+            // Add yellow stone (light)
+            stones.push({
+                id: nextStoneId++,
+                x: yellowStoneX,
+                y: yellowStoneY,
+                color: 'yellow'
+            });
+            
+            // Resolve any collisions
+            stones.forEach(stone => {
+                resolveCollisions(stone);
+            });
+            
+            // Render the stones
+            renderStones();
+        }
+
+        function applyMixedDoublesPowerPlayLeft() {
+            // Remove existing stones
+            stones = [];
+            
+            // Get stone radius
+            const radius = getStoneRadius();
+            
+            // Red stone: A single point on the stone's circumference is shared with both the tee line and the 8-foot circle
+            // Tee line: y = -17.375
+            // 8-foot circle: center at (0, -17.375), radius 1.219m
+            // The intersection point of the tee line and the left side of the circle is at:
+            //   x = -1.219, y = -17.375 (where the circle intersects the tee line on the left)
+            // This point must be on the stone's circumference
+            // If the stone center is at (x_stone, y_stone), and this point is on the stone's circumference:
+            //   Distance from (x_stone, y_stone) to (-1.219, -17.375) = radius
+            //   (x_stone + 1.219)^2 + (y_stone + 17.375)^2 = radius^2
+            // The stone should be positioned such that this intersection point is on its circumference
+            // Since the stone is on the left side and above the tee line, we can solve for x_stone
+            // Given y_stone = -17.375 + radius (stone center above tee line), we get:
+            //   (x_stone + 1.219)^2 + radius^2 = radius^2
+            //   (x_stone + 1.219)^2 = 0
+            //   x_stone = -1.219
+            // But that would place the stone center at the intersection point, which is wrong.
+            // Let me reconsider: The intersection point is on the stone's circumference, so the stone center
+            // must be at a distance of radius from that point. Since the stone is above the tee line and to the left,
+            // the stone center should be at: (-1.219, -17.375 + radius) or slightly to the right
+            // Actually, if we want the stone to be closer to the center line, we need to move the stone center
+            // to the right (less negative x). Let's position it such that the intersection point is on the stone's edge.
+            // The intersection point is at (-1.219, -17.375)
+            // Stone center at (x, -17.375 + radius) where x > -1.219 (closer to center line)
+            // Distance from stone center to intersection = radius
+            // sqrt((x - (-1.219))^2 + ((-17.375 + radius) - (-17.375))^2) = radius
+            // sqrt((x + 1.219)^2 + radius^2) = radius
+            // (x + 1.219)^2 + radius^2 = radius^2
+            // (x + 1.219)^2 = 0
+            // This gives x = -1.219, which is the intersection point itself.
+            // 
+            // Let me think differently: The intersection point is on both the tee line and the circle.
+            // For this point to also be on the stone's circumference, the stone center must be at distance 'radius' from it.
+            // Since we want the stone closer to center line, we move the stone center to the right.
+            // But we also need the stone to be positioned so that the intersection point is on its edge.
+            // If stone center is at (x, y) and intersection is at (-1.219, -17.375), then:
+            // (x + 1.219)^2 + (y + 17.375)^2 = radius^2
+            // If y = -17.375 + radius (stone above tee line), then:
+            // (x + 1.219)^2 + radius^2 = radius^2
+            // This forces x = -1.219, which is wrong.
+            //
+            // Actually, I think the issue is that the stone center should be positioned such that the intersection point
+            // is on the stone's circumference, but the stone might not be centered above the tee line.
+            // Let me solve: (x + 1.219)^2 + (y + 17.375)^2 = radius^2
+            // If we want x closer to center (say x = -0.8), then:
+            // (-0.8 + 1.219)^2 + (y + 17.375)^2 = radius^2
+            // 0.419^2 + (y + 17.375)^2 = radius^2
+            // (y + 17.375)^2 = radius^2 - 0.175561
+            // y + 17.375 = sqrt(radius^2 - 0.175561)  (taking positive since stone is above tee line)
+            // y = -17.375 + sqrt(radius^2 - 0.175561)
+            // Red stone: The intersection point of the tee line and 8-foot circle is on the stone's circumference
+            // A line parallel to the center line (vertical line) through this point bisects the stone
+            // Intersection point: (-1.219, -17.375) where tee line (y = -17.375) meets 8-foot circle (radius 1.219)
+            // If a vertical line through (-1.219, -17.375) bisects the stone, the stone center's x = -1.219
+            // The intersection point is on the stone's circumference, so distance from stone center to intersection = radius
+            // Stone center: (-1.219, y_stone)
+            // Distance: |y_stone - (-17.375)| = radius
+            // Since stone is above tee line (in playing area), y_stone > -17.375
+            // So: y_stone = -17.375 + radius
+            const teeLineY = -17.375;
+            const circleRadius = 1.219;
+            const intersectionX = -circleRadius; // -1.219
+            const intersectionY = teeLineY; // -17.375
+            
+            // Stone center x equals intersection x (vertical line bisects stone)
+            const redStoneX = intersectionX;
+            // Stone center y is one radius above the intersection point
+            const redStoneY = intersectionY + radius;
+            
+            // Yellow stone: Same vertical position as standard placement, always on same side as red stone (left)
+            // Mixed doubles markers (from closest to house to farthest):
+            //   4'6": y = -14.174 (nearest), left marker at x = -1.092
+            //   7'6": y = -13.260 (middle), left marker at x = -1.067
+            //   10'6": y = -12.346 (farthest), left marker at x = -1.041
+            // Yellow stone always uses left side markers (same side as red stone)
+            // Vertical position matches standard placement logic
+            let yellowStoneX, yellowStoneY;
+            
+            if (mixedDoublesPlacement === 1 || mixedDoublesPlacement === 2) {
+                // Nearest left side marker (4'6" marker at x = -1.092, y = -14.174)
+                yellowStoneX = -1.092;
+                if (mixedDoublesPlacement === 1) {
+                    // Placement 1: stone on house side of marker
+                    yellowStoneY = -14.174 - radius;
+                } else {
+                    // Placement 2: stone on hog line side of marker (one diameter closer to hog line)
+                    yellowStoneY = -14.174 + radius;
+                }
+            } else if (mixedDoublesPlacement === 3 || mixedDoublesPlacement === 4) {
+                // Middle left side marker (7'6" marker at x = -1.067, y = -13.260)
+                yellowStoneX = -1.067;
+                if (mixedDoublesPlacement === 3) {
+                    // Placement 3: stone on house side of marker
+                    yellowStoneY = -13.260 - radius;
+                } else {
+                    // Placement 4: stone on hog line side of marker (one diameter closer to hog line)
+                    yellowStoneY = -13.260 + radius;
+                }
+            } else if (mixedDoublesPlacement === 5 || mixedDoublesPlacement === 6) {
+                // Farthest left side marker (10'6" marker at x = -1.041, y = -12.346)
+                yellowStoneX = -1.041;
+                if (mixedDoublesPlacement === 5) {
+                    // Placement 5: stone on house side of marker
+                    yellowStoneY = -12.346 - radius;
+                } else {
+                    // Placement 6: stone on hog line side of marker (one diameter closer to hog line)
+                    yellowStoneY = -12.346 + radius;
+                }
+            }
+            
+            // Add red stone (dark)
+            stones.push({
+                id: nextStoneId++,
+                x: redStoneX,
+                y: redStoneY,
+                color: 'red'
+            });
+            
+            // Add yellow stone (light)
+            stones.push({
+                id: nextStoneId++,
+                x: yellowStoneX,
+                y: yellowStoneY,
+                color: 'yellow'
+            });
+            
+            // Resolve any collisions
+            stones.forEach(stone => {
+                resolveCollisions(stone);
+            });
+            
+            // Render the stones
+            renderStones();
+        }
+
+        function applyMixedDoublesPowerPlayRight() {
+            // Remove existing stones
+            stones = [];
+            
+            // Get stone radius
+            const radius = getStoneRadius();
+            
+            // Red stone: Same as left power play but reflected over center line
+            // Intersection point of tee line and 8-foot circle on right side: (1.219, -17.375)
+            // A vertical line through this point bisects the stone
+            const teeLineY = -17.375;
+            const circleRadius = 1.219;
+            const intersectionX = circleRadius; // 1.219 (right side, positive)
+            const intersectionY = teeLineY; // -17.375
+            
+            // Stone center x equals intersection x (vertical line bisects stone)
+            const redStoneX = intersectionX;
+            // Stone center y is one radius above the intersection point
+            const redStoneY = intersectionY + radius;
+            
+            // Yellow stone: Same vertical position as standard placement, always on same side as red stone (right)
+            // Mixed doubles markers (from closest to house to farthest):
+            //   4'6": y = -14.174 (nearest), right marker at x = 1.092
+            //   7'6": y = -13.260 (middle), right marker at x = 1.067
+            //   10'6": y = -12.346 (farthest), right marker at x = 1.041
+            // Yellow stone always uses right side markers (same side as red stone)
+            // Vertical position matches standard placement logic
+            let yellowStoneX, yellowStoneY;
+            
+            if (mixedDoublesPlacement === 1 || mixedDoublesPlacement === 2) {
+                // Nearest right side marker (4'6" marker at x = 1.092, y = -14.174)
+                yellowStoneX = 1.092;
+                if (mixedDoublesPlacement === 1) {
+                    // Placement 1: stone on house side of marker
+                    yellowStoneY = -14.174 - radius;
+                } else {
+                    // Placement 2: stone on hog line side of marker (one diameter closer to hog line)
+                    yellowStoneY = -14.174 + radius;
+                }
+            } else if (mixedDoublesPlacement === 3 || mixedDoublesPlacement === 4) {
+                // Middle right side marker (7'6" marker at x = 1.067, y = -13.260)
+                yellowStoneX = 1.067;
+                if (mixedDoublesPlacement === 3) {
+                    // Placement 3: stone on house side of marker
+                    yellowStoneY = -13.260 - radius;
+                } else {
+                    // Placement 4: stone on hog line side of marker (one diameter closer to hog line)
+                    yellowStoneY = -13.260 + radius;
+                }
+            } else if (mixedDoublesPlacement === 5 || mixedDoublesPlacement === 6) {
+                // Farthest right side marker (10'6" marker at x = 1.041, y = -12.346)
+                yellowStoneX = 1.041;
+                if (mixedDoublesPlacement === 5) {
+                    // Placement 5: stone on house side of marker
+                    yellowStoneY = -12.346 - radius;
+                } else {
+                    // Placement 6: stone on hog line side of marker (one diameter closer to hog line)
+                    yellowStoneY = -12.346 + radius;
+                }
+            }
+            
+            // Add red stone (dark)
+            stones.push({
+                id: nextStoneId++,
+                x: redStoneX,
+                y: redStoneY,
+                color: 'red'
+            });
+            
+            // Add yellow stone (light)
+            stones.push({
+                id: nextStoneId++,
+                x: yellowStoneX,
+                y: yellowStoneY,
+                color: 'yellow'
+            });
+            
+            // Resolve any collisions
+            stones.forEach(stone => {
+                resolveCollisions(stone);
+            });
+            
+            // Render the stones
+            renderStones();
+        }
+
         // Color and circumference settings
         const blueRingColorInput = document.getElementById('blue-ring-color');
         const redRingColorInput = document.getElementById('red-ring-color');
         const lightStoneColorInput = document.getElementById('light-stone-color');
         const darkStoneColorInput = document.getElementById('dark-stone-color');
         const stoneCircumferenceInput = document.getElementById('stone-circumference');
+        const mixedDoublesPlacementSelect = document.getElementById('mixed-doubles-placement');
+        const buttonSizeSelect = document.getElementById('button-size');
+        let mixedDoublesPlacement = 1;
+        let buttonSize = 'standard'; // 'standard' or 'large'
+        
+        // Get button radius based on size setting
+        function getButtonRadius() {
+            if (buttonSize === 'large') {
+                // Large: 18 inches diameter = 9 inches radius = 9 * 2.54 / 100 = 0.2286m
+                return 0.2286;
+            } else {
+                // Standard: 12 inches diameter = 6 inches radius = 6 * 2.54 / 100 = 0.1524m
+                return 0.1524;
+            }
+        }
+        
+        // Update button circles
+        function updateButtonCircles() {
+            const buttonRadius = getButtonRadius();
+            const strokeWidth = 0.013;
+            const outlineRadius = buttonRadius - strokeWidth / 2; // Account for stroke extending outward
+            
+            // Update both houses (bottom and top) using data attributes
+            const buttonFills = svg.querySelectorAll('circle[data-button-fill="true"]');
+            const buttonOutlines = svg.querySelectorAll('circle[data-button-outline="true"]');
+            
+            buttonFills.forEach(circle => {
+                circle.setAttribute('r', String(buttonRadius));
+            });
+            buttonOutlines.forEach(circle => {
+                circle.setAttribute('r', String(outlineRadius));
+            });
+        }
 
         // Function to save colors and circumference to localStorage
         function saveColorsToLocalStorage() {
             const colorSettings = {
                 blueRing: blueRingColor,
                 redRing: redRingColor,
+                eightFootRing: eightFootRingColor,
+                sheetBackground: sheetBackgroundColor,
                 lightStone: lightStoneColor,
                 darkStone: darkStoneColor,
-                circumference: stoneCircumferenceInches
+                circumference: stoneCircumferenceInches,
+                mixedDoublesPlacement: mixedDoublesPlacement,
+                buttonSize: buttonSize
             };
             localStorage.setItem('curlstrat_colors', JSON.stringify(colorSettings));
         }
@@ -578,25 +1386,46 @@
                     const colorSettings = JSON.parse(stored);
                     if (colorSettings.blueRing) blueRingColor = colorSettings.blueRing;
                     if (colorSettings.redRing) redRingColor = colorSettings.redRing;
+                    if (colorSettings.eightFootRing) eightFootRingColor = colorSettings.eightFootRing;
+                    if (colorSettings.sheetBackground) sheetBackgroundColor = colorSettings.sheetBackground;
                     if (colorSettings.lightStone) lightStoneColor = colorSettings.lightStone;
                     if (colorSettings.darkStone) darkStoneColor = colorSettings.darkStone;
                     if (colorSettings.circumference) stoneCircumferenceInches = colorSettings.circumference;
+                    if (colorSettings.mixedDoublesPlacement !== undefined) {
+                        mixedDoublesPlacement = parseInt(colorSettings.mixedDoublesPlacement) || 1;
+                    }
+                    if (colorSettings.buttonSize) {
+                        buttonSize = colorSettings.buttonSize;
+                    }
                     
                     // Update UI elements
                     blueRingColorInput.value = blueRingColor;
                     redRingColorInput.value = redRingColor;
+                    const eightFootRingColorInput = document.getElementById('eight-foot-ring-color');
+                    const sheetBackgroundColorInput = document.getElementById('sheet-background-color');
+                    if (eightFootRingColorInput) eightFootRingColorInput.value = eightFootRingColor;
+                    if (sheetBackgroundColorInput) sheetBackgroundColorInput.value = sheetBackgroundColor;
                     lightStoneColorInput.value = lightStoneColor;
                     darkStoneColorInput.value = darkStoneColor;
                     stoneCircumferenceInput.value = stoneCircumferenceInches;
+                    if (mixedDoublesPlacementSelect) mixedDoublesPlacementSelect.value = String(mixedDoublesPlacement);
+                    if (buttonSizeSelect) buttonSizeSelect.value = buttonSize;
+                    
+                    // Update button circles
+                    updateButtonCircles();
                     
                     // Apply the colors
                     updateHouseRingColors();
+                    updateSheetBackground();
                     if (yellowTemplate) yellowTemplate.style.background = lightStoneColor;
                     if (redTemplate) redTemplate.style.background = darkStoneColor;
                     renderStones();
                 }
             } catch (e) {
             }
+            
+            // Always update sheet background (even if no colors were loaded from localStorage)
+            updateSheetBackground();
         }
 
         blueRingColorInput.addEventListener('change', (e) => {
@@ -610,6 +1439,24 @@
             updateHouseRingColors();
             saveColorsToLocalStorage();
         });
+
+        const eightFootRingColorInput = document.getElementById('eight-foot-ring-color');
+        if (eightFootRingColorInput) {
+            eightFootRingColorInput.addEventListener('change', (e) => {
+                eightFootRingColor = e.target.value;
+                updateHouseRingColors();
+                saveColorsToLocalStorage();
+            });
+        }
+
+        const sheetBackgroundColorInput = document.getElementById('sheet-background-color');
+        if (sheetBackgroundColorInput) {
+            sheetBackgroundColorInput.addEventListener('change', (e) => {
+                sheetBackgroundColor = e.target.value;
+                updateSheetBackground();
+                saveColorsToLocalStorage();
+            });
+        }
 
         lightStoneColorInput.addEventListener('change', (e) => {
             lightStoneColor = e.target.value;
@@ -633,19 +1480,41 @@
             saveColorsToLocalStorage();
         });
 
+        mixedDoublesPlacementSelect.addEventListener('change', (e) => {
+            mixedDoublesPlacement = parseInt(e.target.value) || 1;
+            saveColorsToLocalStorage();
+        });
+
+        buttonSizeSelect.addEventListener('change', (e) => {
+            buttonSize = e.target.value;
+            updateButtonCircles();
+            saveColorsToLocalStorage();
+        });
+
         // Function to update house ring colors
         function updateHouseRingColors() {
             // Update bottom house (y = -17.375)
             const bottomBlueRing = svg.querySelector('circle[cy="-17.375"][r="1.829"]');
             const bottomRedRing = svg.querySelector('circle[cy="-17.375"][r="0.610"]');
+            const bottomEightFootRing = svg.querySelector('circle[cy="-17.375"][data-eight-foot-ring="true"]');
             if (bottomBlueRing) bottomBlueRing.setAttribute('fill', blueRingColor);
             if (bottomRedRing) bottomRedRing.setAttribute('fill', redRingColor);
+            if (bottomEightFootRing) bottomEightFootRing.setAttribute('fill', eightFootRingColor);
             
             // Update top house (y = 17.375)
             const topBlueRing = svg.querySelector('circle[cy="17.375"][r="1.829"]');
             const topRedRing = svg.querySelector('circle[cy="17.375"][r="0.610"]');
+            const topEightFootRing = svg.querySelector('circle[cy="17.375"][data-eight-foot-ring="true"]');
             if (topBlueRing) topBlueRing.setAttribute('fill', blueRingColor);
             if (topRedRing) topRedRing.setAttribute('fill', redRingColor);
+            if (topEightFootRing) topEightFootRing.setAttribute('fill', eightFootRingColor);
+        }
+
+        function updateSheetBackground() {
+            const sheetBackground = document.getElementById('sheet-background');
+            if (sheetBackground) {
+                sheetBackground.setAttribute('fill', sheetBackgroundColor);
+            }
         }
 
         // Function to darken a color (for stroke)
@@ -785,6 +1654,8 @@
         // Color settings - user-configurable
         let blueRingColor = '#80b3ff';
         let redRingColor = '#ff8080';
+        let eightFootRingColor = '#ffffff';
+        let sheetBackgroundColor = '#f0f8ff';
         let lightStoneColor = '#ffd700';
         let darkStoneColor = '#cc0000';
         let stones = []; // Array to store all stones: { id, x, y, color }
@@ -1050,7 +1921,6 @@
 
         // Rotation control
         const rotateCwButton = document.getElementById('rotate-cw-button');
-        const rotateCcwButton = document.getElementById('rotate-ccw-button');
         
         // Initialize rotation group on page load
         let rotateGroup = document.getElementById('rotate-group');
@@ -1173,35 +2043,8 @@
         // Clockwise rotation (rotate content clockwise in SVG space)
         rotateCwButton.addEventListener('click', () => {
             // Rotate 90 degrees clockwise from user's perspective
-            // Since SVG rotation is counter-clockwise, rotating content clockwise
-            // makes the view appear to rotate clockwise
-            // Subtract 90 degrees from the content rotation
-            currentRotation = (currentRotation - 90) % 360;
-            // Ensure positive rotation value
-            if (currentRotation < 0) {
-                currentRotation += 360;
-            }
-            
-            // Rotate around the center of the sheet (0, 0 in SVG coordinates)
-            rotateGroup.setAttribute('transform', 
-                `rotate(${currentRotation} 0 0)`
-            );
-            
-            // Reset zoom and pan to default view
-            resetToDefaultView();
-            
-            // Re-render stones after rotation to ensure they're visible
-            renderStones();
-            
-            // Re-render broom line after rotation
-            renderBroomLine();
-        });
-        
-        // Counterclockwise rotation (rotate content counter-clockwise in SVG space)
-        rotateCcwButton.addEventListener('click', () => {
-            // Rotate 90 degrees counter-clockwise from user's perspective
             // Since SVG rotation is counter-clockwise, rotating content counter-clockwise
-            // makes the view appear to rotate counter-clockwise
+            // makes the view appear to rotate clockwise
             // Add 90 degrees to the content rotation
             currentRotation = (currentRotation + 90) % 360;
             
@@ -1268,13 +2111,16 @@
             const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
             circle.setAttribute('cx', String(stone.x));
             circle.setAttribute('cy', String(stone.y));
-            const radius = getStoneRadius();
-            circle.setAttribute('r', String(radius));
+            const desiredRadius = getStoneRadius();
+            const strokeWidth = 0.01;
+            // Adjust radius by -stroke-width/2 to account for stroke extending outward
+            const actualRadius = desiredRadius - strokeWidth / 2;
+            circle.setAttribute('r', String(actualRadius));
             const stoneColor = stone.color === 'yellow' ? lightStoneColor : darkStoneColor;
             const stoneStroke = stone.color === 'yellow' ? darkenColor(lightStoneColor, 0.7) : darkenColor(darkStoneColor, 0.7);
             circle.setAttribute('fill', stoneColor);
             circle.setAttribute('stroke', stoneStroke);
-            circle.setAttribute('stroke-width', '0.01');
+            circle.setAttribute('stroke-width', String(strokeWidth));
             circle.setAttribute('data-stone-id', String(stone.id));
             circle.style.cursor = 'grab';
             circle.style.pointerEvents = 'all';
@@ -1286,6 +2132,10 @@
 
         // Render all stones
         function renderStones() {
+            // Update snapshot button state whenever stones are rendered
+            updateSnapshotButtonState();
+            // Update swap colors button visibility
+            updateSwapColorsButtonVisibility();
             const layer = getStonesLayer();
             if (!layer) {
                 return;
@@ -1326,6 +2176,35 @@
             draggedStoneTemplate = 'red';
             svg.style.cursor = 'crosshair';
         });
+
+        // Update swap colors button visibility based on whether there are stones
+        function updateSwapColorsButtonVisibility() {
+            const swapStoneColorsButton = document.getElementById('swap-stone-colors-button');
+            if (swapStoneColorsButton) {
+                if (stones.length === 0) {
+                    swapStoneColorsButton.style.display = 'none';
+                } else {
+                    swapStoneColorsButton.style.display = 'block';
+                }
+            }
+        }
+
+        // Swap all stone colors button
+        const swapStoneColorsButton = document.getElementById('swap-stone-colors-button');
+        swapStoneColorsButton.addEventListener('click', () => {
+            // Swap colors: yellow -> red, red -> yellow
+            stones.forEach(stone => {
+                if (stone.color === 'yellow') {
+                    stone.color = 'red';
+                } else if (stone.color === 'red') {
+                    stone.color = 'yellow';
+                }
+            });
+            renderStones();
+        });
+        
+        // Initialize swap colors button visibility on page load
+        updateSwapColorsButtonVisibility();
 
         // Stone dragging on the sheet
         // Use event delegation on the SVG since stones layer might be inside rotate group
@@ -1853,16 +2732,20 @@
                     centerLine: toggleCenterLine.checked,
                     courtesyLines: toggleCourtesyLines.checked,
                     wheelchairLines: toggleWheelchairLines.checked,
-                    fourFootLines: toggleFourFootLines.checked
+                    fourFootLines: toggleFourFootLines.checked,
+                    mixedDoublesMarkers: toggleMixedDoublesMarkers.checked
                 },
                 targetHack: broomHack,
                 colors: {
                     blueRing: blueRingColor,
                     redRing: redRingColor,
+                    eightFootRing: eightFootRingColor,
+                    sheetBackground: sheetBackgroundColor,
                     lightStone: lightStoneColor,
                     darkStone: darkStoneColor
                 },
-                stoneCircumference: stoneCircumferenceInches
+                stoneCircumference: stoneCircumferenceInches,
+                buttonSize: buttonSize
             };
             
             // Encode as base64 URL-safe string
@@ -1911,6 +2794,9 @@
                     toggleFourFootLines.checked = state.lineVisibility.fourFootLines === true;
                     fourFootLines.style.display = toggleFourFootLines.checked ? 'block' : 'none';
                     
+                    toggleMixedDoublesMarkers.checked = state.lineVisibility.mixedDoublesMarkers === true;
+                    mixedDoublesMarkers.style.display = toggleMixedDoublesMarkers.checked ? 'block' : 'none';
+                    
                     // Save restored visibility to localStorage (so it persists)
                     saveLineVisibilityToLocalStorage();
                 }
@@ -1926,15 +2812,22 @@
                 if (state.colors) {
                     blueRingColor = state.colors.blueRing || blueRingColor;
                     redRingColor = state.colors.redRing || redRingColor;
+                    eightFootRingColor = state.colors.eightFootRing || eightFootRingColor;
+                    sheetBackgroundColor = state.colors.sheetBackground || sheetBackgroundColor;
                     lightStoneColor = state.colors.lightStone || lightStoneColor;
                     darkStoneColor = state.colors.darkStone || darkStoneColor;
                     
                     blueRingColorInput.value = blueRingColor;
                     redRingColorInput.value = redRingColor;
+                    const eightFootRingColorInput = document.getElementById('eight-foot-ring-color');
+                    const sheetBackgroundColorInput = document.getElementById('sheet-background-color');
+                    if (eightFootRingColorInput) eightFootRingColorInput.value = eightFootRingColor;
+                    if (sheetBackgroundColorInput) sheetBackgroundColorInput.value = sheetBackgroundColor;
                     lightStoneColorInput.value = lightStoneColor;
                     darkStoneColorInput.value = darkStoneColor;
                     
                     updateHouseRingColors();
+                    updateSheetBackground();
                     if (yellowTemplate) yellowTemplate.style.background = lightStoneColor;
                     if (redTemplate) redTemplate.style.background = darkStoneColor;
                 }
@@ -1942,6 +2835,12 @@
                 if (state.stoneCircumference !== undefined) {
                     stoneCircumferenceInches = state.stoneCircumference;
                     stoneCircumferenceInput.value = stoneCircumferenceInches;
+                }
+                
+                if (state.buttonSize) {
+                    buttonSize = state.buttonSize;
+                    if (buttonSizeSelect) buttonSizeSelect.value = buttonSize;
+                    updateButtonCircles();
                 }
                 
                 // Re-render stones with restored colors/sizes
@@ -2006,6 +2905,228 @@
         const shareButton = document.getElementById('share-button');
         shareButton.addEventListener('click', copyShareLink);
 
+        // Snapshots functionality
+        const STORAGE_KEY_SNAPSHOTS = 'curlingStrategySnapshots';
+        let snapshots = [];
+        let nextSnapshotNumber = 1;
+
+        function loadSnapshotsFromLocalStorage() {
+            try {
+                const stored = localStorage.getItem(STORAGE_KEY_SNAPSHOTS);
+                if (stored) {
+                    snapshots = JSON.parse(stored);
+                    // Find the highest snapshot number
+                    let maxNum = 0;
+                    snapshots.forEach(snapshot => {
+                        const match = snapshot.name.match(/^Snapshot (\d+)$/);
+                        if (match) {
+                            const num = parseInt(match[1], 10);
+                            if (num > maxNum) maxNum = num;
+                        }
+                    });
+                    nextSnapshotNumber = maxNum + 1;
+                } else {
+                    snapshots = [];
+                    nextSnapshotNumber = 1;
+                }
+            } catch (e) {
+                snapshots = [];
+                nextSnapshotNumber = 1;
+            }
+            renderSnapshots();
+        }
+
+        function saveSnapshotsToLocalStorage() {
+            try {
+                localStorage.setItem(STORAGE_KEY_SNAPSHOTS, JSON.stringify(snapshots));
+            } catch (e) {
+                // Ignore storage errors
+            }
+        }
+
+        function renderSnapshots() {
+            const list = document.getElementById('snapshots-list');
+            list.innerHTML = '';
+
+            // Show/hide "Clear All" button
+            const clearAllButton = document.getElementById('clear-all-snapshots-button');
+            if (snapshots.length > 0) {
+                clearAllButton.style.display = 'block';
+            } else {
+                clearAllButton.style.display = 'none';
+            }
+
+            snapshots.forEach(snapshot => {
+                const item = document.createElement('div');
+                item.style.cssText = 'display: flex; align-items: center; gap: 8px; padding: 6px 0; border-bottom: 1px solid #eee;';
+                
+                // Load button
+                const loadButton = document.createElement('button');
+                loadButton.innerHTML = '▶';
+                loadButton.style.cssText = 'padding: 4px 6px; background: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px;';
+                loadButton.title = 'Load snapshot';
+                loadButton.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    loadSnapshot(snapshot.id);
+                });
+                
+                // Editable name
+                const nameInput = document.createElement('input');
+                nameInput.type = 'text';
+                nameInput.value = snapshot.name;
+                nameInput.style.cssText = 'flex: 1; padding: 4px; border: 1px solid #ddd; border-radius: 4px; font-size: 12px; background: transparent;';
+                nameInput.addEventListener('blur', () => {
+                    snapshot.name = nameInput.value.trim() || `Snapshot ${nextSnapshotNumber}`;
+                    saveSnapshotsToLocalStorage();
+                });
+                nameInput.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') {
+                        nameInput.blur();
+                    }
+                });
+                
+                // Permalink button
+                const permalinkButton = document.createElement('button');
+                permalinkButton.innerHTML = '🔗';
+                permalinkButton.style.cssText = 'padding: 4px 6px; background: #0066cc; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px;';
+                permalinkButton.title = 'Copy permalink';
+                permalinkButton.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    copySnapshotPermalink(snapshot.id);
+                });
+                
+                // Delete button
+                const deleteButton = document.createElement('button');
+                deleteButton.innerHTML = '🗑️';
+                deleteButton.style.cssText = 'padding: 4px 6px; background: #dc3545; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px;';
+                deleteButton.title = 'Delete snapshot';
+                deleteButton.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    if (confirm(`Delete "${snapshot.name}"?`)) {
+                        deleteSnapshot(snapshot.id);
+                    }
+                });
+                
+                // Click on item to load snapshot (but not if clicking buttons or input)
+                item.addEventListener('click', (e) => {
+                    // Don't trigger if clicking on input or buttons
+                    if (e.target === nameInput || e.target === loadButton || e.target === permalinkButton || e.target === deleteButton) {
+                        return;
+                    }
+                    loadSnapshot(snapshot.id);
+                });
+                item.style.cursor = 'pointer';
+                
+                item.appendChild(loadButton);
+                item.appendChild(nameInput);
+                item.appendChild(permalinkButton);
+                item.appendChild(deleteButton);
+                list.appendChild(item);
+            });
+        }
+
+        function createSnapshot() {
+            const stateData = serializeBoardState();
+            const snapshot = {
+                id: Date.now().toString(), // Use timestamp as unique ID
+                name: `Snapshot ${nextSnapshotNumber}`,
+                stateData: stateData,
+                createdAt: new Date().toISOString()
+            };
+            snapshots.unshift(snapshot); // Add to beginning of array
+            nextSnapshotNumber++;
+            saveSnapshotsToLocalStorage();
+            renderSnapshots();
+            
+            // Focus and select the newly created snapshot's name input
+            setTimeout(() => {
+                const list = document.getElementById('snapshots-list');
+                const firstItem = list.firstElementChild;
+                if (firstItem) {
+                    const nameInput = firstItem.querySelector('input[type="text"]');
+                    if (nameInput) {
+                        nameInput.focus();
+                        nameInput.select();
+                    }
+                }
+            }, 0);
+        }
+
+        function deleteSnapshot(snapshotId) {
+            snapshots = snapshots.filter(s => s.id !== snapshotId);
+            saveSnapshotsToLocalStorage();
+            renderSnapshots();
+        }
+
+        function loadSnapshot(snapshotId) {
+            const snapshot = snapshots.find(s => s.id === snapshotId);
+            if (snapshot) {
+                deserializeBoardState(snapshot.stateData);
+            }
+        }
+
+        function getSnapshotPermalink(snapshotId) {
+            const snapshot = snapshots.find(s => s.id === snapshotId);
+            if (snapshot) {
+                const url = new URL(window.location.href);
+                url.searchParams.set('state', snapshot.stateData);
+                return url.toString();
+            }
+            return '';
+        }
+
+        function copySnapshotPermalink(snapshotId) {
+            const link = getSnapshotPermalink(snapshotId);
+            if (link) {
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(link).then(() => {
+                        showShareFeedback('✓ Permalink copied!');
+                    }).catch(() => {
+                        fallbackCopyToClipboard(link);
+                    });
+                } else {
+                    fallbackCopyToClipboard(link);
+                }
+            }
+        }
+
+        // Update snapshot button state based on whether there are stones
+        function updateSnapshotButtonState() {
+            const createSnapshotButton = document.getElementById('create-snapshot-button');
+            if (createSnapshotButton) {
+                createSnapshotButton.disabled = stones.length === 0;
+                if (stones.length === 0) {
+                    createSnapshotButton.style.opacity = '0.5';
+                    createSnapshotButton.style.cursor = 'not-allowed';
+                } else {
+                    createSnapshotButton.style.opacity = '1';
+                    createSnapshotButton.style.cursor = 'pointer';
+                }
+            }
+        }
+
+        // Create snapshot button
+        const createSnapshotButton = document.getElementById('create-snapshot-button');
+        createSnapshotButton.addEventListener('click', createSnapshot);
+
+        // Clear all snapshots button
+        const clearAllSnapshotsButton = document.getElementById('clear-all-snapshots-button');
+        clearAllSnapshotsButton.addEventListener('click', () => {
+            if (snapshots.length === 0) return;
+            if (confirm(`Delete all ${snapshots.length} snapshots?`)) {
+                snapshots = [];
+                nextSnapshotNumber = 1;
+                saveSnapshotsToLocalStorage();
+                renderSnapshots();
+            }
+        });
+
+        // Load snapshots on page load
+        loadSnapshotsFromLocalStorage();
+        
+        // Initialize snapshot button state on page load
+        updateSnapshotButtonState();
+
         // Restore state from URL on page load
         function restoreStateFromURL() {
             const urlParams = new URLSearchParams(window.location.search);
@@ -2069,23 +3190,35 @@
         // Reset colors and stone settings button
         const resetColorsButton = document.getElementById('reset-colors-button');
         resetColorsButton.addEventListener('click', () => {
-            if (confirm('Reset colors and stone circumference to defaults? This cannot be undone.')) {
+            if (confirm('Reset colors and settings to defaults?')) {
                 // Reset to defaults
                 blueRingColor = '#80b3ff';
                 redRingColor = '#ff8080';
+                eightFootRingColor = '#ffffff';
+                sheetBackgroundColor = '#f0f8ff';
                 lightStoneColor = '#ffd700';
                 darkStoneColor = '#cc0000';
                 stoneCircumferenceInches = 36;
+                mixedDoublesPlacement = 1;
+                buttonSize = 'standard';
                 
                 // Update UI
                 blueRingColorInput.value = blueRingColor;
                 redRingColorInput.value = redRingColor;
+                const eightFootRingColorInput = document.getElementById('eight-foot-ring-color');
+                const sheetBackgroundColorInput = document.getElementById('sheet-background-color');
+                if (eightFootRingColorInput) eightFootRingColorInput.value = eightFootRingColor;
+                if (sheetBackgroundColorInput) sheetBackgroundColorInput.value = sheetBackgroundColor;
                 lightStoneColorInput.value = lightStoneColor;
                 darkStoneColorInput.value = darkStoneColor;
                 stoneCircumferenceInput.value = stoneCircumferenceInches;
+                mixedDoublesPlacementSelect.value = String(mixedDoublesPlacement);
+                buttonSizeSelect.value = buttonSize;
                 
                 // Apply changes
                 updateHouseRingColors();
+                updateSheetBackground();
+                updateButtonCircles();
                 if (yellowTemplate) yellowTemplate.style.background = lightStoneColor;
                 if (redTemplate) redTemplate.style.background = darkStoneColor;
                 renderStones();
