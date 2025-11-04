@@ -30,7 +30,10 @@
             top: 20px;
             right: 20px;
             width: 300px;
+            /* Fallback for older browsers */
             max-height: calc(100vh - 40px);
+            /* Use dynamic viewport height when available and account for safe area inset */
+            max-height: calc(100dvh - 40px - env(safe-area-inset-bottom, 0px));
             overflow-y: auto;
             background: #f8f9fa;
             padding: 0;
@@ -40,6 +43,9 @@
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
             font-size: 14px;
             transition: transform 0.3s ease-in-out;
+            /* Ensure content isn't hidden behind system UI at the bottom */
+            padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+            overscroll-behavior: contain;
         }
 
         /* Hamburger menu button - only visible on mobile */
@@ -147,6 +153,9 @@
                 width: calc(100vw - 20px);
                 right: 10px;
                 top: 70px;
+                /* Re-apply height calc for small screens */
+                max-height: calc(100dvh - 80px - env(safe-area-inset-bottom, 0px));
+                padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
             }
 
             .controls-toggle {
