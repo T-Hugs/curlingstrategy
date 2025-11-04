@@ -35,6 +35,119 @@
             z-index: 1000;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
             font-size: 14px;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        /* Hamburger menu button - only visible on mobile */
+        .controls-toggle {
+            display: none;
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 44px;
+            height: 44px;
+            background: #f8f9fa;
+            border: none;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            z-index: 1001;
+            cursor: pointer;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        .controls-toggle span {
+            display: block;
+            width: 24px;
+            height: 3px;
+            background: #2c3e50;
+            border-radius: 2px;
+            transition: all 0.3s ease;
+            margin-bottom: 4px;
+        }
+
+        .controls-toggle span:last-child {
+            margin-bottom: 0;
+        }
+
+        .controls-toggle.active span:nth-child(1) {
+            transform: rotate(45deg) translate(6px, 6px);
+        }
+
+        .controls-toggle.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .controls-toggle.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(6px, -6px);
+        }
+
+        /* Mobile styles */
+        @media (max-width: 768px) {
+            .controls-toggle {
+                display: block;
+            }
+
+            .controls {
+                transform: translateX(100%);
+                width: calc(100vw - 40px);
+                max-width: 320px;
+                top: 70px;
+                right: 20px;
+                max-height: calc(100vh - 90px);
+            }
+
+            .controls.open {
+                transform: translateX(0);
+            }
+
+            .controls-backdrop {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 999;
+            }
+
+            .controls-backdrop.active {
+                display: block;
+            }
+
+            /* Hide stones section in controls panel on mobile */
+            .stone-placement-section {
+                display: none;
+            }
+
+            /* Show mobile stones container */
+            .mobile-stones-container {
+                display: flex !important;
+            }
+            
+            /* Ensure stone templates are visible */
+            .mobile-stones-container .stone-template {
+                display: block !important;
+                visibility: visible !important;
+            }
+            
+            .mobile-stones-container .stone-template-label {
+                display: block !important;
+                visibility: visible !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .controls {
+                width: calc(100vw - 20px);
+                right: 10px;
+                top: 70px;
+            }
+
+            .controls-toggle {
+                right: 10px;
+            }
         }
 
         .controls h3 {
@@ -414,6 +527,37 @@
             font-weight: 500;
         }
 
+        /* Mobile-only stone templates */
+        .mobile-stones-container {
+            display: none;
+            position: fixed;
+            left: 10px;
+            bottom: 10px;
+            z-index: 1002;
+            flex-direction: column;
+            gap: 12px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 12px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .mobile-stone-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .mobile-stone-item .stone-template {
+            width: 48px;
+            height: 48px;
+        }
+
+        .mobile-stone-item .stone-template-label {
+            font-size: 10px;
+            margin-top: 4px;
+        }
+
         /* Help & Feedback Text */
         .help-text {
             font-size: 11px;
@@ -612,7 +756,27 @@
             <g id="broom-line-layer"></g>
         </svg>
 
-    <div class="controls">
+    <button id="controls-toggle" class="controls-toggle" aria-label="Toggle settings panel">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <!-- Mobile-only stone templates (always visible on small screens) -->
+    <div class="mobile-stones-container" id="mobile-stones-container">
+        <div class="mobile-stone-item">
+            <div class="stone-template yellow" id="mobile-light-stone-template" data-color="yellow"></div>
+            <div class="stone-template-label">Light</div>
+        </div>
+        <div class="mobile-stone-item">
+            <div class="stone-template red" id="mobile-dark-stone-template" data-color="red"></div>
+            <div class="stone-template-label">Dark</div>
+        </div>
+    </div>
+
+    <div class="controls-backdrop" id="controls-backdrop"></div>
+
+    <div class="controls" id="controls-panel">
         <!-- Line/Marker Visibility -->
         <div class="settings-section">
             <h3 class="settings-header settings-header-expandable" onclick="toggleLineVisibility()">
@@ -729,7 +893,7 @@
         </div>
         
         <!-- Stone Placement -->
-        <div class="settings-section">
+        <div class="settings-section stone-placement-section">
             <div class="stone-placement-label">Drag stones onto the sheet</div>
             <div class="stone-templates-row">
                 <div>
@@ -800,6 +964,38 @@
     </div>
 
     <script type="module">
+        // Toggle controls panel on mobile
+        const controlsToggle = document.getElementById('controls-toggle');
+        const controlsPanel = document.getElementById('controls-panel');
+        const controlsBackdrop = document.getElementById('controls-backdrop');
+        
+        controlsToggle.addEventListener('click', () => {
+            controlsPanel.classList.toggle('open');
+            controlsToggle.classList.toggle('active');
+            if (window.innerWidth <= 768) {
+                controlsBackdrop.classList.toggle('active');
+            }
+        });
+
+        // Close panel when clicking outside on mobile
+        controlsBackdrop.addEventListener('click', () => {
+            if (window.innerWidth <= 768) {
+                controlsPanel.classList.remove('open');
+                controlsToggle.classList.remove('active');
+                controlsBackdrop.classList.remove('active');
+            }
+        });
+
+        document.addEventListener('click', (e) => {
+            if (window.innerWidth <= 768) {
+                if (!controlsPanel.contains(e.target) && !controlsToggle.contains(e.target) && controlsPanel.classList.contains('open')) {
+                    controlsPanel.classList.remove('open');
+                    controlsToggle.classList.remove('active');
+                    controlsBackdrop.classList.remove('active');
+                }
+            }
+        });
+
         // Toggle Line/Marker Visibility section
         window.toggleLineVisibility = function() {
             const content = document.getElementById('line-visibility-content');
@@ -1124,6 +1320,8 @@
                     updateSheetBackground();
                     if (yellowTemplate) yellowTemplate.style.background = lightStoneColor;
                     if (redTemplate) redTemplate.style.background = darkStoneColor;
+                    if (mobileYellowTemplate) mobileYellowTemplate.style.background = lightStoneColor;
+                    if (mobileRedTemplate) mobileRedTemplate.style.background = darkStoneColor;
                     renderStones();
                 }
             } catch (e) {
@@ -1167,6 +1365,7 @@
             lightStoneColor = e.target.value;
             // Update template color
             yellowTemplate.style.background = lightStoneColor;
+            if (mobileYellowTemplate) mobileYellowTemplate.style.background = lightStoneColor;
             renderStones(); // Re-render all stones with new color
             saveColorsToLocalStorage();
         });
@@ -1175,6 +1374,7 @@
             darkStoneColor = e.target.value;
             // Update template color
             redTemplate.style.background = darkStoneColor;
+            if (mobileRedTemplate) mobileRedTemplate.style.background = darkStoneColor;
             renderStones(); // Re-render all stones with new color
             saveColorsToLocalStorage();
         });
@@ -1368,7 +1568,9 @@
         let isDraggingStone = false;
         let draggedStoneTemplate = null;
         let draggedStone = null;
+        let draggedStoneId = null; // Store ID separately to avoid reference issues
         let dragStartPoint = null;
+        let renderStonesScheduled = false; // Flag to prevent multiple renderStones() calls in RAF
         let isDraggingFromTemplate = false; // Track if dragging from template (not existing stone)
         let previewStone = null; // Preview stone element during drag
 
@@ -1463,32 +1665,71 @@
 
         // Touch pinch zoom
         let lastTouchDistance = 0;
-        let pinchCenter = null;
+        let pinchCenterPoint = null; // Store pinch center in viewBox coordinates
+        let wasPinching = false; // Track if we were just pinching
+        let pinchEndTime = 0; // Timestamp when pinch ended
+        const PINCH_SENSITIVITY = 0.5; // Damping factor for zoom sensitivity (increased for better responsiveness)
+        const PINCH_END_DEBOUNCE = 100; // Milliseconds to ignore single-touch after pinch ends
 
         svg.addEventListener('touchstart', (e) => {
             if (e.touches.length === 2) {
                 e.preventDefault();
+                wasPinching = true;
+                isPanning = false; // Stop any active panning when starting pinch
                 const touch1 = e.touches[0];
                 const touch2 = e.touches[1];
                 lastTouchDistance = Math.hypot(
                     touch2.clientX - touch1.clientX,
                     touch2.clientY - touch1.clientY
                 );
-                pinchCenter = screenToSVG(
-                    (touch1.clientX + touch2.clientX) / 2,
-                    (touch1.clientY + touch2.clientY) / 2
-                );
+                // Calculate and store pinch center in viewBox coordinates at start
+                const centerScreenX = (touch1.clientX + touch2.clientX) / 2;
+                const centerScreenY = (touch1.clientY + touch2.clientY) / 2;
+                const rect = svg.getBoundingClientRect();
+                const point = svg.createSVGPoint();
+                point.x = centerScreenX - rect.left;
+                point.y = centerScreenY - rect.top;
+                const svgPoint = point.matrixTransform(svg.getScreenCTM().inverse());
+                pinchCenterPoint = { x: svgPoint.x, y: svgPoint.y };
             } else if (e.touches.length === 1) {
+                // IMPORTANT: Check if touching a stone FIRST - don't start panning if so
+                // This prevents panning from interfering with stone dragging
                 const touch = e.touches[0];
-                isPanning = true;
-                panStart = { x: touch.clientX, y: touch.clientY };
-                panStartViewBox = { x: viewBox.x, y: viewBox.y };
+                let stoneElement = e.target.closest ? e.target.closest('[data-stone-id]') : null;
+                if (!stoneElement) {
+                    stoneElement = document.elementFromPoint(touch.clientX, touch.clientY)?.closest('[data-stone-id]');
+                }
+                
+                // Don't start panning if touching a stone - let the stone touchstart handler handle it
+                if (stoneElement) {
+                    return;
+                }
+                
+                // Don't start panning if already dragging a stone
+                if (isDraggingStone) {
+                    return;
+                }
+                
+                // Only start panning if we weren't just pinching (prevent jump when lifting one finger)
+                const timeSincePinchEnd = Date.now() - pinchEndTime;
+                if (!wasPinching || timeSincePinchEnd > PINCH_END_DEBOUNCE) {
+                    wasPinching = false;
+                    isPanning = true;
+                    panStart = { x: touch.clientX, y: touch.clientY };
+                    panStartViewBox = { x: viewBox.x, y: viewBox.y };
+                }
             }
         });
 
         svg.addEventListener('touchmove', (e) => {
+            // Don't pan if dragging a stone, template, or broom line
+            if (isDraggingStone || isDraggingFromTemplate || isDraggingBroomLine) {
+                return;
+            }
+            
             if (e.touches.length === 2) {
                 e.preventDefault();
+                wasPinching = true;
                 const touch1 = e.touches[0];
                 const touch2 = e.touches[1];
                 const currentDistance = Math.hypot(
@@ -1496,55 +1737,78 @@
                     touch2.clientY - touch1.clientY
                 );
 
-                if (lastTouchDistance > 0 && pinchCenter) {
-                    const zoomFactor = currentDistance / lastTouchDistance;
-                    zoomAtPoint(zoomFactor, pinchCenter.x, pinchCenter.y);
+                if (lastTouchDistance > 0) {
+                    // Recalculate pinch center on each move to track finger movement
+                    const centerScreenX = (touch1.clientX + touch2.clientX) / 2;
+                    const centerScreenY = (touch1.clientY + touch2.clientY) / 2;
+                    const rect = svg.getBoundingClientRect();
+                    const point = svg.createSVGPoint();
+                    point.x = centerScreenX - rect.left;
+                    point.y = centerScreenY - rect.top;
+                    const svgPoint = point.matrixTransform(svg.getScreenCTM().inverse());
+                    
+                    // Calculate zoom factor with damping
+                    const rawZoomFactor = currentDistance / lastTouchDistance;
+                    const zoomFactor = 1 + (rawZoomFactor - 1) * PINCH_SENSITIVITY;
+                    
+                    zoomAtPoint(zoomFactor, svgPoint.x, svgPoint.y);
                     lastTouchDistance = currentDistance;
                 }
             } else if (e.touches.length === 1 && isPanning) {
-                e.preventDefault();
-                const touch = e.touches[0];
-                const deltaX = touch.clientX - panStart.x;
-                const deltaY = touch.clientY - panStart.y;
-                
-                // Convert screen pixel deltas directly using the inverse transform
-                const ctm = svg.getScreenCTM();
-                const invCTM = ctm ? ctm.inverse() : null;
-                
-                if (invCTM) {
-                    // Convert screen pixel delta to SVG coordinate delta
-                    const startPoint = svg.createSVGPoint();
-                    startPoint.x = 0;
-                    startPoint.y = 0;
+                // Only pan if we weren't just pinching (prevent jump when lifting one finger)
+                const timeSincePinchEnd = Date.now() - pinchEndTime;
+                if (!wasPinching || timeSincePinchEnd > PINCH_END_DEBOUNCE) {
+                    wasPinching = false;
+                    e.preventDefault();
+                    const touch = e.touches[0];
+                    const deltaX = touch.clientX - panStart.x;
+                    const deltaY = touch.clientY - panStart.y;
                     
-                    const endPoint = svg.createSVGPoint();
-                    endPoint.x = deltaX;
-                    endPoint.y = deltaY;
+                    // Convert screen pixel deltas directly using the inverse transform
+                    const ctm = svg.getScreenCTM();
+                    const invCTM = ctm ? ctm.inverse() : null;
                     
-                    // Transform both points
-                    const startTransformed = startPoint.matrixTransform(invCTM);
-                    const endTransformed = endPoint.matrixTransform(invCTM);
-                    
-                    // Calculate the delta in SVG space
-                    const svgDeltaX = endTransformed.x - startTransformed.x;
-                    const svgDeltaY = endTransformed.y - startTransformed.y;
-                    
-                    // Move viewBox opposite to drag direction for natural panning
-                    viewBox.x = panStartViewBox.x - svgDeltaX;
-                    viewBox.y = panStartViewBox.y - svgDeltaY;
-                    
-                    updateViewBox();
+                    if (invCTM) {
+                        // Convert screen pixel delta to SVG coordinate delta
+                        const startPoint = svg.createSVGPoint();
+                        startPoint.x = 0;
+                        startPoint.y = 0;
+                        
+                        const endPoint = svg.createSVGPoint();
+                        endPoint.x = deltaX;
+                        endPoint.y = deltaY;
+                        
+                        // Transform both points
+                        const startTransformed = startPoint.matrixTransform(invCTM);
+                        const endTransformed = endPoint.matrixTransform(invCTM);
+                        
+                        // Calculate the delta in SVG space
+                        const svgDeltaX = endTransformed.x - startTransformed.x;
+                        const svgDeltaY = endTransformed.y - startTransformed.y;
+                        
+                        // Move viewBox opposite to drag direction for natural panning
+                        viewBox.x = panStartViewBox.x - svgDeltaX;
+                        viewBox.y = panStartViewBox.y - svgDeltaY;
+                        
+                        updateViewBox();
+                    }
                 }
             }
         });
 
         svg.addEventListener('touchend', (e) => {
             if (e.touches.length < 2) {
+                if (wasPinching && e.touches.length === 1) {
+                    // Pinch ended but one finger still down - mark time and prevent panning
+                    pinchEndTime = Date.now();
+                    isPanning = false; // Stop any panning that might have started
+                }
                 lastTouchDistance = 0;
-                pinchCenter = null;
+                pinchCenterPoint = null;
             }
             if (e.touches.length === 0) {
                 isPanning = false;
+                wasPinching = false;
             }
         });
 
@@ -1758,10 +2022,14 @@
         
         const yellowTemplate = document.getElementById('light-stone-template');
         const redTemplate = document.getElementById('dark-stone-template');
+        const mobileYellowTemplate = document.getElementById('mobile-light-stone-template');
+        const mobileRedTemplate = document.getElementById('mobile-dark-stone-template');
         
         // Initialize template colors
         if (yellowTemplate) yellowTemplate.style.background = lightStoneColor;
         if (redTemplate) redTemplate.style.background = darkStoneColor;
+        if (mobileYellowTemplate) mobileYellowTemplate.style.background = lightStoneColor;
+        if (mobileRedTemplate) mobileRedTemplate.style.background = darkStoneColor;
         
         // Initial render of any existing stones (should be empty on first load)
         renderStones();
@@ -1820,22 +2088,46 @@
             });
         }
 
-        // Template mousedown - start dragging from template
-        yellowTemplate.addEventListener('mousedown', (e) => {
+        // Template mousedown/touchstart - start dragging from template
+        function startDraggingFromTemplate(color, e) {
             e.preventDefault();
             e.stopPropagation();
             isDraggingFromTemplate = true;
-            draggedStoneTemplate = 'yellow';
+            draggedStoneTemplate = color;
             svg.style.cursor = 'crosshair';
-        });
+        }
 
-        redTemplate.addEventListener('mousedown', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            isDraggingFromTemplate = true;
-            draggedStoneTemplate = 'red';
-            svg.style.cursor = 'crosshair';
-        });
+        // Desktop templates
+        yellowTemplate.addEventListener('mousedown', (e) => startDraggingFromTemplate('yellow', e));
+        redTemplate.addEventListener('mousedown', (e) => startDraggingFromTemplate('red', e));
+
+        // Mobile templates - handle both mouse and touch
+        if (mobileYellowTemplate) {
+            mobileYellowTemplate.addEventListener('mousedown', (e) => startDraggingFromTemplate('yellow', e));
+            mobileYellowTemplate.addEventListener('touchstart', (e) => {
+                if (e.touches.length === 1) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    cancelLongPress(); // Cancel any pending long press
+                    isDraggingFromTemplate = true;
+                    draggedStoneTemplate = 'yellow';
+                    svg.style.cursor = 'crosshair';
+                }
+            }, { passive: false });
+        }
+        if (mobileRedTemplate) {
+            mobileRedTemplate.addEventListener('mousedown', (e) => startDraggingFromTemplate('red', e));
+            mobileRedTemplate.addEventListener('touchstart', (e) => {
+                if (e.touches.length === 1) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    cancelLongPress(); // Cancel any pending long press
+                    isDraggingFromTemplate = true;
+                    draggedStoneTemplate = 'red';
+                    svg.style.cursor = 'crosshair';
+                }
+            }, { passive: false });
+        }
 
         // Update swap colors button visibility based on whether there are stones
         function updateSwapColorsButtonVisibility() {
@@ -1980,6 +2272,7 @@
                 
                 isDraggingStone = false;
                 draggedStone = null;
+                draggedStoneId = null;
                 dragStartPoint = null;
                 svg.style.cursor = 'grab';
             }
@@ -2210,7 +2503,7 @@
                 return;
             }
             
-            // Place or start dragging broom line
+            // Place or start dragging broom line (only for single-touch callers)
             broomLinePosition = { x: point.x, y: point.y };
             isDraggingBroomLine = true;
             renderBroomLine();
@@ -2226,54 +2519,392 @@
         }
 
         // Long press detection for touch (mobile)
+        // Use capture phase to run BEFORE the panning touchstart handler
         svg.addEventListener('touchstart', (e) => {
-            // Only handle if not already interacting with stones or panning
-            if (isDraggingStone || isDraggingFromTemplate || isPanning) {
+            // Don't interfere if already dragging from template
+            if (isDraggingFromTemplate) {
                 return;
             }
             
-            const touch = e.touches[0];
-            longPressStartPoint = { x: touch.clientX, y: touch.clientY };
+            // Handle stone dragging first - check if touching a stone
+            if (e.touches.length === 1) {
+                const touch = e.touches[0];
+                
+                // Try e.target first (more reliable for SVG elements)
+                let stoneElement = e.target.closest ? e.target.closest('[data-stone-id]') : null;
+                
+                // Fallback to elementFromPoint if e.target doesn't work
+                if (!stoneElement) {
+                    stoneElement = document.elementFromPoint(touch.clientX, touch.clientY)?.closest('[data-stone-id]');
+                }
+                
+                if (stoneElement) {
+                    e.preventDefault();
+                    // Don't stop propagation - we need touchmove events to fire
+                    cancelLongPress();
+                    
+                    // CRITICAL: Set stone dragging state BEFORE panning handler can interfere
+                    isPanning = false;
+                    wasPinching = false;
+                    isDraggingStone = true;
+                    
+                    const stoneId = parseInt(stoneElement.getAttribute('data-stone-id'));
+                    draggedStone = stones.find(s => s.id === stoneId);
+                    
+                    if (!draggedStone) {
+                        isDraggingStone = false;
+                        draggedStoneId = null;
+                        return;
+                    }
+                    
+                    // Store ID separately to avoid reference issues after renderStones()
+                    draggedStoneId = stoneId;
+                    
+                    const point = screenToSVG(touch.clientX, touch.clientY);
+                    dragStartPoint = { x: point.x - draggedStone.x, y: point.y - draggedStone.y };
+                    
+                    return; // Don't process further - stone dragging takes priority
+                }
+            }
             
-            longPressTimer = setTimeout(() => {
-                // Long press detected - place broom line
-                placeBroomLine(touch.clientX, touch.clientY);
-                longPressTimer = null;
-            }, LONG_PRESS_DURATION);
-        });
+            // Only handle if not already interacting with stones or panning
+            if (isDraggingStone || isPanning) {
+                return;
+            }
+            // Only start a long-press when exactly one touch is down
+            if (e.touches.length === 1) {
+                const touch = e.touches[0];
+                longPressStartPoint = { x: touch.clientX, y: touch.clientY };
+                
+                longPressTimer = setTimeout(() => {
+                    // Ensure we still have exactly one touch when the timer fires
+                    if (svg && (window.TouchEvent ? true : true)) {
+                        // Use current touches from the active pointer: rely on flag instead
+                    }
+                    // Guard against multi-touch: only place broom if not pinching and not multi-touch
+                    if (!wasPinching) {
+                        placeBroomLine(touch.clientX, touch.clientY);
+                    }
+                    longPressTimer = null;
+                }, LONG_PRESS_DURATION);
+            }
+            
+            // If multi-touch begins, cancel long-press and broom dragging
+            if (e.touches.length > 1) {
+                cancelLongPress();
+                isDraggingBroomLine = false;
+            }
+        }, { capture: true });
 
         svg.addEventListener('touchmove', (e) => {
-            if (!longPressTimer || !longPressStartPoint) {
+            // Check for stone dragging FIRST - if dragging stone, prevent default and return
+            if (isDraggingStone) {
+                e.preventDefault(); // Prevent scrolling while dragging stone
+                // Let document handler handle the actual dragging
                 return;
             }
             
-            const touch = e.touches[0];
-            const dx = touch.clientX - longPressStartPoint.x;
-            const dy = touch.clientY - longPressStartPoint.y;
-            const distance = Math.sqrt(dx * dx + dy * dy);
+            // Don't handle stone dragging here - let document-level handler do it
+            // This prevents conflicts and ensures consistent behavior
             
-            // If moved too much, cancel long press
-            if (distance > LONG_PRESS_MOVE_THRESHOLD) {
-                cancelLongPress();
-            } else if (isDraggingBroomLine && broomLinePosition) {
-                // Update broom line position while dragging
+            // Handle dragging from template - show preview
+            if (isDraggingFromTemplate && draggedStoneTemplate && e.touches.length === 1) {
+                e.preventDefault();
+                e.stopPropagation();
+                const touch = e.touches[0];
+                const point = screenToSVG(touch.clientX, touch.clientY);
+                
+                // Remove old preview if it exists
+                if (previewStone && previewStone.parentElement) {
+                    previewStone.parentElement.removeChild(previewStone);
+                }
+                
+                // Create preview stone
+                previewStone = createStoneElement({
+                    id: -1, // Temporary ID for preview
+                    x: point.x,
+                    y: point.y,
+                    color: draggedStoneTemplate
+                });
+                previewStone.style.opacity = '0.6'; // Semi-transparent preview
+                previewStone.style.pointerEvents = 'none';
+                
+                const layer = getStonesLayer();
+                if (layer) {
+                    layer.appendChild(previewStone);
+                }
+                return;
+            }
+            
+            // Don't handle anything else if dragging stone - let document handler do it
+            if (isDraggingStone) {
+                return;
+            }
+            
+            // Handle pinch zoom (2 touches)
+            if (e.touches.length === 2) {
+                // This is handled in the pinch zoom section above
+                return;
+            }
+            
+            // Handle broom line dragging (after long press has triggered) - only with single touch
+            if (isDraggingBroomLine && broomLinePosition && e.touches.length === 1) {
+                e.preventDefault(); // Prevent scrolling
+                const touch = e.touches[0];
                 const point = screenToSVG(touch.clientX, touch.clientY);
                 broomLinePosition.x = point.x;
                 broomLinePosition.y = point.y;
                 renderBroomLine();
+                return;
             }
-        });
+            
+            // Handle long press detection (before long press has triggered)
+            if (longPressTimer && longPressStartPoint) {
+                const touch = e.touches[0];
+                const dx = touch.clientX - longPressStartPoint.x;
+                const dy = touch.clientY - longPressStartPoint.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                
+                // If moved too much, cancel long press
+                if (distance > LONG_PRESS_MOVE_THRESHOLD) {
+                    cancelLongPress();
+                }
+            }
+        }, { passive: false });
+        
+        // Document-level touchmove handler for dragging existing stones (PRIMARY handler)
+        // Use capture phase to run BEFORE SVG handlers
+        const handleStoneDragMove = (e) => {
+            // Handle stone dragging - check this FIRST before any other handlers
+            if (isDraggingStone && draggedStoneId !== null && dragStartPoint && e.touches.length === 1) {
+                e.preventDefault();
+                const touch = e.touches[0];
+                
+                // Always look up stone by ID to avoid reference issues
+                draggedStone = stones.find(s => s.id === draggedStoneId);
+                
+                if (!draggedStone) {
+                    isDraggingStone = false;
+                    draggedStone = null;
+                    draggedStoneId = null;
+                    dragStartPoint = null;
+                    return;
+                }
+                
+                const point = screenToSVG(touch.clientX, touch.clientY);
+                draggedStone.x = point.x - dragStartPoint.x;
+                draggedStone.y = point.y - dragStartPoint.y;
+                
+                // Update the stone's visual position directly without recreating elements
+                // This prevents the touch sequence from being interrupted
+                const stoneElement = document.querySelector(`[data-stone-id="${draggedStoneId}"]`);
+                if (stoneElement) {
+                    stoneElement.setAttribute('cx', draggedStone.x);
+                    stoneElement.setAttribute('cy', draggedStone.y);
+                }
+                
+                return;
+            }
+        };
+        
+        // Register in capture phase only (runs first, before SVG handlers)
+        document.addEventListener('touchmove', handleStoneDragMove, { passive: false, capture: true });
+        
+        // Document-level touchmove handler for dragging from templates (since templates are outside SVG)
+        document.addEventListener('touchmove', (e) => {
+            // Handle dragging from template - show preview
+            if (isDraggingFromTemplate && draggedStoneTemplate && e.touches.length === 1) {
+                e.preventDefault();
+                e.stopPropagation();
+                const touch = e.touches[0];
+                const point = screenToSVG(touch.clientX, touch.clientY);
+                
+                // Remove old preview if it exists
+                if (previewStone && previewStone.parentElement) {
+                    previewStone.parentElement.removeChild(previewStone);
+                }
+                
+                // Create preview stone
+                previewStone = createStoneElement({
+                    id: -1, // Temporary ID for preview
+                    x: point.x,
+                    y: point.y,
+                    color: draggedStoneTemplate
+                });
+                previewStone.style.opacity = '0.6'; // Semi-transparent preview
+                previewStone.style.pointerEvents = 'none';
+                
+                const layer = getStonesLayer();
+                if (layer) {
+                    layer.appendChild(previewStone);
+                }
+            }
+        }, { passive: false });
+        
+        // Document-level touchend handler for dropping from templates
+        document.addEventListener('touchend', (e) => {
+            // Handle dropping from template
+            if (isDraggingFromTemplate && draggedStoneTemplate && e.changedTouches.length > 0) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                const touch = e.changedTouches[0];
+                const point = screenToSVG(touch.clientX, touch.clientY);
+                
+                // Remove preview stone
+                if (previewStone && previewStone.parentElement) {
+                    previewStone.parentElement.removeChild(previewStone);
+                }
+                previewStone = null;
+                
+                // Check if dropped on the sheet (blue playing surface)
+                const SHEET_X_MIN = -2.375;
+                const SHEET_X_MAX = 2.375;
+                const SHEET_Y_MIN = -22.86;
+                const SHEET_Y_MAX = 22.86;
+                
+                const isOnSheet = (
+                    point.x >= SHEET_X_MIN &&
+                    point.x <= SHEET_X_MAX &&
+                    point.y >= SHEET_Y_MIN &&
+                    point.y <= SHEET_Y_MAX
+                );
+                
+                if (isOnSheet) {
+                    // Create the actual stone
+                    const newStone = {
+                        id: nextStoneId++,
+                        x: point.x,
+                        y: point.y,
+                        color: draggedStoneTemplate
+                    };
+                    
+                    // Resolve collisions before adding to array
+                    resolveCollisions(newStone);
+                    
+                    stones.push(newStone);
+                    
+                    // Render the new stone
+                    renderStones();
+                }
+                
+                // Reset state
+                isDraggingFromTemplate = false;
+                draggedStoneTemplate = null;
+            }
+        }, { passive: false });
 
         svg.addEventListener('touchend', (e) => {
             cancelLongPress();
+            
+            // Handle finishing dragging an existing stone
+            if (isDraggingStone && draggedStone && e.changedTouches.length > 0) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                const touch = e.changedTouches[0];
+                
+                // Check if stone is outside the sheet bounds (blue playing surface)
+                const SHEET_X_MIN = -2.375;
+                const SHEET_X_MAX = 2.375;
+                const SHEET_Y_MIN = -22.86;
+                const SHEET_Y_MAX = 22.86;
+                
+                const isOutsideSheet = (
+                    draggedStone.x < SHEET_X_MIN ||
+                    draggedStone.x > SHEET_X_MAX ||
+                    draggedStone.y < SHEET_Y_MIN ||
+                    draggedStone.y > SHEET_Y_MAX
+                );
+                
+                if (isOutsideSheet) {
+                    // Delete the stone
+                    const stoneIndex = stones.findIndex(s => s.id === draggedStone.id);
+                    if (stoneIndex !== -1) {
+                        stones.splice(stoneIndex, 1);
+                    }
+                } else {
+                    // Resolve collisions after moving stone
+                    resolveCollisions(draggedStone);
+                }
+                
+                // Render once at the end
+                renderStones();
+                
+                isDraggingStone = false;
+                draggedStone = null;
+                draggedStoneId = null;
+                dragStartPoint = null;
+                return;
+            }
             
             if (isDraggingBroomLine) {
                 isDraggingBroomLine = false;
             }
         });
+        
+        // Document-level touchend handler for dropping existing stones (fallback)
+        document.addEventListener('touchend', (e) => {
+            // Handle finishing dragging an existing stone
+            if (isDraggingStone && draggedStone && e.changedTouches.length > 0) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                const touch = e.changedTouches[0];
+                
+                // Check if stone is outside the sheet bounds (blue playing surface)
+                const SHEET_X_MIN = -2.375;
+                const SHEET_X_MAX = 2.375;
+                const SHEET_Y_MIN = -22.86;
+                const SHEET_Y_MAX = 22.86;
+                
+                const isOutsideSheet = (
+                    draggedStone.x < SHEET_X_MIN ||
+                    draggedStone.x > SHEET_X_MAX ||
+                    draggedStone.y < SHEET_Y_MIN ||
+                    draggedStone.y > SHEET_Y_MAX
+                );
+                
+                if (isOutsideSheet) {
+                    // Delete the stone
+                    const stoneIndex = stones.findIndex(s => s.id === draggedStone.id);
+                    if (stoneIndex !== -1) {
+                        stones.splice(stoneIndex, 1);
+                        renderStones();
+                    }
+                } else {
+                    // Resolve collisions after moving stone
+                    resolveCollisions(draggedStone);
+                    renderStones();
+                }
+                
+                isDraggingStone = false;
+                draggedStone = null;
+                draggedStoneId = null;
+                dragStartPoint = null;
+            }
+        }, { passive: false });
 
         svg.addEventListener('touchcancel', (e) => {
             cancelLongPress();
+            
+            // Cancel stone dragging if active
+            if (isDraggingStone) {
+                isDraggingStone = false;
+                draggedStone = null;
+                draggedStoneId = null;
+                dragStartPoint = null;
+            }
+            
+            // Cancel template dragging if active
+            if (isDraggingFromTemplate) {
+                if (previewStone && previewStone.parentElement) {
+                    previewStone.parentElement.removeChild(previewStone);
+                }
+                previewStone = null;
+                isDraggingFromTemplate = false;
+                draggedStoneTemplate = null;
+            }
             
             if (isDraggingBroomLine) {
                 isDraggingBroomLine = false;
@@ -2490,6 +3121,8 @@
                     updateSheetBackground();
                     if (yellowTemplate) yellowTemplate.style.background = lightStoneColor;
                     if (redTemplate) redTemplate.style.background = darkStoneColor;
+                    if (mobileYellowTemplate) mobileYellowTemplate.style.background = lightStoneColor;
+                    if (mobileRedTemplate) mobileRedTemplate.style.background = darkStoneColor;
                 }
                 
                 if (state.stoneCircumference !== undefined) {
@@ -2881,6 +3514,8 @@
                 updateButtonCircles();
                 if (yellowTemplate) yellowTemplate.style.background = lightStoneColor;
                 if (redTemplate) redTemplate.style.background = darkStoneColor;
+                if (mobileYellowTemplate) mobileYellowTemplate.style.background = lightStoneColor;
+                if (mobileRedTemplate) mobileRedTemplate.style.background = darkStoneColor;
                 renderStones();
                 
                 // Save to localStorage
