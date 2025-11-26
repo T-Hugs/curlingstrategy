@@ -859,7 +859,7 @@
                 <div class="settings-subsection">
                     <div class="form-group">
                         <label for="stone-circumference">Stone circumference (inches)</label>
-                        <input type="number" id="stone-circumference" value="36" min="1" max="100" step="0.1" class="form-input">
+                        <input type="number" id="stone-circumference" value="34" min="1" max="100" step="0.1" class="form-input">
                     </div>
                     <div class="form-group">
                         <label for="button-size">Button size</label>
@@ -1396,7 +1396,7 @@
         });
 
         stoneCircumferenceInput.addEventListener('change', (e) => {
-            stoneCircumferenceInches = parseFloat(e.target.value) || 36;
+            stoneCircumferenceInches = parseFloat(e.target.value) || 34;
             renderStones(); // Re-render all stones with new size
             saveColorsToLocalStorage();
         });
@@ -1475,9 +1475,9 @@
         let currentZoom = 1;
 
         // Stone drag and drop functionality - declare early so ALL handlers can access
-        // Curling stone: default circumference 36 inches = 0.9144 meters
+        // Curling stone: default circumference 34 inches = 0.9144 meters
         // Radius = circumference / (2 * π)
-        let stoneCircumferenceInches = 36; // User-configurable
+        let stoneCircumferenceInches = 34; // User-configurable
         function getStoneRadius() {
             const circumferenceMeters = (stoneCircumferenceInches * 2.54) / 100; // Convert inches to meters
             return circumferenceMeters / (2 * Math.PI);
@@ -3507,7 +3507,7 @@
                 sheetBackgroundColor = '#f0f8ff';
                 lightStoneColor = '#ffd700';
                 darkStoneColor = '#cc0000';
-                stoneCircumferenceInches = 36;
+                stoneCircumferenceInches = 34;
                 mixedDoublesPlacement = 1;
                 buttonSize = 'standard';
                 
